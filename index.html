@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Mapa demonstrativo de recursos de acessibilidade em São Paulo." />
+    <title>IncluiMais | Mapa de acessibilidade</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="aplicacao">
+      <aside class="sidebar" aria-label="Busca e filtros de acessibilidade">
+        <header class="cabecalho-sidebar">
+          <p class="marca"><span aria-hidden="true">+</span> INCLUIMAIS</p>
+          <h1>Locais mais acessíveis perto de você</h1>
+          <p>Encontre locais com recursos de acessibilidade</p>
+        </header>
+
+        <section class="controles" aria-label="Refinar resultados">
+          <fieldset class="grupo-filtros categorias">
+            <legend>Categorias</legend>
+            <div class="lista-categorias" id="lista-categorias">
+              <button class="botao-categoria ativo" type="button" data-categoria="Todos">Todos</button>
+              <button class="botao-categoria" type="button" data-categoria="Banheiro">Banheiros</button>
+              <button class="botao-categoria" type="button" data-categoria="Restaurante">Restaurantes</button>
+              <button class="botao-categoria" type="button" data-categoria="Loja">Lojas</button>
+              <button class="botao-categoria" type="button" data-categoria="Estacionamento">Estacionamentos</button>
+              <button class="botao-categoria" type="button" data-categoria="Farmácia">Farmácias</button>
+              <button class="botao-categoria" type="button" data-categoria="Instituição de ensino">Instituições de ensino</button>
+              <button class="botao-categoria" type="button" data-categoria="Espaço de lazer">Espaços de lazer</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="grupo-filtros recursos">
+            <legend>Recursos de acessibilidade</legend>
+            <label><input type="checkbox" data-recurso="entradaAcessivel" /> Entrada acessível</label>
+            <label><input type="checkbox" data-recurso="banheiroAcessivel" /> Banheiro acessível</label>
+            <label><input type="checkbox" data-recurso="estacionamentoAcessivel" /> Estacionamento acessível</label>
+            <label><input type="checkbox" data-recurso="libras" /> Atendimento em Libras</label>
+            <label><input type="checkbox" data-recurso="pisoTatil" /> Piso tátil</label>
+            <label><input type="checkbox" data-recurso="braille" /> Material em braille</label>
+          </fieldset>
+        </section>
+
+        <section class="resultados" aria-live="polite" aria-label="Estabelecimentos encontrados">
+          <div class="titulo-resultados">
+            <h2>Locais encontrados</h2>
+            <span id="contador-resultados">0 locais</span>
+          </div>
+          <div id="lista-locais" class="lista-locais"></div>
+        </section>
+      </aside>
+
+      <section class="area-mapa" aria-label="Mapa de locais com acessibilidade em São Paulo">
+        <div id="mapa"></div>
+        <div class="campo-busca">
+          <label class="visualmente-oculto" for="busca">Buscar estabelecimento</label>
+          <span class="icone-busca" aria-hidden="true"></span>
+          <input id="busca" type="search" placeholder="Buscar estabelecimento..." autocomplete="off" />
+        </div>
+        <details class="menu-temas">
+          <summary aria-label="Tema do mapa" title="Tema do mapa"><span class="menu-temas-texto">Tema do mapa</span><span class="menu-temas-icone" aria-hidden="true">▤</span></summary>
+          <fieldset>
+            <legend class="visualmente-oculto">Escolha o tema do mapa</legend>
+            <label><input type="radio" name="tema-mapa" value="positron" /> Positron</label>
+            <label><input type="radio" name="tema-mapa" value="bright" checked /> Bright</label>
+            <label><input type="radio" name="tema-mapa" value="liberty" /> Liberty</label>
+            <label><input type="radio" name="tema-mapa" value="fiord" /> Fiord</label>
+            <label><input type="radio" name="tema-mapa" value="dark" /> Dark</label>
+          </fieldset>
+        </details>
+        <div class="creditos-mapa">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> · © <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a></div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
