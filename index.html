@@ -16,12 +16,6 @@
   <body>
     <main class="aplicacao">
       <aside class="sidebar" aria-label="Busca e filtros de acessibilidade">
-        <header class="cabecalho-sidebar">
-          <p class="marca"><span aria-hidden="true">+</span> INCLUIMAIS</p>
-          <h1>Locais mais acessíveis perto de você</h1>
-          <p>Encontre locais com recursos de acessibilidade</p>
-        </header>
-
         <section class="controles" aria-label="Refinar resultados">
           <fieldset class="grupo-filtros categorias">
             <legend>Categorias</legend>
@@ -65,7 +59,7 @@
           <input id="busca" type="search" placeholder="Buscar estabelecimento..." autocomplete="off" />
         </div>
         <details class="menu-temas">
-          <summary aria-label="Tema do mapa" title="Tema do mapa"><span class="menu-temas-texto">Tema do mapa</span><span class="menu-temas-icone" aria-hidden="true">▤</span></summary>
+          <summary aria-label="Menu de acessibilidade" title="Menu de acessibilidade"><span class="menu-temas-texto">Menu de acessibilidade</span><span class="menu-temas-icone" aria-hidden="true"><i></i><i></i><i></i></span></summary>
           <fieldset>
             <legend class="visualmente-oculto">Escolha o tema do mapa</legend>
             <label><input type="radio" name="tema-mapa" value="positron" /> Positron</label>
@@ -82,6 +76,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>

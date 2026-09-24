@@ -1,8 +1,8 @@
 const CENTRO_INICIAL = [-23.53598, -46.55948];
 const RAIO_DESLOCAMENTO_METROS = 100;
 const RAIO_TERRA_METROS = 6371000;
-// Novos estabelecimentos podem ser adicionados aqui futuramente.
-const locais = [];
+let locais = [];
+const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 
 let mapa;
 let camadaBase;
@@ -18,6 +18,116 @@ const nomesRecursos = {
   pisoTatil: "Piso tátil",
   braille: "Material em braille"
 };
+
+function estadoAcessibilidade(valor) {
+  if (valor === "yes" || valor === "designated") return "available";
+  if (valor === "no") return "unavailable";
+  return "unknown";
+}
+
+function categoriaDoLocal(tags) {
+  if (tags.amenity === "university" || tags.amenity === "college" || tags.amenity === "school") return "Instituição de ensino";
+  if (tags.amenity === "restaurant" || tags.amenity === "cafe" || tags.amenity === "fast_food") return "Restaurante";
+  if (tags.amenity === "pharmacy") return "Farmácia";
+  if (tags.amenity === "parking") return "Estacionamento";
+  if (tags.amenity === "toilets") return "Banheiro";
+  if (tags.shop) return "Loja";
+  return tags.leisure ? "Espaço de lazer" : "Estabelecimento";
+}
+
+function iconeDoLocal(local) {
+  const icones = {
+    "Restaurante": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3v18M14 8h6M17 3c3 1 3 5 3 8"/></svg>',
+    "Farmácia": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    "Instituição de ensino": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5-9 5-9-5ZM6 11v5c3 3 9 3 12 0v-5M21 9v7"/></svg>',
+    "Espaço de lazer": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V10M7 21h10M5 10h14M7 10c0-3 2-5 5-5s5 2 5 5M9 10c-1-2-1-4 1-6M15 10c1-2 1-4-1-6"/></svg>',
+    "Estacionamento": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20V4h5a4 4 0 0 1 0 8H8M8 12h5"/></svg>',
+    "Loja": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1 10H5L4 10ZM6 10l2-5h8l2 5M9 20v-6h6v6"/></svg>'
+  };
+  return icones[local.categoria] || '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8l8-4 8 4v12M8 20v-6h8v6M9 9h.01M15 9h.01"/></svg>';
+}
+
+function localDoElemento(elemento) {
+  const tags = elemento.tags || {};
+  const latitude = elemento.lat ?? elemento.center?.lat;
+  const longitude = elemento.lon ?? elemento.center?.lon;
+  if (!tags.name || latitude == null || longitude == null) return null;
+
+  return {
+    id: `${elemento.type}-${elemento.id}`,
+    nome: tags.name,
+    categoria: categoriaDoLocal(tags),
+    endereco: [tags["addr:street"], tags["addr:housenumber"]].filter(Boolean).join(", ") || "Endereço não informado",
+    latitude,
+    longitude,
+    acessibilidade: {
+      cadeira: estadoAcessibilidade(tags.wheelchair),
+      visual: "unknown",
+      auditiva: "unknown",
+      banheiro: estadoAcessibilidade(tags["toilets:wheelchair"]),
+      entrada: estadoAcessibilidade(tags.wheelchair),
+      elevador: estadoAcessibilidade(tags.elevator),
+      tatil: estadoAcessibilidade(tags.tactile_paving),
+      estacionamento: estadoAcessibilidade(tags.amenity === "parking" ? tags.wheelchair : tags["parking:wheelchair"])
+    }
+  };
+}
+
+function pontoDaFeature(feature) {
+  const coordenadas = feature.geometry?.coordinates;
+  if (!coordenadas) return null;
+  if (feature.geometry.type === "Point") return [coordenadas[1], coordenadas[0]];
+  const pontos = [];
+  const coletar = (valor) => {
+    if (typeof valor[0] === "number") pontos.push(valor);
+    else valor.forEach(coletar);
+  };
+  coletar(coordenadas);
+  if (!pontos.length) return null;
+  return [
+    pontos.reduce((total, ponto) => total + ponto[1], 0) / pontos.length,
+    pontos.reduce((total, ponto) => total + ponto[0], 0) / pontos.length
+  ];
+}
+
+function localDoGeoJson(feature) {
+  const tags = feature.properties || {};
+  const ponto = pontoDaFeature(feature);
+  if (!tags.name?.trim() || !ponto) return null;
+  if (!["amenity", "shop", "leisure", "healthcare", "tourism"].some((tag) => tags[tag])) return null;
+  return {
+    id: `geojson-${tags.osm_id}`,
+    nome: tags.name.trim(),
+    categoria: categoriaDoLocal(tags),
+    endereco: [tags.addr_street, tags.addr_housenumber].filter(Boolean).join(", ") || "Endereço não informado",
+    latitude: ponto[0],
+    longitude: ponto[1],
+    acessibilidade: null
+  };
+}
+
+async function carregarLocaisGeoJson() {
+  const resposta = await fetch("data/UNICID_2.geojson");
+  const dados = await resposta.json();
+  locais = dados.features.map(localDoGeoJson).filter(Boolean);
+  filtrarLocais();
+}
+
+async function carregarLocaisOverpass() {
+  const [latitude, longitude] = CENTRO_INICIAL;
+  const consulta = `[out:json][timeout:20];(nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][amenity~"university|college|school|restaurant|cafe|fast_food|pharmacy|parking|toilets"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][shop];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][leisure];);out center tags;`;
+  try {
+    const resposta = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(consulta)}`);
+    if (!resposta.ok) throw new Error(`Overpass respondeu ${resposta.status}`);
+    const dados = await resposta.json();
+    locais = dados.elements.map(localDoElemento).filter(Boolean);
+    filtrarLocais();
+  } catch (erro) {
+    console.error("Não foi possível carregar estabelecimentos do OpenStreetMap:", erro);
+    locais = [];
+    filtrarLocais();
+  }
+}
 
 // Projeta qualquer centro fora do raio sobre a borda do círculo geográfico.
 function limitarCentro(latlng) {
@@ -95,12 +205,33 @@ function inicializarMapa() {
   camadaBase = L.maplibreGL({
     style: "https://tiles.openfreemap.org/styles/bright"
   }).addTo(mapa);
+  const glMap = camadaBase.getMaplibreMap();
+  const ocultarPois = () => {
+    if (!glMap.getStyle()) return;
+    glMap.getStyle().layers.forEach((layer) => {
+      if (layer["source-layer"] === "poi") {
+        glMap.setLayoutProperty(layer.id, "visibility", "none");
+      }
+    });
+  };
+  glMap.once("load", ocultarPois);
+  glMap.on("style.load", ocultarPois);
   // Indicador visual fixo no ponto inicial; não pertence à lista de estabelecimentos.
   L.marker(CENTRO_INICIAL, {
     icon: L.divIcon({ className: "icone-localizacao", html: '<span class="ponto-localizacao" aria-hidden="true"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),
     interactive: false, keyboard: false
   }).addTo(mapa);
   camadaMarcadores = L.layerGroup().addTo(mapa);
+
+  // O mapa é criado dentro de um flex container. Em alguns navegadores o
+  // tamanho final só fica disponível depois do primeiro layout; sem esta
+  // atualização, os overlays podem só aparecer após um zoom.
+  const atualizarLayoutMapa = () => {
+    mapa.invalidateSize({ animate: false, pan: false });
+    document.querySelector(".campo-busca").getBoundingClientRect();
+  };
+  mapa.whenReady(() => requestAnimationFrame(atualizarLayoutMapa));
+  window.addEventListener("load", atualizarLayoutMapa, { once: true });
 }
 
 function recursosDoLocal(local) {
@@ -108,8 +239,16 @@ function recursosDoLocal(local) {
 }
 
 function conteudoPopup(local) {
-  const recursos = recursosDoLocal(local).map((recurso) => `<li>${nomesRecursos[recurso]}</li>`).join("");
-  return `<article><h2 class="popup-titulo">${local.nome}</h2><p class="popup-texto">${local.categoria}</p><p class="popup-texto">${local.endereco}</p><ul class="popup-recursos">${recursos}</ul></article>`;
+  const acessibilidade = local.acessibilidade || {};
+  const svg = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg>';
+  const categorias = [
+    ["cadeira", "Cadeira de rodas"], ["visual", "Acessibilidade visual"],
+    ["auditiva", "Acessibilidade auditiva"], ["banheiro", "Banheiro acessível"],
+    ["entrada", "Entrada acessível"], ["elevador", "Elevador acessível"],
+    ["tatil", "Piso tátil"], ["estacionamento", "Estacionamento acessível"]
+  ];
+  const status = { available: ["Disponível", "✓"], unavailable: ["Não disponível", "×"], unknown: ["Não informado", "?"] };
+  return `<article class="popup-estabelecimento"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><a href="#" class="endereco-estabelecimento">${local.endereco}</a><span class="distancia-estabelecimento">1.2 km</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações">×</button></div><div class="indicadores-resumo" role="group" aria-label="Indicadores de acessibilidade">${categorias.map(([chave, nome]) => `<span class="indicador estado-${acessibilidade[chave] || "unknown"}" title="${nome}: ${status[acessibilidade[chave]]?.[0] || status.unknown[0]}">${svg}</span>`).join("")}</div></article>`;
 }
 
 // Remove os marcadores anteriores e cria apenas os que correspondem à busca atual.
@@ -118,7 +257,13 @@ function criarMarcadores(locaisFiltrados) {
   Object.keys(marcadores).forEach((id) => delete marcadores[id]);
 
   locaisFiltrados.forEach((local) => {
-    const marcador = L.marker([local.latitude, local.longitude]).bindPopup(conteudoPopup(local), { maxWidth: 260 });
+    const marcador = L.marker([local.latitude, local.longitude], {
+      icon: L.divIcon({ className: "pin-estabelecimento", html: `<span class="pin-estabelecimento-forma"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
+    }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade" });
+    marcador.on("popupopen", (evento) => {
+      const popup = evento.popup.getElement();
+      popup.querySelector(".fechar-estabelecimento").addEventListener("click", () => marcador.closePopup());
+    });
     marcador.addTo(camadaMarcadores);
     marcadores[local.id] = marcador;
   });
@@ -150,7 +295,7 @@ function mostrarLocais(locaisFiltrados) {
   `).join("");
 
   document.querySelectorAll(".local-item").forEach((item) => {
-    item.addEventListener("click", () => abrirLocal(Number(item.dataset.id)));
+    item.addEventListener("click", () => abrirLocal(item.dataset.id));
   });
 }
 
@@ -201,4 +346,5 @@ function configurarEventos() {
 inicializarMapa();
 configurarEventos();
 filtrarLocais();
+carregarLocaisGeoJson().catch((erro) => console.error("Não foi possível carregar o GeoJSON:", erro));
 
