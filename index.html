@@ -11,11 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="aplicacao">
       <aside class="sidebar" aria-label="Busca e filtros de acessibilidade">
+        <header class="cabecalho-sidebar">
+          <a class="marca" href="index.html" aria-label="IncluiMais, início"><span aria-hidden="true">+</span> INCLUIMAIS</a>
+          <h1>Encontre lugares mais acessíveis.</h1>
+          <p>Explore o mapa e descubra recursos de acessibilidade perto de você.</p>
+          <a class="link-cadastro" href="cadastro.html">＋ Cadastrar estabelecimento</a>
+        </header>
         <section class="controles" aria-label="Refinar resultados">
           <fieldset class="grupo-filtros categorias">
             <legend>Categorias</legend>
@@ -39,6 +45,8 @@
             <label><input type="checkbox" data-recurso="libras" /> Atendimento em Libras</label>
             <label><input type="checkbox" data-recurso="pisoTatil" /> Piso tátil</label>
             <label><input type="checkbox" data-recurso="braille" /> Material em braille</label>
+            <label><input type="checkbox" data-recurso="cardapioAcessivel" /> Cardápio acessível</label>
+            <label><input type="checkbox" data-recurso="caoGuia" /> Cão-guia permitido</label>
           </fieldset>
         </section>
 
@@ -77,6 +85,6 @@
     <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
