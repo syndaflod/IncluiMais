@@ -2,7 +2,7 @@
 
 **Encontre lugares mais acessíveis.**
 
-O IncluiMais é um projeto acadêmico desenvolvido para facilitar a localização de estabelecimentos e a consulta de recursos de acessibilidade. A plataforma utiliza um mapa interativo para apresentar locais próximos à área piloto da Universidade Cidade de São Paulo (UNICID), permitindo pesquisar estabelecimentos, filtrar categorias e consultar informações relacionadas à acessibilidade.
+O IncluiMais é um projeto acadêmico desenvolvido para facilitar a localização de estabelecimentos e a consulta de recursos de acessibilidade. A plataforma utiliza um mapa interativo para apresentar locais próximos à área da Universidade Cidade de São Paulo (UNICID), permitindo pesquisar estabelecimentos, filtrar categorias e consultar informações relacionadas à acessibilidade.
 
 ## Sobre o projeto
 
