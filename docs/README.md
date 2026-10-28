@@ -15,7 +15,7 @@ A primeira versão do site já possui 9 páginas, navegação compartilhada, map
 - `sobre.html`: contexto, problema, proposta, missão, visão e valores do projeto.
 - `acessibilidade.html`: explicação dos recursos de acessibilidade exibidos no mapa.
 - `impacto.html`: objetivos, indicadores e relação entre acessibilidade, participação social e sustentabilidade.
-- `midia.html`: vídeo, áudio e iframe relacionados à UNICID e à acessibilidade educacional.
+- `midia.html`: vídeo, áudio e iframe relacionados à UNICID.
 - `cadastro_estabelecimento.html`: formulário para sugerir um novo estabelecimento.
 - `noticias.html`: textos sobre inclusão, acessibilidade, tecnologia e participação social.
 - `contato.html`: formulário de contato, sugestões e correções de informações.
