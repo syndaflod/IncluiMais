@@ -2,6 +2,7 @@ const CENTRO_INICIAL = [-23.53598, -46.55948];
 const RAIO_DESLOCAMENTO_METROS = 100;
 const RAIO_TERRA_METROS = 6371000;
 let locais = [];
+let estadoCarregamentoLocais = "carregando";
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 
 let mapa;
@@ -19,6 +20,41 @@ const nomesRecursos = {
   braille: "Material em braille"
 };
 
+const iconesRecursos = {
+  entradaAcessivel: "assets/accessibility/entrada-acessivel.svg",
+  banheiroAcessivel: "assets/accessibility/banheiro-acessivel.svg",
+  estacionamentoAcessivel: "assets/accessibility/estacionamento-acessivel.svg",
+  libras: "assets/accessibility/libras.svg",
+  pisoTatil: "assets/accessibility/piso-tatil.svg",
+  braille: "assets/accessibility/braille.svg"
+};
+
+const iconesEstabelecimentos = {
+  restaurante: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v7M4.5 3v4.5a2.5 2.5 0 0 0 5 0V3M7 10v11M17 3v18M14.5 8h5M17 3c2.5 1.6 2.5 4.4 2.5 7"/></svg>',
+  farmacia: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 0 0-7-7l-10 10a4.95 4.95 0 0 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>',
+  ensino: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5-9 5-9-5ZM6 11v5c3.5 3 8.5 3 12 0v-5M21 9v7"/></svg>',
+  lazer: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a4 4 0 0 0-3.7 5.5A3.5 3.5 0 0 0 9 16h6a3.5 3.5 0 0 0 .7-7A4 4 0 0 0 12 3.5ZM12 16v5M9 21h6"/></svg>',
+  estacionamento: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 20V4h6a4 4 0 0 1 0 8H7M7 12h6"/></svg>',
+  loja: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2 10H5.2L4 10ZM6 10l2-5h8l2 5M9 20v-6h6v6"/></svg>',
+  banheiro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 4v5h8V4M8 13h8M8 16h5"/></svg>',
+  academia: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>',
+  padrao: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V7l8-4 8 4v13M8 20v-6h8v6M9 9h.01M15 9h.01"/></svg>'
+};
+
+function recursosAcessibilidade(tags = {}) {
+  const campo = (...nomes) => nomes.map((nome) => tags[nome]).find((valor) => valor != null && valor !== "");
+  const estado = (...nomes) => estadoAcessibilidade(campo(...nomes));
+  const acessibilidade = {
+    entradaAcessivel: estado("entrance:wheelchair", "wheelchair"),
+    banheiroAcessivel: estado("toilets:wheelchair", "wheelchair:toilets"),
+    estacionamentoAcessivel: estado("parking:wheelchair"),
+    libras: estado("sign_language:pt-BR", "sign_language", "communication:sign_language"),
+    pisoTatil: estado("tactile_paving", "tactile_paving:floor"),
+    braille: estado("braille", "information:braille")
+  };
+  return acessibilidade;
+}
+
 function estadoAcessibilidade(valor) {
   if (valor === "yes" || valor === "designated") return "available";
   if (valor === "no") return "unavailable";
@@ -26,6 +62,7 @@ function estadoAcessibilidade(valor) {
 }
 
 function categoriaDoLocal(tags) {
+  if (tags.amenity === "fitness_centre" || tags.leisure === "fitness_centre" || tags.leisure === "sports_centre") return "Academia";
   if (tags.amenity === "university" || tags.amenity === "college" || tags.amenity === "school") return "Instituição de ensino";
   if (tags.amenity === "restaurant" || tags.amenity === "cafe" || tags.amenity === "fast_food") return "Restaurante";
   if (tags.amenity === "pharmacy") return "Farmácia";
@@ -35,16 +72,16 @@ function categoriaDoLocal(tags) {
   return tags.leisure ? "Espaço de lazer" : "Estabelecimento";
 }
 
-function iconeDoLocal(local) {
-  const icones = {
-    "Restaurante": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3v18M14 8h6M17 3c3 1 3 5 3 8"/></svg>',
-    "Farmácia": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
-    "Instituição de ensino": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5-9 5-9-5ZM6 11v5c3 3 9 3 12 0v-5M21 9v7"/></svg>',
-    "Espaço de lazer": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V10M7 21h10M5 10h14M7 10c0-3 2-5 5-5s5 2 5 5M9 10c-1-2-1-4 1-6M15 10c1-2 1-4-1-6"/></svg>',
-    "Estacionamento": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20V4h5a4 4 0 0 1 0 8H8M8 12h5"/></svg>',
-    "Loja": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1 10H5L4 10ZM6 10l2-5h8l2 5M9 20v-6h6v6"/></svg>'
+function chaveCategoriaLocal(local) {
+  const categorias = {
+    "Restaurante": "restaurante", "Farmácia": "farmacia", "Instituição de ensino": "ensino",
+    "Espaço de lazer": "lazer", "Estacionamento": "estacionamento", "Loja": "loja", "Banheiro": "banheiro", "Academia": "academia"
   };
-  return icones[local.categoria] || '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V8l8-4 8 4v12M8 20v-6h8v6M9 9h.01M15 9h.01"/></svg>';
+  return categorias[local.categoria] || "padrao";
+}
+
+function iconeDoLocal(local) {
+  return iconesEstabelecimentos[chaveCategoriaLocal(local)];
 }
 
 function localDoElemento(elemento) {
@@ -60,16 +97,7 @@ function localDoElemento(elemento) {
     endereco: [tags["addr:street"], tags["addr:housenumber"]].filter(Boolean).join(", ") || "Endereço não informado",
     latitude,
     longitude,
-    acessibilidade: {
-      cadeira: estadoAcessibilidade(tags.wheelchair),
-      visual: "unknown",
-      auditiva: "unknown",
-      banheiro: estadoAcessibilidade(tags["toilets:wheelchair"]),
-      entrada: estadoAcessibilidade(tags.wheelchair),
-      elevador: estadoAcessibilidade(tags.elevator),
-      tatil: estadoAcessibilidade(tags.tactile_paving),
-      estacionamento: estadoAcessibilidade(tags.amenity === "parking" ? tags.wheelchair : tags["parking:wheelchair"])
-    }
+    acessibilidade: recursosAcessibilidade(tags)
   };
 }
 
@@ -92,9 +120,10 @@ function pontoDaFeature(feature) {
 
 function localDoGeoJson(feature) {
   const tags = feature.properties || {};
-  const ponto = pontoDaFeature(feature);
-  if (!tags.name?.trim() || !ponto) return null;
+  if (!tags.name?.trim()) return null;
   if (!["amenity", "shop", "leisure", "healthcare", "tourism"].some((tag) => tags[tag])) return null;
+  const ponto = pontoDaFeature(feature);
+  if (!ponto) return null;
   return {
     id: `geojson-${tags.osm_id}`,
     nome: tags.name.trim(),
@@ -102,20 +131,56 @@ function localDoGeoJson(feature) {
     endereco: [tags.addr_street, tags.addr_housenumber].filter(Boolean).join(", ") || "Endereço não informado",
     latitude: ponto[0],
     longitude: ponto[1],
-    acessibilidade: null
+    acessibilidade: recursosAcessibilidade(tags)
   };
 }
 
 async function carregarLocaisGeoJson() {
-  const resposta = await fetch("data/UNICID_2.geojson");
-  const dados = await resposta.json();
-  locais = dados.features.map(localDoGeoJson).filter(Boolean);
+  estadoCarregamentoLocais = "carregando";
   filtrarLocais();
+  try {
+    const resposta = await fetch("data/locais.json");
+    if (!resposta.ok) throw new Error(`O arquivo de locais respondeu ${resposta.status}`);
+    const dados = await resposta.json();
+    locais = deduplicarLocais(dados.features.map(localDoGeoJson).filter(Boolean));
+    estadoCarregamentoLocais = "carregado";
+  } catch (erro) {
+    console.error("Não foi possível carregar o GeoJSON:", erro);
+    locais = [];
+    estadoCarregamentoLocais = "erro";
+  }
+  filtrarLocais();
+}
+
+// O GeoJSON mistura pontos, áreas e relações OSM do mesmo local.
+// Mantém uma única entrada quando nome, categoria e posição são praticamente iguais.
+function deduplicarLocais(itens) {
+  const resultado = [];
+  const ids = new Set();
+  for (const local of itens) {
+    const nome = local.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
+    const duplicado = resultado.some((existente) => {
+      if (existente.categoria !== local.categoria) return false;
+      const outroNome = existente.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
+      if (outroNome !== nome) return false;
+      // Praças e instituições podem vir duplicadas como way e relation OSM,
+      // com centroides diferentes para o mesmo espaço ou campus.
+      if (["Espaço de lazer", "Instituição de ensino"].includes(local.categoria)) return true;
+      const lat = (local.latitude - existente.latitude) * 111320;
+      const lng = (local.longitude - existente.longitude) * 111320 * Math.cos(local.latitude * Math.PI / 180);
+      return Math.hypot(lat, lng) < 45;
+    });
+    if (!duplicado && !ids.has(local.id)) {
+      resultado.push(local);
+      ids.add(local.id);
+    }
+  }
+  return resultado;
 }
 
 async function carregarLocaisOverpass() {
   const [latitude, longitude] = CENTRO_INICIAL;
-  const consulta = `[out:json][timeout:20];(nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][amenity~"university|college|school|restaurant|cafe|fast_food|pharmacy|parking|toilets"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][shop];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][leisure];);out center tags;`;
+  const consulta = `[out:json][timeout:20];(nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][amenity~"university|college|school|restaurant|cafe|fast_food|pharmacy|parking|toilets|fitness_centre"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][shop];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][leisure];);out center tags;`;
   try {
     const resposta = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(consulta)}`);
     if (!resposta.ok) throw new Error(`Overpass respondeu ${resposta.status}`);
@@ -129,7 +194,6 @@ async function carregarLocaisOverpass() {
   }
 }
 
-// Projeta qualquer centro fora do raio sobre a borda do círculo geográfico.
 function limitarCentro(latlng) {
   const distancia = mapa.distance(CENTRO_INICIAL, latlng);
   if (distancia <= RAIO_DESLOCAMENTO_METROS) return latlng;
@@ -156,13 +220,15 @@ function limitarCentro(latlng) {
   return L.latLng(latitudeLimitada / rad, longitudeLimitada / rad);
 }
 
+// Limita o centro a um raio de 100 m com operações simples em pixels durante o arrasto.
+// A correção geográfica mais cara acontece apenas ao terminar o gesto ou mudar o zoom.
 function configurarLimiteCircular() {
   const arraste = mapa.dragging._draggable;
   let posicaoBrutaAnterior;
   arraste.on("dragstart", () => {
     posicaoBrutaAnterior = arraste._startPos.clone();
   });
-  // Intercepta mouse e touch antes de o Leaflet mover o painel do mapa.
+  // Limita mouse e toque antes de o Leaflet mover o painel do mapa.
   arraste.on("predrag", () => {
     const posicaoBruta = arraste._newPos.clone();
     const deslocamento = posicaoBruta.subtract(posicaoBrutaAnterior || arraste._startPos);
@@ -175,16 +241,15 @@ function configurarLimiteCircular() {
   });
 
   let corrigindo = false;
-  const corrigirOutrosMovimentos = () => {
+  const corrigirCentro = () => {
     if (corrigindo) return;
-    const centroAtual = mapa.getCenter();
-    const centroLimitado = limitarCentro(centroAtual);
-    if (centroLimitado === centroAtual) return;
+    const centroLimitado = limitarCentro(mapa.getCenter());
+    if (mapa.distance(centroLimitado, mapa.getCenter()) < 0.01) return;
     corrigindo = true;
     mapa.setView(centroLimitado, mapa.getZoom(), { animate: false });
     corrigindo = false;
   };
-  mapa.on("moveend zoomend", corrigirOutrosMovimentos);
+  mapa.on("moveend zoomend", corrigirCentro);
 }
 
 function inicializarMapa() {
@@ -201,10 +266,21 @@ function inicializarMapa() {
     zoomInTitle: "Aproximar mapa",
     zoomOutTitle: "Afastar mapa"
   }).addTo(mapa);
-  camadaBase = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "© OpenStreetMap contributors"
+  // OpenFreeMap fornece o mapa-base com dados do OpenStreetMap sem usar os servidores de tiles da OSMF.
+  camadaBase = L.maplibreGL({
+    style: "https://tiles.openfreemap.org/styles/bright"
   }).addTo(mapa);
+  const glMap = camadaBase.getMaplibreMap();
+  const ocultarPois = () => {
+    if (!glMap.getStyle()) return;
+    glMap.getStyle().layers.forEach((layer) => {
+      if (layer["source-layer"] === "poi") {
+        glMap.setLayoutProperty(layer.id, "visibility", "none");
+      }
+    });
+  };
+  glMap.once("load", ocultarPois);
+  glMap.on("style.load", ocultarPois);
   // Indicador visual fixo no ponto inicial; não pertence à lista de estabelecimentos.
   L.marker(CENTRO_INICIAL, {
     icon: L.divIcon({ className: "icone-localizacao", html: '<span class="ponto-localizacao" aria-hidden="true"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),
@@ -220,65 +296,73 @@ function inicializarMapa() {
     document.querySelector(".campo-busca").getBoundingClientRect();
   };
   mapa.whenReady(() => requestAnimationFrame(atualizarLayoutMapa));
-  window.addEventListener("load", atualizarLayoutMapa, { once: true });
 }
 
 function recursosDoLocal(local) {
-  return Object.keys(nomesRecursos).filter((recurso) => local[recurso]);
+  return Object.keys(nomesRecursos).filter((recurso) => local.acessibilidade?.[recurso] === "available");
 }
 
 function conteudoPopup(local) {
   const acessibilidade = local.acessibilidade || {};
-  const svg = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg>';
-  const categorias = [
-    ["cadeira", "Cadeira de rodas"], ["visual", "Acessibilidade visual"],
-    ["auditiva", "Acessibilidade auditiva"], ["banheiro", "Banheiro acessível"],
-    ["entrada", "Entrada acessível"], ["elevador", "Elevador acessível"],
-    ["tatil", "Piso tátil"], ["estacionamento", "Estacionamento acessível"]
-  ];
   const status = { available: ["Disponível", "✓"], unavailable: ["Não disponível", "×"], unknown: ["Não informado", "?"] };
-  return `<article class="popup-estabelecimento"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><a href="#" class="endereco-estabelecimento">${local.endereco}</a><span class="distancia-estabelecimento">1.2 km</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações">×</button></div><div class="indicadores-resumo" role="group" aria-label="Indicadores de acessibilidade">${categorias.map(([chave, nome]) => `<span class="indicador estado-${acessibilidade[chave] || "unknown"}" title="${nome}: ${status[acessibilidade[chave]]?.[0] || status.unknown[0]}">${svg}</span>`).join("")}</div></article>`;
+  const indicadores = Object.entries(nomesRecursos).map(([chave, nome]) => {
+    const estado = acessibilidade[chave] || "unknown";
+    return `<span class="indicador estado-${estado}" role="img" aria-label="${nome}: ${status[estado]?.[0] || status.unknown[0]}" title="${nome}: ${status[estado]?.[0] || status.unknown[0]}"><img src="${iconesRecursos[chave]}" alt=""></span>`;
+  }).join("");
+  return `<article class="popup-estabelecimento"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${indicadores}</div></article>`;
 }
 
 // Remove os marcadores anteriores e cria apenas os que correspondem à busca atual.
 function criarMarcadores(locaisFiltrados) {
   camadaMarcadores.clearLayers();
   Object.keys(marcadores).forEach((id) => delete marcadores[id]);
+  const novosMarcadores = [];
 
   locaisFiltrados.forEach((local) => {
     const marcador = L.marker([local.latitude, local.longitude], {
-      icon: L.divIcon({ className: "pin-estabelecimento", html: `<span class="pin-estabelecimento-forma"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
+      title: local.nome,
+      alt: local.nome,
+      icon: L.divIcon({ className: "pin-estabelecimento", html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
     }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade" });
     marcador.on("popupopen", (evento) => {
       const popup = evento.popup.getElement();
       popup.querySelector(".fechar-estabelecimento").addEventListener("click", () => marcador.closePopup());
     });
-    marcador.addTo(camadaMarcadores);
+    novosMarcadores.push(marcador);
     marcadores[local.id] = marcador;
   });
+  novosMarcadores.forEach((marcador) => marcador.addTo(camadaMarcadores));
 }
 
 function resumoRecursos(local) {
-  const rotulos = { entradaAcessivel: "Entrada", banheiroAcessivel: "Banheiro", estacionamentoAcessivel: "Estacionamento", libras: "Libras", pisoTatil: "Piso tátil", braille: "Braille" };
-  return recursosDoLocal(local).slice(0, 3).map((recurso) => `<span class="recurso-tag">${rotulos[recurso]}</span>`).join("");
+  return recursosDoLocal(local).slice(0, 3).map((recurso) => `<span class="recurso-tag">${nomesRecursos[recurso]}</span>`).join("");
 }
 
 // Atualiza a lista lateral com os mesmos locais exibidos no mapa.
 function mostrarLocais(locaisFiltrados) {
   const lista = document.querySelector("#lista-locais");
   const contador = document.querySelector("#contador-resultados");
-  contador.textContent = `${locaisFiltrados.length} ${locaisFiltrados.length === 1 ? "local" : "locais"}`;
+  contador.textContent = estadoCarregamentoLocais === "carregando"
+    ? "Carregando…"
+    : `${locaisFiltrados.length} ${locaisFiltrados.length === 1 ? "local" : "locais"}`;
 
   if (!locaisFiltrados.length) {
-    lista.innerHTML = `<p class="estado-vazio">${locais.length ? "Nenhum local corresponde aos filtros escolhidos." : "Nenhum estabelecimento cadastrado ainda."}</p>`;
+    if (estadoCarregamentoLocais === "carregando") {
+      lista.innerHTML = '<p class="estado-vazio" role="status">Carregando locais…</p>';
+    } else if (estadoCarregamentoLocais === "erro") {
+      lista.innerHTML = '<div class="estado-vazio" role="status"><p>Não foi possível carregar os locais.</p><button class="tentar-novamente" type="button">Tentar novamente</button></div>';
+      lista.querySelector(".tentar-novamente").addEventListener("click", carregarLocaisGeoJson);
+    } else {
+      lista.innerHTML = `<p class="estado-vazio">${locais.length ? "Nenhum local corresponde aos filtros escolhidos." : "Nenhum local disponível nesta área."}</p>`;
+    }
     return;
   }
 
   lista.innerHTML = locaisFiltrados.map((local) => `
     <button class="local-item" type="button" data-id="${local.id}">
       <span class="local-nome">${local.nome}</span>
-      <span class="local-meta">${local.categoria}</span>
-      <span class="local-meta">${local.endereco}</span>
+      <span class="local-meta local-categoria">${local.categoria}</span>
+      <span class="local-meta local-endereco">${local.endereco}</span>
       <span class="recursos-resumo">${resumoRecursos(local)}</span>
     </button>
   `).join("");
@@ -296,7 +380,7 @@ function filtrarLocais() {
     const textoDoLocal = `${local.nome} ${local.categoria} ${local.endereco}`.toLocaleLowerCase("pt-BR");
     const correspondeBusca = !termo || textoDoLocal.includes(termo);
     const correspondeCategoria = categoriaAtual === "Todos" || local.categoria === categoriaAtual;
-    const possuiRecursos = recursosSelecionados.every((recurso) => local[recurso]);
+    const possuiRecursos = recursosSelecionados.every((recurso) => local.acessibilidade?.[recurso] === "available");
     return correspondeBusca && correspondeCategoria && possuiRecursos;
   });
 
@@ -308,17 +392,29 @@ function abrirLocal(id) {
   const local = locais.find((item) => item.id === id);
   const marcador = marcadores[id];
   if (!local || !marcador) return;
-  mapa.setView(limitarCentro(L.latLng(local.latitude, local.longitude)), 19, { animate: true });
+  mapa.setView([local.latitude, local.longitude], 19, { animate: false });
   marcador.openPopup();
 }
 
 function configurarEventos() {
+  document.querySelectorAll('input[name="tema-mapa"]').forEach((opcao) => {
+    opcao.addEventListener("change", () => {
+      if (opcao.checked) {
+        camadaBase.getMaplibreMap().setStyle(`https://tiles.openfreemap.org/styles/${opcao.value}`);
+        document.querySelector(".menu-temas").open = false;
+      }
+    });
+  });
   document.querySelector("#busca").addEventListener("input", filtrarLocais);
   document.querySelectorAll("[data-recurso]").forEach((campo) => campo.addEventListener("change", filtrarLocais));
   document.querySelectorAll(".botao-categoria").forEach((botao) => {
     botao.addEventListener("click", () => {
       categoriaAtual = botao.dataset.categoria;
-      document.querySelectorAll(".botao-categoria").forEach((item) => item.classList.toggle("ativo", item === botao));
+      document.querySelectorAll(".botao-categoria").forEach((item) => {
+        const ativo = item === botao;
+        item.classList.toggle("ativo", ativo);
+        item.setAttribute("aria-pressed", String(ativo));
+      });
       filtrarLocais();
     });
   });
@@ -327,5 +423,4 @@ function configurarEventos() {
 inicializarMapa();
 configurarEventos();
 filtrarLocais();
-carregarLocaisGeoJson().catch((erro) => console.error("Não foi possível carregar o GeoJSON:", erro));
-
+carregarLocaisGeoJson();
