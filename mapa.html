@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mapa demonstrativo de locais com recursos de acessibilidade em São Paulo.">
+  <title>Mapa | IncluiMais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+</head>
+<body class="map-page">
+  <a class="skip-link" href="#mapa">Pular para o mapa</a>
+  <header class="site-header"><div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">+</span>IncluiMais</a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">Menu</button><nav id="menu-principal" class="site-nav" aria-label="Menu principal"><a href="index.html">Início</a><a href="mapa.html" aria-current="page">Mapa</a><a href="acessibilidade.html">Acessibilidade</a><a href="cadastro_estabelecimento.html">Cadastrar local</a><a href="contato.html">Contato</a></nav></div></header>
+  <main class="aplicacao">
+    <aside class="sidebar" aria-label="Busca e filtros de acessibilidade">
+      <section class="controles" aria-label="Refinar resultados"><h1 class="map-title">Mapa de acessibilidade</h1><p class="map-intro">Encontre locais e recursos perto da UNICID.</p><fieldset class="grupo-filtros categorias"><legend>Categorias</legend><div class="lista-categorias" id="lista-categorias"><button class="botao-categoria ativo" type="button" data-categoria="Todos">Todos</button><button class="botao-categoria" type="button" data-categoria="Banheiro">Banheiros</button><button class="botao-categoria" type="button" data-categoria="Restaurante">Restaurantes</button><button class="botao-categoria" type="button" data-categoria="Loja">Lojas</button><button class="botao-categoria" type="button" data-categoria="Estacionamento">Estacionamentos</button><button class="botao-categoria" type="button" data-categoria="Farmácia">Farmácias</button><button class="botao-categoria" type="button" data-categoria="Instituição de ensino">Instituições de ensino</button><button class="botao-categoria" type="button" data-categoria="Espaço de lazer">Espaços de lazer</button></div></fieldset><fieldset class="grupo-filtros recursos"><legend>Recursos de acessibilidade</legend><label><input type="checkbox" data-recurso="entradaAcessivel"> Entrada acessível</label><label><input type="checkbox" data-recurso="banheiroAcessivel"> Banheiro acessível</label><label><input type="checkbox" data-recurso="estacionamentoAcessivel"> Estacionamento acessível</label><label><input type="checkbox" data-recurso="libras"> Atendimento em Libras</label><label><input type="checkbox" data-recurso="pisoTatil"> Piso tátil</label><label><input type="checkbox" data-recurso="braille"> Material em braille</label></fieldset></section>
+      <section class="resultados" aria-live="polite" aria-label="Estabelecimentos encontrados"><div class="titulo-resultados"><h2>Locais encontrados</h2><span id="contador-resultados">0 locais</span></div><div id="lista-locais" class="lista-locais"></div></section>
+    </aside>
+    <section class="area-mapa" aria-label="Mapa de locais com acessibilidade em São Paulo"><div id="mapa"></div><div class="campo-busca"><label class="visualmente-oculto" for="busca">Buscar estabelecimento</label><span class="icone-busca" aria-hidden="true"></span><input id="busca" type="search" placeholder="Buscar estabelecimento..." autocomplete="off"></div><div class="creditos-mapa">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></div></section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="js/script.js"></script><script src="js/site.js"></script>
+</body>
+</html>

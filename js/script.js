@@ -201,21 +201,10 @@ function inicializarMapa() {
     zoomInTitle: "Aproximar mapa",
     zoomOutTitle: "Afastar mapa"
   }).addTo(mapa);
-  // OpenFreeMap fornece o mapa-base com dados do OpenStreetMap sem usar os servidores de tiles da OSMF.
-  camadaBase = L.maplibreGL({
-    style: "https://tiles.openfreemap.org/styles/bright"
+  camadaBase = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap contributors"
   }).addTo(mapa);
-  const glMap = camadaBase.getMaplibreMap();
-  const ocultarPois = () => {
-    if (!glMap.getStyle()) return;
-    glMap.getStyle().layers.forEach((layer) => {
-      if (layer["source-layer"] === "poi") {
-        glMap.setLayoutProperty(layer.id, "visibility", "none");
-      }
-    });
-  };
-  glMap.once("load", ocultarPois);
-  glMap.on("style.load", ocultarPois);
   // Indicador visual fixo no ponto inicial; não pertence à lista de estabelecimentos.
   L.marker(CENTRO_INICIAL, {
     icon: L.divIcon({ className: "icone-localizacao", html: '<span class="ponto-localizacao" aria-hidden="true"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),
@@ -324,14 +313,6 @@ function abrirLocal(id) {
 }
 
 function configurarEventos() {
-  document.querySelectorAll('input[name="tema-mapa"]').forEach((opcao) => {
-    opcao.addEventListener("change", () => {
-      if (opcao.checked) {
-        camadaBase.getMaplibreMap().setStyle(`https://tiles.openfreemap.org/styles/${opcao.value}`);
-        document.querySelector(".menu-temas").open = false;
-      }
-    });
-  });
   document.querySelector("#busca").addEventListener("input", filtrarLocais);
   document.querySelectorAll("[data-recurso]").forEach((campo) => campo.addEventListener("change", filtrarLocais));
   document.querySelectorAll(".botao-categoria").forEach((botao) => {

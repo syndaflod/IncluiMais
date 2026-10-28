@@ -1,7 +1,7 @@
 :root {
-  --azul: #116eee;
-  --azul-escuro: #3b1e90;
-  --laranja: #11ee92;
+  --azul: #0b9d68;
+  --azul-escuro: #075c43;
+  --laranja: #b9f4d7;
   --texto: #252b2f;
   --texto-suave: #666e7e;
   --linha: #d6dee6;
@@ -22,7 +22,8 @@ body {
 button, input { font: inherit; }
 button { cursor: pointer; }
 
-.aplicacao { display: flex; height: 100dvh; overflow: hidden; }
+.map-page { overflow: hidden; }
+.aplicacao { display: flex; height: calc(100dvh - 76px); overflow: hidden; }
 
 .sidebar {
   width: 350px;
@@ -41,6 +42,8 @@ h1 { margin: 0; font-size: 24px; line-height: 1.3; font-weight: 800; }
 .cabecalho-sidebar > p:not(.marca) { margin: 8px 0 0; color: var(--texto-suave); font-size: 14px; line-height: 1.4; }
 
 .controles { padding: 20px; overflow-y: auto; border-bottom: 1px solid var(--linha); }
+.map-title { margin: 0; color: var(--azul-escuro); font-size: 21px; line-height: 1.2; letter-spacing: -.02em; }
+.map-intro { margin: 6px 0 20px; color: var(--texto-suave); font-size: 12px; line-height: 1.4; }
 .visualmente-oculto { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .campo-busca { position: absolute; top: 20px; left: 50%; z-index: 1000; display: flex; align-items: center; width: clamp(420px, 48vw, 500px); height: 52px; padding: 0 18px; transform: translate3d(-50%, 0, 0); will-change: transform; background: #fff; border: 1px solid var(--linha); border-radius: 9999px; box-shadow: var(--sombra); transition: width .2s ease, box-shadow .2s ease, border-color .2s ease; }
 .campo-busca:focus-within { width: clamp(420px, 48vw, 500px); border-color: var(--linha); box-shadow: var(--sombra); }
@@ -155,7 +158,7 @@ h1 { margin: 0; font-size: 24px; line-height: 1.3; font-weight: 800; }
 }
 
 @media (max-width: 760px) {
-  .aplicacao { display: flex; flex-direction: column; height: auto; min-height: 100dvh; overflow: visible; }
+  .aplicacao { display: flex; flex-direction: column; height: auto; min-height: calc(100dvh - 76px); overflow: visible; }
   .area-mapa { order: -1; flex: none; height: 58dvh; min-height: 380px; }
   .campo-busca, .campo-busca:focus-within { width: calc(100% - 108px); }
   .sidebar { width: 100%; min-width: 0; height: auto; max-height: none; border-right: 0; }
