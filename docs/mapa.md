@@ -10,7 +10,6 @@ index.html
 ├── acessibilidade.html
 ├── impacto.html
 ├── cadastro_estabelecimento.html
-├── midia.html
 ├── noticias.html
 ├── contato.html
 └── orcamento_hospedagem.html
