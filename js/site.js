@@ -1,4 +1,71 @@
 (() => {
+  const configurarIdentidade = () => {
+    if (!document.body.classList.contains("map-page")) {
+      const favicon = document.querySelector('link[rel="icon"]');
+      if (!favicon) {
+        const novoFavicon = document.createElement("link");
+        novoFavicon.rel = "icon";
+        novoFavicon.type = "image/svg+xml";
+        novoFavicon.href = "assets/icon.svg";
+        document.head.appendChild(novoFavicon);
+      }
+    }
+
+    document.querySelectorAll(".brand, .site-logo").forEach((brand) => {
+      brand.className = "site-logo";
+      brand.setAttribute("aria-label", "IncluiMais, página inicial");
+      brand.innerHTML = '<img src="assets/icon.svg" alt=""><span>IncluiMais</span>';
+    });
+
+    document.querySelectorAll(".site-footer .footer-shell").forEach((footer) => {
+      const brandText = footer.querySelector(":scope > p:first-child");
+      if (!brandText || footer.querySelector(".footer-brand")) return;
+      const brand = document.createElement("div");
+      brand.className = "footer-brand";
+      brand.innerHTML = '<img src="assets/logo-footer.svg" alt=""><p>Informação para uma cidade mais acessível.</p>';
+      brandText.replaceWith(brand);
+    });
+  };
+
+  configurarIdentidade();
+
+  const configurarMovimento = () => {
+    const hero = document.querySelector(".hero");
+    const heroHeading = hero?.querySelector("h1");
+    const heroParagraph = hero?.querySelector("p");
+    const heroActions = hero?.querySelector(".hero-actions");
+    const heroArt = hero?.querySelector(".hero-art");
+
+    [heroHeading, heroParagraph, heroActions, heroArt].filter(Boolean).forEach((elemento) => {
+      elemento.classList.add("motion-reveal");
+    });
+    if (heroHeading) heroHeading.style.setProperty("--motion-delay", "60ms");
+    if (heroParagraph) heroParagraph.style.setProperty("--motion-delay", "130ms");
+    if (heroActions) heroActions.style.setProperty("--motion-delay", "200ms");
+
+    document.querySelectorAll(".section-heading, .page-heading, .content > h2, .content > h3, .content > p, .content > ul, .content > table, .surface, .form > .field, .form > .button").forEach((elemento, indice) => {
+      elemento.classList.add("motion-reveal");
+      elemento.style.setProperty("--motion-delay", `${Math.min(indice * 35, 175)}ms`);
+    });
+
+    document.body.classList.add("motion-ready");
+    const elementos = document.querySelectorAll(".motion-reveal");
+    if (!("IntersectionObserver" in window)) {
+      elementos.forEach((elemento) => elemento.classList.add("is-visible"));
+      return;
+    }
+    const observador = new IntersectionObserver((entradas, observer) => {
+      entradas.forEach((entrada) => {
+        if (!entrada.isIntersecting) return;
+        entrada.target.classList.add("is-visible");
+        observer.unobserve(entrada.target);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+    elementos.forEach((elemento) => observador.observe(elemento));
+  };
+
+  configurarMovimento();
+
   if (!document.querySelector("[vw]")) {
     document.body.insertAdjacentHTML("beforeend", '<div vw class="enabled"><div vw-access-button class="active"></div><div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>');
     const vlibrasScript = document.createElement("script");
