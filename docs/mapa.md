@@ -11,6 +11,7 @@ index.html
 ├── impacto.html
 ├── cadastro_estabelecimento.html
 ├── noticias.html
+├── midia.html
 ├── contato.html
 └── orcamento_hospedagem.html
 ```

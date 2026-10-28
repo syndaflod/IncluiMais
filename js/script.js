@@ -1,3 +1,5 @@
+import { CATEGORIAS, iconeCategoria } from "../assets/categorias.js?v=transport-icons-20261028";
+
 const CENTRO_INICIAL = [-23.53598, -46.55948];
 const RAIO_DESLOCAMENTO_METROS = 100;
 const RAIO_TERRA_METROS = 6371000;
@@ -8,8 +10,29 @@ const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 let mapa;
 let camadaBase;
 let camadaMarcadores;
-let categoriaAtual = "Todos";
+const categoriasAtivas = new Set();
+let categoriasRascunho = new Set();
+let painelCategoriasModal = false;
+let restaurarFocoCategorias = false;
 const marcadores = {};
+
+const idsPorCategoriaLocal = {
+  "Banheiro": "banheiros", "Restaurante": "restaurantes", "Loja": "lojas", "Estacionamento": "estacionamentos",
+  "Farmácia": "farmacias", "Academia": "academias", "Instituição de ensino": "ensino", "Espaço de lazer": "lazer",
+  "Creche": "creche", "Posto de gasolina": "posto", "Metrô": "metro", "Ônibus": "onibus", "Bicicletário": "bicicletario",
+  "Corpo de Bombeiros": "bombeiros", "Igreja": "igreja", "Polícia": "policia", "Lava-jato": "lavajato",
+  "Dentista": "dentista", "Tatuagem": "tatuagem", "Banco": "banco", "Táxi": "taxi", "Hospital": "hospital"
+};
+
+const gruposCategorias = [
+  { nome: "Banheiros", ids: ["banheiros"] },
+  { nome: "Comer e comprar", ids: ["restaurantes", "lojas", "posto"] },
+  { nome: "Saúde", ids: ["hospital", "farmacias", "dentista"] },
+  { nome: "Transporte", ids: ["estacionamentos", "metro", "onibus", "bicicletario", "taxi"] },
+  { nome: "Serviços", ids: ["banco", "policia", "bombeiros", "lavajato"] },
+  { nome: "Educação e comunidade", ids: ["ensino", "creche", "igreja"] },
+  { nome: "Lazer e bem-estar", ids: ["lazer", "academias", "tatuagem"] }
+];
 
 const nomesRecursos = {
   entradaAcessivel: "Entrada acessível",
@@ -30,15 +53,53 @@ const iconesRecursos = {
 };
 
 const iconesEstabelecimentos = {
-  restaurante: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v7M4.5 3v4.5a2.5 2.5 0 0 0 5 0V3M7 10v11M17 3v18M14.5 8h5M17 3c2.5 1.6 2.5 4.4 2.5 7"/></svg>',
-  farmacia: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 0 0-7-7l-10 10a4.95 4.95 0 0 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>',
-  ensino: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5-9 5-9-5ZM6 11v5c3.5 3 8.5 3 12 0v-5M21 9v7"/></svg>',
-  lazer: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a4 4 0 0 0-3.7 5.5A3.5 3.5 0 0 0 9 16h6a3.5 3.5 0 0 0 .7-7A4 4 0 0 0 12 3.5ZM12 16v5M9 21h6"/></svg>',
-  estacionamento: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 20V4h6a4 4 0 0 1 0 8H7M7 12h6"/></svg>',
-  loja: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2 10H5.2L4 10ZM6 10l2-5h8l2 5M9 20v-6h6v6"/></svg>',
-  banheiro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 4v5h8V4M8 13h8M8 16h5"/></svg>',
-  academia: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>',
-  padrao: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V7l8-4 8 4v13M8 20v-6h8v6M9 9h.01M15 9h.01"/></svg>'
+  restaurante: "assets/icons/restaurante.svg#icon",
+  farmacia: "assets/icons/farmacia.svg#icon",
+  ensino: "assets/icons/instituicao-ensino.svg#icon",
+  lazer: "assets/icons/espaco-lazer.svg#icon",
+  estacionamento: "assets/icons/estacionamento.svg#icon",
+  loja: "assets/icons/loja.svg#icon",
+  banheiro: "assets/icons/banheiro.svg#icon",
+  academia: "assets/icons/academia.svg#icon",
+  creche: "assets/icons/creche.svg#icon",
+  posto: "assets/icons/posto.svg#icon",
+  metro: "assets/icons/metro.svg#icon",
+  onibus: "assets/onibus.svg",
+  bicicletario: "assets/icons/bicicletario.svg#icon",
+  bombeiros: "assets/icons/bombeiros.svg#icon",
+  igreja: "assets/icons/igreja.svg#icon",
+  policia: "assets/icons/policia.svg#icon",
+  lavajato: "assets/icons/lavajato.svg#icon",
+  dentista: "assets/icons/dentista.svg#icon",
+  tatuagem: "assets/icons/tatuagem.svg#icon",
+  banco: "assets/icons/banco.svg#icon",
+  taxi: "assets/icons/taxi.svg#icon",
+  hospital: "assets/icons/hospital.svg#icon"
+};
+
+const coresCategorias = {
+  restaurante: "#E65100",
+  farmacia: "#C62828",
+  ensino: "#3949AB",
+  lazer: "#2E7D32",
+  estacionamento: "#455A64",
+  loja: "#6A1B9A",
+  banheiro: "#0277BD",
+  academia: "#00838F",
+  creche: "#E91E63",
+  posto: "#795548",
+  metro: "#212121",
+  onibus: "#1565C0",
+  bicicletario: "#827717",
+  bombeiros: "#BF360C",
+  igreja: "#A66F00",
+  policia: "#14325C",
+  lavajato: "#0097A7",
+  dentista: "#5E35B1",
+  tatuagem: "#880E4F",
+  banco: "#558B2F",
+  taxi: "#F9A825",
+  hospital: "#00796B"
 };
 
 function recursosAcessibilidade(tags = {}) {
@@ -62,6 +123,22 @@ function estadoAcessibilidade(valor) {
 }
 
 function categoriaDoLocal(tags) {
+  if (tags.railway === "subway_entrance" || tags.station === "subway" || tags.amenity === "subway" ||
+      /metr[oô]/i.test(tags.name || "") && (tags.railway === "station" || tags.amenity === "bus_station" || tags.public_transport === "station")) return "Metrô";
+  if (/terminal urbano carr[aã]o/i.test(tags.name || "")) return "Ônibus";
+  if (tags.amenity === "bus_station" || tags.highway === "bus_stop" || (tags.public_transport === "platform" && tags.bus === "yes")) return "Ônibus";
+  if (tags.amenity === "kindergarten" || tags.amenity === "childcare" || tags.amenity === "nursery") return "Creche";
+  if (tags.amenity === "fuel") return "Posto de gasolina";
+  if (tags.amenity === "bicycle_parking") return "Bicicletário";
+  if (tags.amenity === "fire_station") return "Corpo de Bombeiros";
+  if (tags.amenity === "place_of_worship") return "Igreja";
+  if (tags.amenity === "police") return "Polícia";
+  if (tags.amenity === "car_wash") return "Lava-jato";
+  if (tags.amenity === "dentist" || tags.healthcare === "dentist") return "Dentista";
+  if (tags.shop === "tattoo") return "Tatuagem";
+  if (tags.amenity === "bank") return "Banco";
+  if (tags.amenity === "taxi") return "Táxi";
+  if (tags.amenity === "hospital" || tags.healthcare === "hospital") return "Hospital";
   if (tags.amenity === "fitness_centre" || tags.leisure === "fitness_centre" || tags.leisure === "sports_centre") return "Academia";
   if (tags.amenity === "university" || tags.amenity === "college" || tags.amenity === "school") return "Instituição de ensino";
   if (tags.amenity === "restaurant" || tags.amenity === "cafe" || tags.amenity === "fast_food") return "Restaurante";
@@ -75,13 +152,153 @@ function categoriaDoLocal(tags) {
 function chaveCategoriaLocal(local) {
   const categorias = {
     "Restaurante": "restaurante", "Farmácia": "farmacia", "Instituição de ensino": "ensino",
-    "Espaço de lazer": "lazer", "Estacionamento": "estacionamento", "Loja": "loja", "Banheiro": "banheiro", "Academia": "academia"
+    "Espaço de lazer": "lazer", "Estacionamento": "estacionamento", "Loja": "loja", "Banheiro": "banheiro", "Academia": "academia",
+    "Creche": "creche", "Posto de gasolina": "posto", "Metrô": "metro", "Ônibus": "onibus", "Bicicletário": "bicicletario",
+    "Corpo de Bombeiros": "bombeiros", "Igreja": "igreja", "Polícia": "policia", "Lava-jato": "lavajato",
+    "Dentista": "dentista", "Tatuagem": "tatuagem", "Banco": "banco", "Táxi": "taxi", "Hospital": "hospital"
   };
   return categorias[local.categoria] || "padrao";
 }
 
 function iconeDoLocal(local) {
-  return iconesEstabelecimentos[chaveCategoriaLocal(local)];
+  if (chaveCategoriaLocal(local) === "onibus") {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M18 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M4 17h-2v-11a1 1 0 0 1 1 -1h14a5 7 0 0 1 5 7v5h-2m-4 0h-8"/><path d="M16 5l1.5 7l4.5 0"/><path d="M2 10l15 0"/><path d="M7 5l0 5"/><path d="M12 5l0 5"/></svg>';
+  }
+  const icone = iconesEstabelecimentos[chaveCategoriaLocal(local)];
+  return icone
+    ? `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="${icone}"></use></svg>`
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V7l8-4 8 4v13M8 20v-6h8v6M9 9h.01M15 9h.01"/></svg>';
+}
+
+function corDaCategoria(local) {
+  return coresCategorias[chaveCategoriaLocal(local)] || "#455A64";
+}
+
+function idDaCategoriaLocal(local) {
+  return idsPorCategoriaLocal[local.categoria] || "";
+}
+
+function atualizarCategoriasAtivas() {
+  const botaoBanheiros = document.querySelector("#filtro-banheiros");
+  const contagem = document.querySelector("#contador-categorias-ativas");
+  const chips = document.querySelector("#categorias-ativas");
+  const banheirosAtivos = categoriasAtivas.has("banheiros");
+  botaoBanheiros.classList.toggle("ativo", banheirosAtivos);
+  botaoBanheiros.setAttribute("aria-pressed", String(banheirosAtivos));
+  botaoBanheiros.setAttribute("aria-label", `${banheirosAtivos ? "Remover filtro" : "Filtrar"} Banheiros`);
+  botaoBanheiros.querySelector(".chip-remover").hidden = !banheirosAtivos;
+  contagem.textContent = String(categoriasAtivas.size);
+
+  const idsVisiveis = [...categoriasAtivas].filter((id) => id !== "banheiros");
+  chips.innerHTML = idsVisiveis.map((id) => {
+    const categoria = CATEGORIAS[id];
+    return `<button class="chip-categoria chip-ativo" type="button" data-remover-categoria="${id}" aria-label="Remover filtro ${categoria.rotulo}"><span>${categoria.rotulo}</span><span class="chip-remover" aria-hidden="true">×</span></button>`;
+  }).join("");
+  chips.hidden = idsVisiveis.length === 0;
+}
+
+function atualizarEstadoDosGrupos() {
+  document.querySelectorAll("[data-marcar-grupo]").forEach((botao) => {
+    const checks = [...botao.closest("fieldset").querySelectorAll("input[data-categoria-id]")];
+    const todosMarcados = checks.length > 0 && checks.every((check) => categoriasRascunho.has(check.dataset.categoriaId));
+    botao.textContent = todosMarcados ? "Desmarcar todos" : "Marcar todos";
+    botao.setAttribute("aria-pressed", String(todosMarcados));
+  });
+}
+
+function renderizarPainelCategorias() {
+  const contagens = Object.fromEntries(Object.keys(CATEGORIAS).map((id) => [id, 0]));
+  locais.forEach((local) => {
+    const id = idDaCategoriaLocal(local);
+    if (id in contagens) contagens[id] += 1;
+  });
+
+  const grupos = gruposCategorias.map((grupo) => {
+    const itens = grupo.ids.filter((id) => contagens[id] > 0);
+    if (!itens.length) return "";
+    const opcoes = itens.map((id) => {
+      const categoria = CATEGORIAS[id];
+      const quantidade = contagens[id];
+      return `<label class="opcao-categoria" style="--categoria-cor:${categoria.cor}"><input type="checkbox" name="categorias" value="${id}" data-categoria-id="${id}"${categoriasRascunho.has(id) ? " checked" : ""}><span class="opcao-categoria-icone">${iconeCategoria(id, { tamanho: 19 })}</span><span class="opcao-categoria-nome">${categoria.rotulo}</span><span class="opcao-categoria-contagem"><span aria-hidden="true">${quantidade}</span><span class="visualmente-oculto">${quantidade} ${quantidade === 1 ? "local" : "locais"}</span></span></label>`;
+    }).join("");
+    return `<fieldset class="grupo-categorias-painel"><legend>${grupo.nome}</legend><button class="marcar-grupo" type="button" data-marcar-grupo aria-pressed="false">Marcar todos</button><div class="opcoes-categoria">${opcoes}</div></fieldset>`;
+  }).join("");
+
+  document.querySelector("#painel-categorias-grupos").innerHTML = grupos || `<p class="estado-categorias-vazio">${estadoCarregamentoLocais === "carregando" ? "Carregando categorias…" : "Nenhuma categoria disponível."}</p>`;
+  atualizarEstadoDosGrupos();
+  requestAnimationFrame(atualizarIndicadorScrollCategorias);
+}
+
+function atualizarIndicadorScrollCategorias() {
+  const lista = document.querySelector("#painel-categorias-lista");
+  const conteudo = document.querySelector("#painel-categorias-grupos");
+  const temMais = conteudo.scrollHeight > conteudo.clientHeight + 1 &&
+    conteudo.scrollTop + conteudo.clientHeight < conteudo.scrollHeight - 1;
+  lista.dataset.temMais = String(temMais);
+}
+
+function sincronizarRascunhoCategorias() {
+  categoriasRascunho = new Set(categoriasAtivas);
+  document.querySelectorAll("input[data-categoria-id]").forEach((check) => {
+    check.checked = categoriasRascunho.has(check.dataset.categoriaId);
+  });
+  atualizarEstadoDosGrupos();
+}
+
+function posicionarPainelCategorias() {
+  if (painelCategoriasModal) return;
+  const gatilho = document.querySelector("#abrir-categorias");
+  const painel = document.querySelector("#painel-categorias");
+  const caixa = gatilho.getBoundingClientRect();
+  const rtl = getComputedStyle(gatilho).direction === "rtl";
+  const inicioInline = rtl ? window.innerWidth - caixa.right : caixa.left;
+  const largura = painel.getBoundingClientRect().width;
+  const inicioLimitado = Math.max(16, Math.min(inicioInline, window.innerWidth - largura - 16));
+  const altura = painel.getBoundingClientRect().height;
+  const topoMaximo = Math.max(16, window.innerHeight - altura - 16);
+  painel.style.insetBlockStart = `${Math.min(caixa.bottom + 8, topoMaximo)}px`;
+  painel.style.insetInlineStart = `${inicioLimitado}px`;
+}
+
+function abrirPainelCategorias(reiniciarRascunho = true, focarTitulo = true) {
+  const painel = document.querySelector("#painel-categorias");
+  if (painel.open) return;
+  if (reiniciarRascunho) sincronizarRascunhoCategorias();
+  painelCategoriasModal = window.matchMedia("(max-width: 639px)").matches;
+  if (painelCategoriasModal) {
+    painel.showModal();
+  } else {
+    painel.show();
+    posicionarPainelCategorias();
+  }
+  document.querySelector("#abrir-categorias").setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => {
+    atualizarIndicadorScrollCategorias();
+    if (focarTitulo) document.querySelector("#titulo-painel-categorias").focus();
+  });
+}
+
+function fecharPainelCategorias(restaurarFoco = true) {
+  const painel = document.querySelector("#painel-categorias");
+  if (!painel.open) return;
+  restaurarFocoCategorias = restaurarFoco;
+  painel.close();
+}
+
+function alternarCategoria(id) {
+  if (categoriasAtivas.has(id)) categoriasAtivas.delete(id);
+  else categoriasAtivas.add(id);
+  categoriasRascunho = new Set(categoriasAtivas);
+  atualizarCategoriasAtivas();
+  sincronizarChecksDoPainel();
+  filtrarLocais();
+}
+
+function sincronizarChecksDoPainel() {
+  document.querySelectorAll("input[data-categoria-id]").forEach((check) => {
+    check.checked = categoriasRascunho.has(check.dataset.categoriaId);
+  });
+  atualizarEstadoDosGrupos();
 }
 
 function localDoElemento(elemento) {
@@ -121,7 +338,7 @@ function pontoDaFeature(feature) {
 function localDoGeoJson(feature) {
   const tags = feature.properties || {};
   if (!tags.name?.trim()) return null;
-  if (!["amenity", "shop", "leisure", "healthcare", "tourism"].some((tag) => tags[tag])) return null;
+  if (!["amenity", "shop", "leisure", "healthcare", "tourism", "railway", "station", "public_transport", "highway"].some((tag) => tags[tag])) return null;
   const ponto = pontoDaFeature(feature);
   if (!ponto) return null;
   return {
@@ -149,6 +366,7 @@ async function carregarLocaisGeoJson() {
     locais = [];
     estadoCarregamentoLocais = "erro";
   }
+  renderizarPainelCategorias();
   filtrarLocais();
 }
 
@@ -180,16 +398,18 @@ function deduplicarLocais(itens) {
 
 async function carregarLocaisOverpass() {
   const [latitude, longitude] = CENTRO_INICIAL;
-  const consulta = `[out:json][timeout:20];(nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][amenity~"university|college|school|restaurant|cafe|fast_food|pharmacy|parking|toilets|fitness_centre"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][shop];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][leisure];);out center tags;`;
+  const consulta = `[out:json][timeout:20];(nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][amenity~"university|college|school|restaurant|cafe|fast_food|pharmacy|parking|toilets|fitness_centre|kindergarten|childcare|nursery|fuel|subway|bicycle_parking|fire_station|place_of_worship|police|car_wash|dentist|bank|taxi|hospital|bus_station"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][shop];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][leisure];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][railway~"station|subway_entrance"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][public_transport=station];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][station=subway];);out center tags;`;
   try {
     const resposta = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(consulta)}`);
     if (!resposta.ok) throw new Error(`Overpass respondeu ${resposta.status}`);
     const dados = await resposta.json();
     locais = dados.elements.map(localDoElemento).filter(Boolean);
+    renderizarPainelCategorias();
     filtrarLocais();
   } catch (erro) {
     console.error("Não foi possível carregar estabelecimentos do OpenStreetMap:", erro);
     locais = [];
+    renderizarPainelCategorias();
     filtrarLocais();
   }
 }
@@ -220,7 +440,7 @@ function limitarCentro(latlng) {
   return L.latLng(latitudeLimitada / rad, longitudeLimitada / rad);
 }
 
-// Limita o centro a um raio de 100 m com operações simples em pixels durante o arrasto.
+// Limita o centro a um raio de 750 m com operações simples em pixels durante o arrasto.
 // A correção geográfica mais cara acontece apenas ao terminar o gesto ou mudar o zoom.
 function configurarLimiteCircular() {
   const arraste = mapa.dragging._draggable;
@@ -309,7 +529,7 @@ function conteudoPopup(local) {
     const estado = acessibilidade[chave] || "unknown";
     return `<span class="indicador estado-${estado}" role="img" aria-label="${nome}: ${status[estado]?.[0] || status.unknown[0]}" title="${nome}: ${status[estado]?.[0] || status.unknown[0]}"><img src="${iconesRecursos[chave]}" alt=""></span>`;
   }).join("");
-  return `<article class="popup-estabelecimento"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${indicadores}</div></article>`;
+  return `<article class="popup-estabelecimento"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${indicadores}</div></article>`;
 }
 
 // Remove os marcadores anteriores e cria apenas os que correspondem à busca atual.
@@ -322,7 +542,7 @@ function criarMarcadores(locaisFiltrados) {
     const marcador = L.marker([local.latitude, local.longitude], {
       title: local.nome,
       alt: local.nome,
-      icon: L.divIcon({ className: "pin-estabelecimento", html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
+      icon: L.divIcon({ className: "pin-estabelecimento", html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
     }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade" });
     marcador.on("popupopen", (evento) => {
       const popup = evento.popup.getElement();
@@ -379,13 +599,24 @@ function filtrarLocais() {
   const locaisFiltrados = locais.filter((local) => {
     const textoDoLocal = `${local.nome} ${local.categoria} ${local.endereco}`.toLocaleLowerCase("pt-BR");
     const correspondeBusca = !termo || textoDoLocal.includes(termo);
-    const correspondeCategoria = categoriaAtual === "Todos" || local.categoria === categoriaAtual;
+    const idCategoria = idDaCategoriaLocal(local);
+    const correspondeCategoria = categoriasAtivas.size === 0 || categoriasAtivas.has(idCategoria);
     const possuiRecursos = recursosSelecionados.every((recurso) => local.acessibilidade?.[recurso] === "available");
     return correspondeBusca && correspondeCategoria && possuiRecursos;
   });
 
   criarMarcadores(locaisFiltrados);
   mostrarLocais(locaisFiltrados);
+  return locaisFiltrados;
+}
+
+function centralizarNosTerminaisOnibus() {
+  const terminais = locais.filter((local) => idDaCategoriaLocal(local) === "onibus");
+  if (!terminais.length) return;
+  const latitude = terminais.reduce((soma, local) => soma + local.latitude, 0) / terminais.length;
+  const longitude = terminais.reduce((soma, local) => soma + local.longitude, 0) / terminais.length;
+  // Reposiciona a vista para os terminais sem mudar o zoom escolhido pelo usuário.
+  mapa.setView([latitude, longitude], mapa.getZoom(), { animate: false });
 }
 
 function abrirLocal(id) {
@@ -407,17 +638,100 @@ function configurarEventos() {
   });
   document.querySelector("#busca").addEventListener("input", filtrarLocais);
   document.querySelectorAll("[data-recurso]").forEach((campo) => campo.addEventListener("change", filtrarLocais));
-  document.querySelectorAll(".botao-categoria").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      categoriaAtual = botao.dataset.categoria;
-      document.querySelectorAll(".botao-categoria").forEach((item) => {
-        const ativo = item === botao;
-        item.classList.toggle("ativo", ativo);
-        item.setAttribute("aria-pressed", String(ativo));
-      });
-      filtrarLocais();
+  const gatilhoCategorias = document.querySelector("#abrir-categorias");
+  const painelCategorias = document.querySelector("#painel-categorias");
+  const gatilhoBanheiros = document.querySelector("#filtro-banheiros");
+
+  gatilhoCategorias.addEventListener("click", () => {
+    if (painelCategorias.open) fecharPainelCategorias();
+    else abrirPainelCategorias();
+  });
+  document.querySelector("#fechar-painel-categorias").addEventListener("click", () => fecharPainelCategorias());
+  painelCategorias.addEventListener("cancel", () => { restaurarFocoCategorias = true; });
+  painelCategorias.addEventListener("close", () => {
+    if (painelCategorias.open) return;
+    gatilhoCategorias.setAttribute("aria-expanded", "false");
+    const deveRestaurarFoco = restaurarFocoCategorias;
+    restaurarFocoCategorias = false;
+    if (deveRestaurarFoco) requestAnimationFrame(() => gatilhoCategorias.focus());
+  });
+  painelCategorias.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape" && !painelCategoriasModal) {
+      evento.preventDefault();
+      fecharPainelCategorias();
+    }
+  });
+  document.addEventListener("pointerdown", (evento) => {
+    if (!painelCategorias.open || painelCategoriasModal || painelCategorias.contains(evento.target) || gatilhoCategorias.contains(evento.target)) return;
+    fecharPainelCategorias(false);
+  });
+  window.addEventListener("resize", () => {
+    if (painelCategorias.open && !painelCategoriasModal) posicionarPainelCategorias();
+    atualizarIndicadorScrollCategorias();
+  });
+  document.querySelector("#painel-categorias-grupos").addEventListener("scroll", atualizarIndicadorScrollCategorias, { passive: true });
+  const larguraCelular = window.matchMedia("(max-width: 639px)");
+  larguraCelular.addEventListener("change", () => {
+    if (!painelCategorias.open || painelCategoriasModal === larguraCelular.matches) return;
+    const focoAnterior = document.activeElement;
+    fecharPainelCategorias(false);
+    abrirPainelCategorias(false, false);
+    requestAnimationFrame(() => {
+      if (focoAnterior && painelCategorias.contains(focoAnterior)) focoAnterior.focus();
+      else document.querySelector("#titulo-painel-categorias").focus();
     });
   });
+
+  gatilhoBanheiros.addEventListener("click", () => alternarCategoria("banheiros"));
+  document.querySelector("#categorias-ativas").addEventListener("click", (evento) => {
+    const botao = evento.target.closest("[data-remover-categoria]");
+    if (!botao) return;
+    const botoes = [...document.querySelectorAll("[data-remover-categoria]")];
+    const proximoIndice = botoes.indexOf(botao);
+    const proximoId = botoes[proximoIndice + 1]?.dataset.removerCategoria || botoes[proximoIndice - 1]?.dataset.removerCategoria;
+    alternarCategoria(botao.dataset.removerCategoria);
+    const proximo = proximoId && document.querySelector(`[data-remover-categoria="${proximoId}"]`);
+    (proximo || gatilhoCategorias).focus();
+  });
+  document.querySelector("#painel-categorias-grupos").addEventListener("change", (evento) => {
+    const check = evento.target.closest("input[data-categoria-id]");
+    if (!check) return;
+    if (check.checked) categoriasRascunho.add(check.dataset.categoriaId);
+    else categoriasRascunho.delete(check.dataset.categoriaId);
+    atualizarEstadoDosGrupos();
+  });
+  document.querySelector("#painel-categorias-grupos").addEventListener("click", (evento) => {
+    const botao = evento.target.closest("[data-marcar-grupo]");
+    if (!botao) return;
+    const checks = [...botao.closest("fieldset").querySelectorAll("input[data-categoria-id]")];
+    const marcar = !checks.every((check) => categoriasRascunho.has(check.dataset.categoriaId));
+    checks.forEach((check) => {
+      check.checked = marcar;
+      if (marcar) categoriasRascunho.add(check.dataset.categoriaId);
+      else categoriasRascunho.delete(check.dataset.categoriaId);
+    });
+    atualizarEstadoDosGrupos();
+  });
+  document.querySelector("#limpar-categorias").addEventListener("click", () => {
+    categoriasRascunho.clear();
+    categoriasAtivas.clear();
+    atualizarCategoriasAtivas();
+    sincronizarChecksDoPainel();
+    filtrarLocais();
+  });
+  document.querySelector("#aplicar-categorias").addEventListener("click", () => {
+    categoriasAtivas.clear();
+    categoriasRascunho.forEach((id) => categoriasAtivas.add(id));
+    atualizarCategoriasAtivas();
+    filtrarLocais();
+    if (categoriasAtivas.has("onibus")) centralizarNosTerminaisOnibus();
+    fecharPainelCategorias();
+  });
+  painelCategorias.addEventListener("click", (evento) => {
+    if (evento.target === painelCategorias && painelCategoriasModal) fecharPainelCategorias();
+  });
+  renderizarPainelCategorias();
+  atualizarCategoriasAtivas();
 }
 
 inicializarMapa();

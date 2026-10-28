@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css?v=category-panel-scroll-20261028" />
     <link rel="stylesheet" href="css/site.css" />
   </head>
   <body class="map-page">
@@ -52,20 +52,17 @@
             <span class="icone-busca" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.2 4.2"/></svg></span>
             <input id="busca" type="search" placeholder="Buscar estabelecimento..." autocomplete="off" />
           </div>
-          <fieldset class="grupo-filtros categorias">
-            <legend>Categorias</legend>
-            <div class="lista-categorias" id="lista-categorias">
-              <button class="botao-categoria ativo" type="button" data-categoria="Todos" aria-pressed="true">Todos</button>
-              <button class="botao-categoria" type="button" data-categoria="Banheiro" aria-pressed="false">Banheiros</button>
-              <button class="botao-categoria" type="button" data-categoria="Restaurante" aria-pressed="false">Restaurantes</button>
-              <button class="botao-categoria" type="button" data-categoria="Loja" aria-pressed="false">Lojas</button>
-              <button class="botao-categoria" type="button" data-categoria="Estacionamento" aria-pressed="false">Estacionamentos</button>
-              <button class="botao-categoria" type="button" data-categoria="Farmácia" aria-pressed="false">Farmácias</button>
-              <button class="botao-categoria" type="button" data-categoria="Academia" aria-pressed="false">Academias</button>
-              <button class="botao-categoria" type="button" data-categoria="Instituição de ensino" aria-pressed="false">Instituições de ensino</button>
-              <button class="botao-categoria" type="button" data-categoria="Espaço de lazer" aria-pressed="false">Espaços de lazer</button>
+          <section class="grupo-filtros categorias" aria-label="Filtros de categorias">
+            <div class="atalhos-categorias">
+              <button class="chip-categoria chip-banheiros" id="filtro-banheiros" type="button" aria-pressed="false" aria-label="Filtrar Banheiros">
+                <span>Banheiros</span><span class="chip-remover" aria-hidden="true">×</span>
+              </button>
+              <button class="botao-abrir-categorias" id="abrir-categorias" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="painel-categorias">
+                Categorias (<span id="contador-categorias-ativas">0</span>)<span class="seta-categorias" aria-hidden="true">▾</span>
+              </button>
             </div>
-          </fieldset>
+            <div class="categorias-ativas" id="categorias-ativas" role="group" aria-label="Categorias selecionadas" hidden></div>
+          </section>
 
           <details class="grupo-filtros recursos" open>
             <summary>Recursos de acessibilidade <span class="recursos-contador" aria-live="polite">(0)</span></summary>
@@ -106,11 +103,31 @@
       </section>
     </main>
 
+    <dialog class="painel-categorias" id="painel-categorias" aria-labelledby="titulo-painel-categorias">
+      <div class="painel-categorias-conteudo">
+        <header class="painel-categorias-cabecalho">
+          <div>
+            <h2 id="titulo-painel-categorias" tabindex="-1">Categorias</h2>
+            <p>Escolha os tipos de locais para mostrar no mapa.</p>
+          </div>
+          <button class="fechar-painel-categorias" id="fechar-painel-categorias" type="button" aria-label="Fechar categorias">×</button>
+        </header>
+        <div class="painel-categorias-lista" id="painel-categorias-lista">
+          <div class="painel-categorias-grupos" id="painel-categorias-grupos"></div>
+        </div>
+        <footer class="painel-categorias-acoes">
+          <button class="botao-limpar-categorias" id="limpar-categorias" type="button">Limpar</button>
+          <button class="botao-aplicar-categorias" id="aplicar-categorias" type="button">Aplicar</button>
+        </footer>
+      </div>
+    </dialog>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js" defer></script>
-    <script src="js/script.js?v=map-drag-rollback-20261019"></script>
+    <script type="module" src="js/script.js?v=map-bus-keep-zoom-20261028"></script>
     <script src="js/site.js"></script>
   </body>
 </html>
+

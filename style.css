@@ -177,7 +177,7 @@ h1 { margin: 0; font-size: 24px; line-height: 1.3; font-weight: 800; }
 .campo-form small { color: #839089; font-size: 10px; font-weight: 400; }
 .ajuda-localizacao { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; color: #75837b; font-size: 11px; }
 .botao-secundario { padding: 8px 12px; color: var(--verde); font-size: 11px; font-weight: 700; background: #f1f7eb; border: 1px solid #cadcc4; border-radius: 8px; }
-.botao-secundario:hover { background: #e2efd8; }
+.botao-secundario:hover { background: #d3e8dc; }
 .dica-form { margin: 10px 0 16px; color: #77857d; font-size: 12px; }
 .opcoes-acessibilidade { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 .opcoes-acessibilidade label { display: flex; align-items: flex-start; gap: 10px; min-height: 65px; padding: 12px; background: #fbfcf8; border: 1px solid #e0e8dd; border-radius: 10px; cursor: pointer; }
@@ -188,7 +188,7 @@ h1 { margin: 0; font-size: 24px; line-height: 1.3; font-weight: 800; }
 .rodape-form { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 24px; }
 .rodape-form p { max-width: 380px; margin: 0; color: #7b8881; font-size: 10px; line-height: 1.6; }
 .botao-enviar { display: inline-flex; align-items: center; gap: 20px; min-height: 48px; padding: 0 18px; color: #122019; font-weight: 700; background: var(--laranja); border: 0; border-radius: 999px; }
-.botao-enviar:hover { background: #b4e51d; }
+.botao-enviar:hover { background: #b9f4d7; }
 .mensagem-form { color: var(--verde); font-size: 13px; font-weight: 600; }
 .nota-prototipo { padding: 10px 12px; margin: 4px 0 0; color: #65766e; font-size: 10px; line-height: 1.5; background: #f4f7f0; border-radius: 8px; }
 .rodape-site { display: flex; justify-content: space-between; gap: 20px; padding: 24px max(5vw, 24px); color: #75837d; font-size: 11px; background: #ebefe5; }
