@@ -2,157 +2,101 @@
 
 **Encontre lugares mais acessíveis.**
 
-O IncluiMais é um projeto acadêmico desenvolvido para facilitar a localização de estabelecimentos e a consulta de recursos de acessibilidade. A plataforma utiliza um mapa interativo para apresentar locais próximos à área da Universidade Cidade de São Paulo (UNICID), permitindo pesquisar estabelecimentos, filtrar categorias e consultar informações relacionadas à acessibilidade.
+O IncluiMais é um projeto acadêmico que reúne informações sobre recursos de acessibilidade em estabelecimentos. O mapa piloto cobre uma área próxima à Universidade Cidade de São Paulo (UNICID), na capital paulista.
 
-## Sobre o projeto
+## Páginas
 
-A proposta do IncluiMais é contribuir para uma sociedade mais inclusiva, tornando informações sobre acessibilidade mais fáceis de encontrar e consultar.
-
-Por meio de uma interface interativa, o usuário pode explorar estabelecimentos no mapa, pesquisar por nome e categoria, aplicar filtros de recursos de acessibilidade e visualizar indicadores sobre as condições informadas para cada local.
-
-O projeto utiliza dados geográficos do OpenStreetMap e um conjunto de dados em GeoJSON para representar os estabelecimentos da área piloto.
+- `index.html`: apresentação do projeto e acesso às principais ações.
+- `mapa.html`: busca de locais, filtros e mapa interativo.
+- `acessibilidade.html`: explicação dos recursos exibidos no mapa.
+- `cadastro_estabelecimento.html`: formulário para sugerir um estabelecimento.
+- `contato.html`: formulário para enviar sugestões ou correções.
+- `impacto.html`: objetivos e indicadores do projeto.
+- `midia.html`: conteúdo multimídia relacionado à UNICID.
+- `noticias.html`: textos sobre inclusão, acessibilidade e tecnologia.
+- `orcamento_hospedagem.html`: opções de hospedagem e domínio.
+- `sobre.html`: contexto, proposta e valores do IncluiMais.
 
 ## Funcionalidades
 
-- **Mapa interativo:** visualização de estabelecimentos por meio de marcadores geográficos.
-- **Busca de estabelecimentos:** pesquisa por nome, categoria ou endereço.
-- **Filtros por categoria:** seleção de banheiros, restaurantes, lojas, estacionamentos, farmácias, instituições de ensino e espaços de lazer.
-- **Filtros de acessibilidade:** busca por entrada acessível, banheiro acessível, estacionamento acessível, atendimento em Libras, piso tátil e material em braille.
-- **Informações dos estabelecimentos:** consulta de endereço e indicadores de acessibilidade.
-- **Temas do mapa:** seleção entre diferentes estilos de visualização cartográfica.
-- **Área geográfica delimitada:** exploração concentrada em um raio de aproximadamente 100 metros do ponto inicial.
-- **Cadastro de estabelecimentos:** formulário para informar dados do local e recursos de acessibilidade.
-- **Interface responsiva:** adaptação para diferentes tamanhos de tela.
+- Pesquisa de estabelecimentos por nome.
+- Filtros por categoria, incluindo banheiros, restaurantes, lojas, estacionamentos, farmácias, academias, instituições de ensino e espaços de lazer.
+- Filtros por entrada acessível, banheiro acessível, estacionamento acessível, atendimento em Libras, piso tátil e material em braille.
+- Lista de resultados sincronizada com os marcadores do mapa.
+- Cinco estilos de mapa e navegação limitada a um raio de 100 metros do ponto inicial.
+- Ícones nos marcadores e nos indicadores de acessibilidade dos locais.
+- Navegação responsiva, atalho para o conteúdo principal e widget VLibras.
+- FAQ local para dúvidas sobre o uso do site.
 
-## Categorias de estabelecimentos
+Os formulários são demonstrativos: a validação e a mensagem de confirmação acontecem no navegador, sem envio para um servidor.
 
-O IncluiMais organiza os locais nas seguintes categorias:
+## Dados do mapa
 
-- Banheiros
-- Restaurantes
-- Lojas
-- Estacionamentos
-- Farmácias
-- Instituições de ensino
-- Espaços de lazer
+O mapa carrega `data/locais.json`. Esse arquivo compacto é gerado a partir de `data/UNICID_2.geojson` pelo script `tools/compact-geojson.py`:
 
-## Recursos de acessibilidade
+```bash
+python tools/compact-geojson.py
+```
 
-A plataforma permite consultar informações relacionadas aos seguintes recursos:
+Os dados geográficos vêm do OpenStreetMap. A disponibilidade dos recursos pode estar incompleta ou desatualizada; “não informado” não significa que o estabelecimento não ofereça o recurso.
 
-| Recurso | Descrição |
-|---|---|
-| Entrada acessível | Informações sobre acesso para pessoas com mobilidade reduzida |
-| Banheiro acessível | Indicação de banheiro adaptado |
-| Estacionamento acessível | Informações sobre estacionamento acessível |
-| Atendimento em Libras | Recurso de comunicação em Língua Brasileira de Sinais |
-| Piso tátil | Indicação de recursos de orientação tátil |
-| Material em braille | Informação sobre materiais acessíveis a pessoas com deficiência visual |
+## Tecnologias
 
-Os indicadores distinguem recursos identificados como disponíveis, indisponíveis ou não informados. A ausência de informação não significa necessariamente que o estabelecimento não possua o recurso.
+- HTML5, CSS3 e JavaScript sem frameworks.
+- Leaflet e MapLibre GL JS para o mapa.
+- OpenStreetMap para os dados geográficos e OpenFreeMap/OpenMapTiles para o mapa-base.
+- GeoJSON para os dados dos estabelecimentos.
+- Google Fonts para a tipografia e VLibras para apoio à tradução em Libras.
 
-## Tecnologias utilizadas
+## Como executar
 
-| Tecnologia | Aplicação |
-|---|---|
-| HTML5 | Estrutura das páginas |
-| CSS3 | Estilização, layout e responsividade |
-| JavaScript | Lógica da aplicação, pesquisa e filtros |
-| Leaflet.js | Gerenciamento do mapa e dos marcadores |
-| MapLibre GL JS | Renderização dos estilos cartográficos |
-| Leaflet-MapLibre-GL | Integração do MapLibre ao Leaflet |
-| OpenFreeMap | Fornecimento dos estilos do mapa |
-| OpenStreetMap | Dados geográficos dos estabelecimentos |
-| Overpass API | Consulta de dados geográficos do OpenStreetMap |
-| GeoJSON | Armazenamento e leitura dos dados da área piloto |
-| LocalStorage | Armazenamento local dos estabelecimentos cadastrados |
-| VLibras | Integração com tecnologia de tradução para Libras |
+É necessário ter Python 3 instalado. Na pasta do projeto, inicie um servidor local:
 
-## Como executar o projeto
+```bash
+python -m http.server 8000
+```
 
-**Pré-requisitos**
+Abra [http://localhost:8000](http://localhost:8000) no navegador. O servidor local permite que o mapa carregue o arquivo GeoJSON. Os serviços de mapas e algumas bibliotecas externas precisam de conexão com a internet.
 
-- Navegador atualizado.
-- Conexão com a internet.
-- Visual Studio Code com a extensão Live Server, ou outro servidor HTTP local.
-
-**Passos para execução**
-
-1. Clone o repositório:
-
-   ```bash
-   git clone https://github.com/syndaflod/IncluiMais.git
-   ```
-
-2. Acesse a pasta do projeto:
-
-   ```bash
-   cd IncluiMais
-   ```
-
-3. Abra a pasta no Visual Studio Code.
-
-4. Inicie o projeto utilizando o Live Server e abra o endereço local disponibilizado pela extensão.
-
-A utilização de um servidor HTTP local é recomendada para permitir o carregamento correto dos arquivos GeoJSON e dos recursos externos.
-
-## Estrutura do projeto
+## Estrutura
 
 ```text
 IncluiMais/
 ├── index.html
-├── cadastro.html
-├── style.css
-├── script.js
-├── UNICID_2.geojson
-└── README.md
+├── mapa.html
+├── acessibilidade.html
+├── cadastro_estabelecimento.html
+├── contato.html
+├── impacto.html
+├── midia.html
+├── noticias.html
+├── orcamento_hospedagem.html
+├── sobre.html
+├── assets/
+│   └── accessibility/
+├── css/
+│   ├── site.css
+│   └── style.css
+├── data/
+│   ├── locais.json
+│   └── UNICID_2.geojson
+├── docs/
+├── js/
+│   ├── script.js
+│   └── site.js
+└── tools/
+    └── compact-geojson.py
 ```
 
-- `index.html`: página principal com o mapa, a busca, os filtros e a lista de estabelecimentos.
-- `cadastro.html`: página destinada ao cadastro de estabelecimentos.
-- `style.css`: estilos visuais, componentes da interface e regras responsivas.
-- `script.js`: lógica do mapa, carregamento de dados, marcadores, pesquisa e filtros.
-- `UNICID_2.geojson`: conjunto de dados geográficos utilizado na área piloto.
-- `README.md`: documentação do projeto.
+## Limites do protótipo
 
-## Área piloto
-
-O projeto utiliza como referência inicial uma área próxima à Universidade Cidade de São Paulo (UNICID), na capital paulista.
-
-A navegação é limitada a um raio aproximado de 100 metros do ponto central definido no código, mantendo o escopo do protótipo concentrado em uma região específica.
+O IncluiMais é um protótipo acadêmico. As informações do mapa não representam uma vistoria presencial nem uma certificação dos estabelecimentos. Quando um recurso for essencial para a visita, confirme as condições diretamente com o local.
 
 ## Equipe
 
-| Integrante | RGM | Usuário GitHub |
+| Integrante | RGM | GitHub |
 |---|---:|---|
 | Antonio Dantas da Silva Neto | 47788356 | [AntonioDS](https://github.com/AntonioDS) |
 | Arthur de Jesus Salviano Oliveira | 47764988 | [arthurjso12-dev](https://github.com/arthurjso12-dev) |
 | Gustavo Frutuoso José | 47604565 | [gustavofjose](https://github.com/gustavofjose) |
 | Heitor Tureck de Oliveira | 47104503 | [syndaflod](https://github.com/syndaflod) |
-
-## Objetivos acadêmicos
-
-- Aplicar conhecimentos de desenvolvimento Front-End.
-- Desenvolver uma aplicação web interativa utilizando JavaScript.
-- Integrar mapas digitais e dados geográficos.
-- Implementar mecanismos de busca e filtragem.
-- Explorar princípios de acessibilidade, inclusão e usabilidade.
-- Desenvolver uma solução tecnológica voltada às necessidades da sociedade.
-
-## Status do projeto
-
-**Em desenvolvimento.**
-
-O IncluiMais é um protótipo acadêmico. As informações de acessibilidade dependem dos dados disponíveis e não representam, necessariamente, uma avaliação presencial ou uma certificação dos estabelecimentos.
-
-## Créditos e fontes de dados
-
-- [OpenStreetMap](https://www.openstreetmap.org/) — dados geográficos.
-- [OpenFreeMap](https://openfreemap.org/) — estilos cartográficos.
-- [Leaflet](https://leafletjs.com/) — biblioteca de mapas interativos.
-- [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/) — renderização cartográfica.
-- [VLibras](https://www.gov.br/governodigital/pt-br/acessibilidade-e-usuario/vlibras) — tecnologia assistiva para tradução de conteúdos digitais em Libras.
-
----
-
-Desenvolvido como projeto acadêmico do curso de Ciência da Computação.
