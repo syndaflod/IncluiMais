@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Cadastre um estabelecimento acessível no IncluiMais.">
-    <title>Cadastrar local | IncluiMais</title>
+    <meta name="description" content="Indique um local e informe seus recursos de acessibilidade no IncluiMais.">
+    <title>Indique um local | IncluiMais</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
@@ -21,46 +21,35 @@
                 aria-expanded="false" aria-controls="menu-principal">Menu</button>
             <nav id="menu-principal" class="site-nav" aria-label="Menu principal"><a href="index.html">Início</a><a
                     href="mapa.html">Mapa</a><a href="acessibilidade.html">Acessibilidade</a><a
-                    href="cadastro_estabelecimento.html" aria-current="page">Cadastrar local</a><a
+                    href="cadastro_estabelecimento.html" aria-current="page">Indicar local</a><a
                     href="contato.html">Contato</a></nav>
         </div>
     </header>
     <main id="conteudo" class="page-main">
         <header class="page-heading">
-            <h1>Indique um estabelecimento</h1>
-            <p>Compartilhe informações que possam ajudar outra pessoa a planejar uma visita com mais autonomia.</p>
+            <h1>Indique um local</h1>
+            <p>Viu um local com recursos de acessibilidade? Conte para quem vai depois de você.</p>
+            <aside class="form-guide" aria-labelledby="titulo-como-preencher"><h2 id="titulo-como-preencher">Como preencher</h2><ul><li>Confirme o nome e o endereço do local.</li><li>Marque apenas o que você verificou.</li><li>Se não tiver certeza, escolha “Não sei”.</li></ul></aside>
         </header>
-        <form class="form" data-demo-form>
+        <form class="form" data-demo-form novalidate>
+            <p class="form-intro">Os campos marcados como <span aria-hidden="true">*</span> são obrigatórios.</p>
             <div class="form-grid">
-                <div class="field"><label for="nome-local">Nome do estabelecimento</label><input id="nome-local"
-                        name="nome-local" type="text" required autocomplete="organization"></div>
-                <div class="field"><label for="categoria">Categoria</label><select id="categoria" name="categoria"
-                        required>
-                        <option value="">Selecione</option>
-                        <option>Restaurante</option>
-                        <option>Loja</option>
-                        <option>Instituição de ensino</option>
-                        <option>Farmácia</option>
-                        <option>Espaço de lazer</option>
-                    </select></div>
-                <div class="field"><label for="rua">Rua e número</label><input id="rua" name="rua" type="text" required
-                        autocomplete="address-line1"></div>
-                <div class="field"><label for="cep">CEP</label><input id="cep" name="cep" type="text" required
-                        inputmode="numeric" pattern="[0-9]{5}-?[0-9]{3}" aria-describedby="dica-cep"><small
-                        id="dica-cep">Use o formato 00000-000.</small></div>
-                <div class="field full"><label>Recursos observados</label>
-                    <div class="feature-list"><label><input type="checkbox" name="recursos" value="entrada"> Entrada
-                            acessível</label><label><input type="checkbox" name="recursos" value="banheiro"> Banheiro
-                            acessível</label><label><input type="checkbox" name="recursos" value="libras"> Atendimento
-                            em Libras</label><label><input type="checkbox" name="recursos" value="tatil"> Piso
-                            tátil</label></div>
-                </div>
-                <div class="field full"><label for="observacoes">Observações</label><textarea id="observacoes"
-                        name="observacoes" required
-                        placeholder="Descreva como você verificou essa informação."></textarea></div>
+                <div class="field"><label for="nome-local">Nome do local <span class="required-label">(obrigatório)</span></label><input id="nome-local" name="nome-local" type="text" required autocomplete="organization" aria-describedby="erro-nome-local"><span class="field-error" id="erro-nome-local" data-error-for="nome-local"></span></div>
+                <div class="field"><label for="categoria">Categoria <span class="required-label">(obrigatório)</span></label><select id="categoria" name="categoria" required aria-describedby="erro-categoria"><option value="">Selecione</option><option>Restaurante</option><option>Loja</option><option>Instituição de ensino</option><option>Farmácia</option><option>Espaço de lazer</option></select><span class="field-error" id="erro-categoria" data-error-for="categoria"></span></div>
+                <div class="field"><label for="rua">Rua e número <span class="required-label">(obrigatório)</span></label><input id="rua" name="rua" type="text" required autocomplete="address-line1" aria-describedby="erro-rua"><span class="field-error" id="erro-rua" data-error-for="rua"></span></div>
+                <div class="field"><label for="cep">CEP <span class="required-label">(obrigatório)</span></label><input id="cep" name="cep" type="text" required inputmode="numeric" pattern="[0-9]{5}-?[0-9]{3}" aria-describedby="dica-cep erro-cep"><small id="dica-cep">Use o formato 00000-000.</small><span class="field-error" id="erro-cep" data-error-for="cep"></span></div>
+                <fieldset class="field full resource-fieldset"><legend>Recursos observados <span class="required-label">(obrigatório)</span></legend><p class="field-hint" id="dica-recursos">Para cada recurso, escolha uma opção. “Não sei” já vem selecionado.</p><div class="resource-groups" aria-describedby="dica-recursos erro-recursos">
+                    <fieldset class="resource-group"><legend>Entrada acessível</legend><label><input type="radio" name="recurso-entrada" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-entrada" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-entrada" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                    <fieldset class="resource-group"><legend>Banheiro acessível</legend><label><input type="radio" name="recurso-banheiro" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-banheiro" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-banheiro" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                    <fieldset class="resource-group"><legend>Estacionamento acessível</legend><label><input type="radio" name="recurso-estacionamento" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-estacionamento" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-estacionamento" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                    <fieldset class="resource-group"><legend>Atendimento em Libras</legend><label><input type="radio" name="recurso-libras" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-libras" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-libras" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                    <fieldset class="resource-group"><legend>Piso tátil</legend><label><input type="radio" name="recurso-tatil" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-tatil" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-tatil" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                    <fieldset class="resource-group"><legend>Material em braille</legend><label><input type="radio" name="recurso-braille" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-braille" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-braille" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                </div><span class="field-error" id="erro-recursos" data-error-for="recursos"></span></fieldset>
+                <fieldset class="field full source-fieldset"><legend>Qual é a origem dessa informação? <span class="required-label">(obrigatório)</span></legend><div class="source-options"><label><input type="radio" name="origem" value="visitei" required> <span>Visitei o local</span></label><label><input type="radio" name="origem" value="responsavel"> <span>Trabalho ou sou responsável pelo local</span></label><label><input type="radio" name="origem" value="outra-fonte"> <span>Vi em outra fonte</span></label><label><input type="radio" name="origem" value="me-contaram"> <span>Foi o que me contaram</span></label></div><span class="field-error" id="erro-origem" data-error-for="origem"></span></fieldset>
+                <div class="field full"><label for="observacoes">Observações <span class="optional-label">(opcional)</span></label><textarea id="observacoes" name="observacoes" aria-describedby="dica-observacoes" placeholder="Acrescente um detalhe útil sobre o acesso, se quiser."></textarea><small id="dica-observacoes">Use este campo para complementar a indicação.</small></div>
             </div>
-            <p class="form-status" data-form-status role="status" aria-live="polite"></p><button class="button"
-                type="submit">Enviar indicação</button>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p><button class="button form-submit" type="submit">Enviar indicação</button>
         </form>
     </main>
     <footer class="site-footer" data-site-footer></footer>

@@ -1,22 +1,110 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="IncluiMais: encontre, conheça e indique locais mais acessíveis.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="IncluiMais: mapa comunitário de acessibilidade para consultar registros e indicar locais.">
   <title>IncluiMais | Acessibilidade perto de você</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/site.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
   <script src="js/accessibility-init.js"></script>
 </head>
-<body>
+<body id="topo" class="home-page">
   <div class="accessibility-bar" data-accessibility-controls></div>
-  <header class="site-header"><div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">+</span>IncluiMais</a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">Menu</button><nav id="menu-principal" class="site-nav" aria-label="Menu principal"><a href="index.html" aria-current="page">Início</a><a href="mapa.html">Mapa</a><a href="acessibilidade.html">Acessibilidade</a><a href="cadastro_estabelecimento.html">Cadastrar local</a><a href="contato.html">Contato</a></nav></div></header>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">+</span>IncluiMais</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">Menu</button>
+      <nav id="menu-principal" class="site-nav" aria-label="Menu principal">
+        <a href="index.html" aria-current="page">Início</a>
+        <a href="mapa.html">Mapa</a>
+        <a href="acessibilidade.html">Acessibilidade</a>
+          <a href="cadastro_estabelecimento.html">Indicar local</a>
+        <a href="contato.html">Contato</a>
+      </nav>
+    </div>
+  </header>
+
   <main id="conteudo" class="page-main">
-    <section class="hero" aria-labelledby="titulo-principal"><div><h1 id="titulo-principal">Acessibilidade começa quando a informação chega.</h1><p>O IncluiMais ajuda pessoas a encontrar locais com recursos de acessibilidade e convida a comunidade a melhorar esses dados.</p><div class="hero-actions"><a class="button" href="mapa.html">Explorar o mapa</a><a class="button secondary" href="cadastro_estabelecimento.html">Indicar um local</a></div></div><div class="hero-art" aria-hidden="true"></div></section>
-    <section class="section" aria-labelledby="como-funciona"><div class="section-heading"><h2 id="como-funciona">Uma rede de informação útil</h2><p>O projeto conecta descoberta, colaboração e educação para apoiar escolhas mais inclusivas no cotidiano.</p></div><div class="grid"><a class="surface surface-link" href="mapa.html"><h3>Encontre no mapa</h3><p>Pesquise estabelecimentos e filtre recursos que fazem diferença para sua visita.</p></a><a class="surface surface-link" href="acessibilidade.html"><h3>Entenda os recursos</h3><p>Conheça os principais recursos e por que informação acessível precisa ser clara.</p></a><a class="surface surface-link" href="impacto.html"><h3>Acompanhe o impacto</h3><p>Veja como dados colaborativos podem ampliar autonomia e participação social.</p></a></div></section>
-    <section class="section" aria-labelledby="proximo-passo"><div class="surface"><div class="section-heading"><h2 id="proximo-passo">Comece pela sua necessidade</h2><p>Você pode buscar um local, registrar uma informação ou aprender mais sobre a iniciativa.</p></div><div class="hero-actions"><a class="button" href="midia.html">Conheça a UNICID</a><a class="button secondary" href="contato.html">Enviar sugestão</a></div></div></section>
+    <section class="hero" aria-labelledby="titulo-principal">
+      <div>
+        <h1 id="titulo-principal">Esse lugar é acessível? Agora dá para saber antes de ir.</h1>
+        <p>Mapa colaborativo feito por estudantes de Ciência da Computação da UNICID. Veja se os locais ao redor da faculdade têm rampa, banheiro adaptado, piso tátil ou intérprete de Libras antes de ir.”</p>
+        <div class="hero-actions">
+          <a class="button" href="mapa.html">Explorar o mapa</a>
+          <a class="button secondary" href="cadastro_estabelecimento.html">Indicar um local</a>
+        </div>
+        <p class="home-location-note">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          Área piloto próxima à Universidade Cidade de São Paulo
+        </p>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="home-map-panel">
+          <div class="home-map-top"><span class="home-map-status">Visualização ilustrativa</span><span>mapa comunitário</span></div>
+          <div class="home-map-route"></div>
+          <span class="home-map-pin one"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1 10H5L4 10ZM6 10l2-5h8l2 5M9 20v-6h6v6"/></svg></span>
+          <span class="home-map-pin two"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span class="home-map-pin three"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V10M7 21h10M5 10h14M7 10c0-3 2-5 5-5s5 2 5 5"/></svg></span>
+          <div class="home-map-legend"><span><i class="available"></i> recurso informado</span><span><i class="unknown"></i> conferir no local</span></div>
+          <div class="home-map-bottom"><span class="home-map-scale">sem localização em tempo real</span><span>consulte o mapa</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="titulo-descoberta">
+      <div class="section-heading">
+        <div><h2 id="titulo-descoberta">Comece pelo lugar que você precisa.</h2></div>
+        <p>Pesquise por nome, categoria e recursos. O mapa mostra o que foi registrado pela comunidade e deixa claro quando uma informação ainda precisa ser confirmada.</p>
+      </div>
+      <div class="home-discovery-grid">
+        <a class="surface surface-link home-map-card" href="mapa.html">
+          <div><h3>Veja o que existe no caminho.</h3><p>Abra o mapa para encontrar estabelecimentos, filtrar recursos e consultar os detalhes de cada ponto.</p></div>
+          <div class="home-card-footer"><span class="home-map-count"><strong data-locais-count hidden>Carregando…</strong><span>Consulte os registros disponíveis no mapa.</span></span><span class="home-card-arrow" aria-hidden="true">↗</span></div>
+        </a>
+        <div class="home-side-stack">
+          <a class="surface surface-link home-resource-card" href="acessibilidade.html">
+            <h3>Recursos diferentes respondem a barreiras diferentes.</h3>
+            <span class="home-card-link">Entender os recursos<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+          </a>
+          <a class="surface surface-link home-impact-card" href="impacto.html">
+            <h3>Informação compartilhada amplia escolhas.</h3><p>Conheça o impacto que dados comunitários podem ter no cotidiano.</p><span class="home-card-link">Ver o impacto<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="titulo-fluxo">
+      <div class="section-heading">
+        <div><h2 id="titulo-fluxo">Uma informação útil tem contexto.</h2></div>
+        <p>O IncluiMais organiza o caminho entre uma dúvida, uma busca e uma contribuição. A experiência é curta porque o problema precisa ser compreendido antes da visita.</p>
+      </div>
+      <div class="home-steps">
+        <article class="home-step accessibility-card"><h3>Consulte</h3><p>Encontre um local e veja quais recursos aparecem registrados.</p></article>
+        <article class="home-step accessibility-card"><h3>Interprete</h3><p>Leia os estados disponíveis, indisponíveis e não informados.</p></article>
+        <article class="home-step accessibility-card"><h3>Contribua</h3><p>Indique um local ou envie uma correção para ajudar outra pessoa.</p></article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="titulo-contribuicao">
+      <div class="surface home-contribution">
+        <div><h2 id="titulo-contribuicao">Você sabe de um lugar? Compartilhe.</h2><p>Esta indicação é demonstrativa. Ainda assim, uma observação bem descrita pode ajudar a orientar a próxima visita e apontar o que precisa ser verificado.</p></div>
+        <div class="hero-actions"><a class="button" href="cadastro_estabelecimento.html">Indicar um local</a><a class="button secondary" href="contato.html">Enviar sugestão</a><a class="home-card-link" href="midia.html">Conhecer a UNICID<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
+      </div>
+    </section>
   </main>
-  <div class="chatbot"><section class="chatbot-panel" hidden aria-label="Assistente de dúvidas"><div class="chatbot-messages" aria-live="polite"><p class="chatbot-message"><strong>IncluiMais:</strong> Posso responder dúvidas sobre mapa, filtros, cadastro, contato e privacidade.</p></div><form class="chatbot-form"><label class="visually-hidden" for="chatbot-pergunta">Sua pergunta</label><input id="chatbot-pergunta" type="text" placeholder="Digite sua dúvida" autocomplete="off"><button type="submit">Enviar</button></form></section><button class="chatbot-toggle" type="button" aria-expanded="false">Dúvidas?</button></div>
+
+  <div class="chatbot">
+    <section id="painel-duvidas" class="chatbot-panel" hidden aria-label="Assistente de dúvidas">
+      <div class="chatbot-messages" aria-live="polite"><p class="chatbot-message"><strong>IncluiMais:</strong> Posso responder dúvidas sobre mapa, indicação, filtros, contato e privacidade.</p></div>
+      <form class="chatbot-form"><label class="visually-hidden" for="chatbot-pergunta">Sua pergunta</label><input id="chatbot-pergunta" name="pergunta" type="text" placeholder="Digite sua dúvida" autocomplete="off"><button type="submit">Enviar</button></form>
+    </section>
+    <button class="chatbot-toggle" type="button" aria-expanded="false" aria-controls="painel-duvidas">Dúvidas?</button>
+  </div>
+
   <footer class="site-footer" data-site-footer></footer>
   <script src="js/site.js"></script>
 </body>

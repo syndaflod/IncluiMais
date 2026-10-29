@@ -114,7 +114,7 @@ async function carregarLocaisGeoJson() {
   const resposta = await fetch("UNICID_2.geojson");
   const dados = await resposta.json();
   let cadastrados = [];
-  try { cadastrados = JSON.parse(localStorage.getItem("incluimais-estabelecimentos") || "[]"); } catch (erro) { console.warn("Não foi possível ler os locais cadastrados neste navegador.", erro); }
+  try { cadastrados = JSON.parse(localStorage.getItem("incluimais-estabelecimentos") || "[]"); } catch (erro) { console.warn("Não foi possível ler os locais registrados neste navegador.", erro); }
   locais = [...dados.features.map(localDoGeoJson).filter(Boolean), ...cadastrados];
   filtrarLocais();
 }
@@ -296,7 +296,7 @@ function mostrarLocais(locaisFiltrados) {
   contador.textContent = `${locaisFiltrados.length} ${locaisFiltrados.length === 1 ? "local" : "locais"}`;
 
   if (!locaisFiltrados.length) {
-    lista.innerHTML = `<p class="estado-vazio">${locais.length ? "Nenhum local corresponde aos filtros escolhidos." : "Nenhum estabelecimento cadastrado ainda."}</p>`;
+    lista.innerHTML = `<p class="estado-vazio">${locais.length ? "Nenhum local corresponde aos filtros escolhidos." : "Nenhum local registrado ainda."}</p>`;
     return;
   }
 

@@ -118,6 +118,8 @@
     const footer = document.querySelector("[data-site-footer]");
     const menu = document.querySelector(".site-nav");
     if (!footer || !menu) return;
+    const contributionLink = menu.querySelector('a[href="cadastro_estabelecimento.html"]');
+    if (contributionLink) contributionLink.textContent = "Indicar local";
     footer.id = "rodape-site";
     footer.tabIndex = -1;
     if (!document.body.id) document.body.id = "topo";
@@ -176,7 +178,7 @@
       const dados = await resposta.json();
       const locais = Array.isArray(dados?.features) ? dados.features : [];
       alvo.textContent = locais.length
-        ? `${locais.length} locais cadastrados no mapa`
+        ? `${locais.length} locais registrados no mapa`
         : "Número de locais: [PREENCHER]";
     } catch {
       alvo.textContent = "Número de locais: [PREENCHER]";
@@ -317,14 +319,39 @@
   const form = document.querySelector("[data-demo-form]");
   const status = document.querySelector("[data-form-status]");
   if (form && status) {
+    const mensagensDeErro = new Map([
+      ["valueMissing", "Preencha este campo."],
+      ["patternMismatch", "Informe o CEP no formato 00000-000."],
+      ["typeMismatch", "Informe um valor válido."]
+    ]);
+    const limparErro = (controle) => {
+      controle.removeAttribute("aria-invalid");
+      const erro = document.querySelector(`[data-error-for="${controle.name || controle.id}"]`);
+      if (erro) erro.textContent = "";
+    };
+    const mostrarErro = (controle) => {
+      const erro = document.querySelector(`[data-error-for="${controle.name || controle.id}"]`);
+      if (!erro) return;
+      controle.setAttribute("aria-invalid", "true");
+      const estado = controle.validity;
+      const chaveDoErro = ["valueMissing", "patternMismatch", "typeMismatch"].find((chave) => estado[chave]);
+      erro.textContent = mensagensDeErro.get(chaveDoErro) || "Revise esta informação.";
+    };
+    form.querySelectorAll("input, select, textarea").forEach((controle) => {
+      controle.addEventListener("input", () => limparErro(controle));
+      controle.addEventListener("change", () => limparErro(controle));
+    });
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      if (!form.checkValidity()) {
-        form.reportValidity();
+      form.querySelectorAll("input, select, textarea").forEach(limparErro);
+      const invalidos = [...form.querySelectorAll("input, select, textarea")].filter((controle) => !controle.checkValidity());
+      if (invalidos.length) {
+        invalidos.forEach(mostrarErro);
+        invalidos[0].focus();
         status.textContent = "Revise os campos destacados antes de enviar.";
         return;
       }
-      status.textContent = "Recebemos sua contribuição. Obrigado por ajudar a tornar a cidade mais acessível.";
+      status.textContent = "Esta é uma demonstração: a indicação foi validada no navegador, mas não é enviada nem publicada no mapa.";
       form.reset();
     });
   }
@@ -338,7 +365,7 @@
 
   const faq = [
     { terms: ["mapa", "local", "encontrar"], answer: "Abra o mapa para buscar locais por nome, categoria e recursos como entrada, banheiro ou estacionamento acessível." },
-    { terms: ["cadastro", "cadastrar", "sugerir"], answer: "Use a página Cadastro de estabelecimento para sugerir um local e informar os recursos de acessibilidade disponíveis." },
+    { terms: ["indicar", "indicação", "sugerir"], answer: "Use a página Indicar um local para sugerir um local e informar os recursos de acessibilidade disponíveis." },
     { terms: ["filtro", "categoria"], answer: "No mapa, escolha uma categoria e marque os recursos desejados. Os resultados são atualizados na mesma tela." },
     { terms: ["dados", "privacidade", "lgpd"], answer: "Esta versão é demonstrativa e não envia seus dados para um servidor. Confira sempre as informações do local antes de visitá-lo." },
     { terms: ["contato", "sugestão", "erro"], answer: "Envie uma sugestão ou corrija uma informação pela página Contato. O retorno aparece no próprio formulário." }
@@ -357,7 +384,7 @@
     if (!question) return;
     const normalized = question.toLocaleLowerCase("pt-BR");
     const match = faq.find((item) => item.terms.some((term) => normalized.includes(term)));
-    const answer = match?.answer || "Ainda não tenho essa resposta. Tente perguntar sobre mapa, cadastro, filtros, contato ou privacidade.";
+    const answer = match?.answer || "Ainda não tenho essa resposta. Tente perguntar sobre mapa, indicação, filtros, contato ou privacidade.";
     messages.insertAdjacentHTML("beforeend", `<p class="chatbot-message"><strong>Você:</strong> ${question.replace(/[<>]/g, "")}</p><p class="chatbot-message"><strong>IncluiMais:</strong> ${answer}</p>`);
     input.value = "";
     messages.scrollTop = messages.scrollHeight;
