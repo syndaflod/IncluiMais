@@ -10,11 +10,19 @@ const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 let mapa;
 let camadaBase;
 let camadaMarcadores;
+let estiloMapaAtual = document.documentElement.classList.contains("alto-contraste") ? "dark" : "bright";
+let estiloMapaAnteriorContraste = "bright";
+let contrasteMapaAtivo = document.documentElement.classList.contains("alto-contraste");
 const categoriasAtivas = new Set();
 let categoriasRascunho = new Set();
 let painelCategoriasModal = false;
 let restaurarFocoCategorias = false;
 const marcadores = {};
+
+function aplicarEstiloMapa(estilo) {
+  estiloMapaAtual = estilo;
+  if (camadaBase) camadaBase.getMaplibreMap().setStyle(`https://tiles.openfreemap.org/styles/${estilo}`);
+}
 
 const idsPorCategoriaLocal = {
   "Banheiro": "banheiros", "Restaurante": "restaurantes", "Loja": "lojas", "Estacionamento": "estacionamentos",
@@ -488,7 +496,7 @@ function inicializarMapa() {
   }).addTo(mapa);
   // OpenFreeMap fornece o mapa-base com dados do OpenStreetMap sem usar os servidores de tiles da OSMF.
   camadaBase = L.maplibreGL({
-    style: "https://tiles.openfreemap.org/styles/bright"
+    style: `https://tiles.openfreemap.org/styles/${estiloMapaAtual}`
   }).addTo(mapa);
   const glMap = camadaBase.getMaplibreMap();
   const ocultarPois = () => {
@@ -628,14 +636,19 @@ function abrirLocal(id) {
 }
 
 function configurarEventos() {
-  document.querySelectorAll('input[name="tema-mapa"]').forEach((opcao) => {
-    opcao.addEventListener("change", () => {
-      if (opcao.checked) {
-        camadaBase.getMaplibreMap().setStyle(`https://tiles.openfreemap.org/styles/${opcao.value}`);
-        document.querySelector(".menu-temas").open = false;
-      }
-    });
-  });
+  const sincronizarContrasteMapa = () => {
+    const ativo = document.documentElement.classList.contains("alto-contraste");
+    if (ativo === contrasteMapaAtivo) return;
+    if (ativo) {
+      estiloMapaAnteriorContraste = estiloMapaAtual;
+      contrasteMapaAtivo = true;
+      aplicarEstiloMapa("dark");
+    } else {
+      contrasteMapaAtivo = false;
+      aplicarEstiloMapa(estiloMapaAnteriorContraste);
+    }
+  };
+  new MutationObserver(sincronizarContrasteMapa).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
   document.querySelector("#busca").addEventListener("input", filtrarLocais);
   document.querySelectorAll("[data-recurso]").forEach((campo) => campo.addEventListener("change", filtrarLocais));
   const gatilhoCategorias = document.querySelector("#abrir-categorias");

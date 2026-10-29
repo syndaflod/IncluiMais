@@ -15,10 +15,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
     <link rel="stylesheet" href="css/style.css?v=category-panel-scroll-20261028" />
+    <script src="js/accessibility-init.js"></script>
     <link rel="stylesheet" href="css/site.css" />
   </head>
   <body class="map-page">
-    <a class="skip-link" href="#mapa">Pular para o mapa</a>
+    <div class="accessibility-bar" data-accessibility-controls></div>
     <header class="site-header">
       <div class="nav-shell">
         <a class="site-logo" href="index.html" aria-label="IncluiMais, página inicial"><img src="assets/icon.svg" alt=""><span>IncluiMais</span></a>
@@ -29,20 +30,20 @@
           <a href="acessibilidade.html">Acessibilidade</a>
           <a href="cadastro_estabelecimento.html">Cadastrar local</a>
           <a href="contato.html">Contato</a>
-          <details class="nav-more">
-            <summary>Mais</summary>
-            <div class="nav-more-menu">
-              <a href="sobre.html">Sobre</a>
-              <a href="impacto.html">Impacto</a>
-              <a href="midia.html">Mídia</a>
-              <a href="noticias.html">Notícias</a>
-              <a href="orcamento_hospedagem.html">Orçamento</a>
+          <div class="nav-more">
+            <button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></button>
+            <div class="nav-more-menu" role="menu" hidden>
+              <a role="menuitem" href="sobre.html">Sobre</a>
+              <a role="menuitem" href="impacto.html">Impacto</a>
+              <a role="menuitem" href="midia.html">Mídia</a>
+              <a role="menuitem" href="noticias.html">Notícias</a>
+              <a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a>
             </div>
-          </details>
+          </div>
         </nav>
       </div>
     </header>
-    <main class="aplicacao">
+    <main id="conteudo" class="aplicacao" tabindex="-1">
       <aside class="sidebar" aria-label="Busca e filtros de acessibilidade">
         <section class="controles" aria-label="Refinar resultados">
           <h1 class="map-title">Mapa de acessibilidade</h1>
@@ -58,7 +59,7 @@
                 <span>Banheiros</span><span class="chip-remover" aria-hidden="true">×</span>
               </button>
               <button class="botao-abrir-categorias" id="abrir-categorias" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="painel-categorias">
-                Categorias (<span id="contador-categorias-ativas">0</span>)<span class="seta-categorias" aria-hidden="true">▾</span>
+                <span class="categorias-label">Categorias ( <span id="contador-categorias-ativas">0</span> )</span><span class="seta-categorias" aria-hidden="true">▾</span>
               </button>
             </div>
             <div class="categorias-ativas" id="categorias-ativas" role="group" aria-label="Categorias selecionadas" hidden></div>
@@ -67,12 +68,12 @@
           <details class="grupo-filtros recursos" open>
             <summary>Recursos de acessibilidade <span class="recursos-contador" aria-live="polite">(0)</span></summary>
             <div class="recursos-grade">
-              <label><input type="checkbox" data-recurso="entradaAcessivel" /> Entrada acessível</label>
-              <label><input type="checkbox" data-recurso="banheiroAcessivel" /> Banheiro acessível</label>
-              <label><input type="checkbox" data-recurso="estacionamentoAcessivel" /> Estacionamento acessível</label>
-              <label><input type="checkbox" data-recurso="libras" /> Atendimento em Libras</label>
-              <label><input type="checkbox" data-recurso="pisoTatil" /> Piso tátil</label>
-              <label><input type="checkbox" data-recurso="braille" /> Material em braille</label>
+              <label><input type="checkbox" data-recurso="entradaAcessivel" /><span>Entrada acessível</span></label>
+              <label><input type="checkbox" data-recurso="banheiroAcessivel" /><span>Banheiro acessível</span></label>
+              <label><input type="checkbox" data-recurso="estacionamentoAcessivel" /><span>Estacionamento acessível</span></label>
+              <label><input type="checkbox" data-recurso="libras" /><span>Atendimento em Libras</span></label>
+              <label><input type="checkbox" data-recurso="pisoTatil" /><span>Piso tátil</span></label>
+              <label><input type="checkbox" data-recurso="braille" /><span>Material em braille</span></label>
             </div>
           </details>
         </section>
@@ -88,17 +89,6 @@
 
       <section class="area-mapa" aria-label="Mapa de locais com acessibilidade em São Paulo">
         <div id="mapa"></div>
-        <details class="menu-temas">
-          <summary aria-label="Estilo do mapa" title="Estilo do mapa"><span class="menu-temas-texto">Estilo do mapa</span><span class="menu-temas-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><span class="seta-menu-temas" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></span></summary>
-          <fieldset>
-            <legend class="visualmente-oculto">Escolha o estilo do mapa</legend>
-            <label><input type="radio" name="tema-mapa" value="positron" /> Positron</label>
-            <label><input type="radio" name="tema-mapa" value="bright" checked /> Bright</label>
-            <label><input type="radio" name="tema-mapa" value="liberty" /> Liberty</label>
-            <label><input type="radio" name="tema-mapa" value="fiord" /> Fiord</label>
-            <label><input type="radio" name="tema-mapa" value="dark" /> Dark</label>
-          </fieldset>
-        </details>
         <div class="creditos-mapa">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> · © <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a></div>
       </section>
     </main>
@@ -115,10 +105,10 @@
         <div class="painel-categorias-lista" id="painel-categorias-lista">
           <div class="painel-categorias-grupos" id="painel-categorias-grupos"></div>
         </div>
-        <footer class="painel-categorias-acoes">
+        <div class="painel-categorias-acoes">
           <button class="botao-limpar-categorias" id="limpar-categorias" type="button">Limpar</button>
           <button class="botao-aplicar-categorias" id="aplicar-categorias" type="button">Aplicar</button>
-        </footer>
+        </div>
       </div>
     </dialog>
 

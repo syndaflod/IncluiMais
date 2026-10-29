@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/site.css">
+    <script src="js/accessibility-init.js"></script>
 </head>
 
-<body><a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<body><div class="accessibility-bar" data-accessibility-controls></div>
     <header class="site-header">
         <div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark"
                     aria-hidden="true">+</span>IncluiMais</a><button class="nav-toggle" type="button"
@@ -23,37 +24,68 @@
                     href="cadastro_estabelecimento.html">Cadastrar local</a><a href="contato.html">Contato</a></nav>
         </div>
     </header>
-    <main id="conteudo" class="page-main">
-        <header class="page-heading">
-            <h1>Acessibilidade em detalhes</h1>
-            <p>Recursos diferentes respondem a barreiras diferentes. Informação clara ajuda cada pessoa a avaliar o que
-                precisa.</p>
-        </header>
-        <section class="content">
-            <h2>O que você pode encontrar no mapa</h2>
-            <ul class="feature-list">
-                <li><strong>Entrada acessível</strong><br>Indica acesso sem degraus ou com rota acessível.</li>
-                <li><strong>Banheiro acessível</strong><br>Aponta a existência de banheiro adaptado.</li>
-                <li><strong>Estacionamento acessível</strong><br>Indica vagas ou estacionamento com acesso facilitado.
-                </li>
-                <li><strong>Atendimento em Libras</strong><br>Mostra quando há suporte informado para comunicação em
-                    Libras.</li>
-                <li><strong>Piso tátil</strong><br>Ajuda pessoas com deficiência visual a orientar seus deslocamentos.
-                </li>
-                <li><strong>Material em braille</strong><br>Indica materiais ou sinalização tátil disponíveis.</li>
-            </ul>
-            <h2>Leia os dados com cuidado</h2>
-            <p>Um recurso marcado como “não informado” não significa que ele não exista. Significa que ainda não há
-                dados suficientes no cadastro. Confirme as condições diretamente com o estabelecimento quando a
-                informação for essencial.</p>
+    <main id="conteudo" class="page-main accessibility-page">
+        <section class="page-heading accessibility-intro" aria-labelledby="titulo-acessibilidade">
+            <h1 id="titulo-acessibilidade">Acessibilidade em detalhes</h1>
+            <p>Recursos diferentes respondem a barreiras diferentes. Informação clara ajuda cada pessoa a avaliar o que precisa.</p>
+        </section>
+
+        <section class="accessibility-section accessibility-reading" aria-labelledby="titulo-leitura-dados">
+            <div class="accessibility-section-heading">
+                <span class="accessibility-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 5.5v15M8 7h8M8 11h8"/></svg></span>
+                <div><h2 id="titulo-leitura-dados">Como ler os dados</h2><p>O mapa apresenta o estado registrado para cada recurso.</p></div>
+            </div>
+            <div class="accessibility-notice">
+                <p>Um recurso marcado como “Não informado” ainda não tem dados registrados. Esse estado não permite concluir se o recurso existe ou não. Quando a informação for importante para sua visita, confirme as condições diretamente com o estabelecimento.</p>
+                <div class="accessibility-states" aria-label="Estados dos recursos de acessibilidade">
+                    <span class="accessibility-state state-available"><span aria-hidden="true">✓</span> Disponível</span>
+                    <span class="accessibility-state state-unavailable"><span aria-hidden="true">×</span> Não disponível</span>
+                    <span class="accessibility-state state-unknown"><span aria-hidden="true">?</span> Não informado</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="accessibility-section" aria-labelledby="titulo-recursos-mapa">
+            <div class="accessibility-section-heading"><div><h2 id="titulo-recursos-mapa">Recursos que você encontra no mapa</h2><p>Os seis recursos aparecem nos filtros e nas informações de cada local.</p></div></div>
+            <div class="resource-groups">
+                <section class="resource-group" aria-labelledby="titulo-mobilidade">
+                    <h3 id="titulo-mobilidade">Mobilidade</h3>
+                    <dl class="resource-list">
+                        <div class="resource-card"><dt><img src="assets/accessibility/entrada-acessivel.svg" alt="" aria-hidden="true">Entrada acessível</dt><dd>Registra a informação disponível sobre a acessibilidade da entrada.</dd></div>
+                        <div class="resource-card"><dt><img src="assets/accessibility/banheiro-acessivel.svg" alt="" aria-hidden="true">Banheiro acessível</dt><dd>Registra a informação disponível sobre a acessibilidade do banheiro.</dd></div>
+                        <div class="resource-card"><dt><img src="assets/accessibility/estacionamento-acessivel.svg" alt="" aria-hidden="true">Estacionamento acessível</dt><dd>Registra a informação disponível sobre estacionamento acessível.</dd></div>
+                    </dl>
+                </section>
+                <section class="resource-group" aria-labelledby="titulo-visual">
+                    <h3 id="titulo-visual">Deficiência visual</h3>
+                    <dl class="resource-list">
+                        <div class="resource-card"><dt><img src="assets/accessibility/piso-tatil.svg" alt="" aria-hidden="true">Piso tátil</dt><dd>Registra a informação disponível sobre a presença de piso tátil.</dd></div>
+                        <div class="resource-card"><dt><img src="assets/accessibility/braille.svg" alt="" aria-hidden="true">Material em braille</dt><dd>Registra a informação disponível sobre braille ou informação tátil.</dd></div>
+                    </dl>
+                </section>
+                <section class="resource-group" aria-labelledby="titulo-comunicacao">
+                    <h3 id="titulo-comunicacao">Comunicação</h3>
+                    <dl class="resource-list">
+                        <div class="resource-card"><dt><img src="assets/accessibility/libras.svg" alt="" aria-hidden="true">Atendimento em Libras</dt><dd>Registra a informação disponível sobre atendimento ou comunicação em Libras.</dd></div>
+                    </dl>
+                </section>
+            </div>
+        </section>
+
+        <section class="accessibility-section" aria-labelledby="titulo-recursos-site">
+            <div class="accessibility-section-heading"><div><h2 id="titulo-recursos-site">Recursos deste site</h2><p>Controles para ajustar a leitura e navegar pela página.</p></div></div>
+            <div class="site-accessibility-grid">
+                <article class="accessibility-card"><h3>Ajustes de leitura</h3><p>Use A+ e A- para alterar o tamanho da fonte. O alto contraste muda as cores da interface. Essas preferências ficam salvas no navegador.</p><button class="accessibility-action" type="button" data-reading-settings>Ajustar leitura e contraste</button></article>
+                <article class="accessibility-card"><h3>Navegação por teclado</h3><p>Os links de atalho no topo levam ao conteúdo, ao menu e ao rodapé. Use Tab para percorrer os controles e Enter ou Espaço para acioná-los.</p></article>
+                <article class="accessibility-card"><h3>VLibras</h3><p>O widget VLibras está disponível nas páginas para apoiar a tradução de conteúdos em Libras.</p></article>
+            </div>
+        </section>
+
+        <section class="accessibility-section accessibility-help" aria-labelledby="titulo-ajude">
+            <div class="accessibility-section-heading"><div><h2 id="titulo-ajude">Ajude a melhorar</h2><p>Você pode corrigir ou completar uma informação pelo <a class="accessibility-inline-link" href="contato.html">Contato</a> ou cadastrar um local na página <a class="accessibility-inline-link" href="cadastro_estabelecimento.html">Cadastrar local</a>.</p><p>Estamos trabalhando para seguir as diretrizes WCAG 2.2 nível AA.</p></div></div>
         </section>
     </main>
-    <footer class="site-footer">
-        <div class="footer-shell">
-            <p><strong>IncluiMais</strong><br>Informação para uma cidade mais acessível.</p>
-            <p><a href="mapa.html">Ir para o mapa</a></p>
-        </div>
-    </footer>
+    <footer class="site-footer" data-site-footer></footer>
     <script src="js/site.js"></script>
 </body>
 

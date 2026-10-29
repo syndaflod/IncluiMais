@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/site.css">
+    <script src="js/accessibility-init.js"></script>
 </head>
 
-<body><a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<body><div class="accessibility-bar" data-accessibility-controls></div>
     <header class="site-header">
         <div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark"
                     aria-hidden="true">+</span>IncluiMais</a><button class="nav-toggle" type="button"
@@ -45,12 +46,7 @@
             </audio>
         </section>
     </main>
-    <footer class="site-footer">
-        <div class="footer-shell">
-            <p><strong>IncluiMais</strong><br>Informação para uma cidade mais acessível.</p>
-            <p><a href="contato.html">Enviar sugestão</a></p>
-        </div>
-    </footer>
+    <footer class="site-footer" data-site-footer></footer>
     <script src="js/site.js"></script>
 </body>
 

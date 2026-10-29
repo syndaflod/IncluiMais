@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/site.css">
+    <script src="js/accessibility-init.js"></script>
 </head>
 
-<body><a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<body><div class="accessibility-bar" data-accessibility-controls></div>
     <header class="site-header">
         <div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark"
                     aria-hidden="true">+</span>IncluiMais</a><button class="nav-toggle" type="button"
@@ -23,38 +24,75 @@
                     href="cadastro_estabelecimento.html">Cadastrar local</a><a href="contato.html">Contato</a></nav>
         </div>
     </header>
-    <main id="conteudo" class="page-main">
-        <header class="page-heading">
-            <h1>Sobre o IncluiMais</h1>
-            <p>Uma proposta de impacto social para tornar informações sobre acessibilidade mais fáceis de encontrar e
-                compartilhar.</p>
-        </header>
-        <article class="content">
-            <h2>O problema</h2>
-            <p>Muitas pessoas precisam descobrir se um estabelecimento oferece entrada acessível, banheiro adaptado,
-                piso tátil ou atendimento em Libras. Quando essa informação não está disponível, a autonomia diminui e a
-                participação social fica mais difícil.</p>
-            <h2>Nossa proposta</h2>
-            <p>O IncluiMais reúne essas informações em uma experiência simples: a pessoa consulta o mapa, entende os
-                recursos e pode contribuir com novos dados. O site não substitui a confirmação do estabelecimento; ele
-                organiza pistas úteis para uma decisão mais informada.</p>
-            <h2>Missão, visão e valores</h2><img class="unicid-logo" src="assets/logo-unicid.svg"
-                alt="Logo IncluiMais, UNICID">
-            <ul class="feature-list">
-                <li><strong>Missão</strong><br>Ampliar o acesso à informação sobre espaços acessíveis.</li>
-                <li><strong>Visão</strong><br>Ser uma referência comunitária para escolhas mais inclusivas.</li>
-                <li><strong>Colaboração</strong><br>Valorizar relatos e contribuições da comunidade.</li>
-                <li><strong>Responsabilidade</strong><br>Comunicar limites e evitar promessas que os dados não
-                    comprovam.</li>
+    <main id="conteudo" class="page-main about-page">
+        <section class="page-heading about-intro" aria-labelledby="titulo-sobre">
+            <h1 id="titulo-sobre">O que é o IncluiMais</h1>
+            <p>O IncluiMais reúne informações sobre acessibilidade em uma experiência simples: a pessoa consulta o mapa, entende os recursos e pode contribuir com novos dados. O site não substitui a confirmação do estabelecimento; ele organiza pistas úteis para uma decisão mais informada.</p>
+            <p>O projeto foi desenvolvido por estudantes de Ciência da Computação da UNICID, começando pelo entorno da universidade e com a visão de crescer para outras áreas.</p>
+        </section>
+
+        <section class="about-section" aria-labelledby="titulo-problema">
+            <h2 id="titulo-problema">O problema</h2>
+            <p>Muitas pessoas precisam descobrir se um estabelecimento oferece entrada acessível, banheiro adaptado, piso tátil ou atendimento em Libras. Quando essa informação não está disponível, a autonomia diminui e a participação social fica mais difícil.</p>
+            <div class="about-placeholder" role="note">
+                <p>Segundo o Censo 2022 do IBGE, o Brasil tinha 14,4 milhões de pessoas com deficiência, cerca de 7,3% da população com 2 anos ou mais.</p>
+                <p>Para muitas delas, descobrir se um lugar tem entrada sem degraus, banheiro adaptado, piso tátil ou atendimento em Libras ainda depende de ligar, perguntar ou arriscar a ida.</p>
+                <a href="https://educa.ibge.gov.br/jovens/materias-especiais/22695-censo-2022-7-3-da-populacao-com-2-anos-ou-mais-tinha-alguma-deficiencia.html" target="_blank" rel="noopener noreferrer">Fonte: Censo 2022 do IBGE</a>
+            </div>
+        </section>
+
+        <section class="about-section" aria-labelledby="titulo-funciona">
+            <h2 id="titulo-funciona">Como funciona</h2>
+            <ol class="about-steps">
+                <li class="about-step">
+                    <span class="about-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5M8.5 11h5M11 8.5v5"></path></svg></span>
+                    <h3>Consulte o mapa</h3>
+                    <p>Encontre locais e recursos de acessibilidade perto da UNICID.</p>
+                    <a class="button" href="mapa.html">Ver o mapa</a>
+                </li>
+                <li class="about-step">
+                    <span class="about-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"></path><path d="M4 5.5v15M8 7h8M8 11h6"></path></svg></span>
+                    <h3>Entenda os recursos</h3>
+                    <p>Veja o que significa cada estado registrado e conheça os limites das informações.</p>
+                    <a class="button secondary" href="acessibilidade.html">Ler sobre acessibilidade</a>
+                </li>
+                <li class="about-step">
+                    <span class="about-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 5v14M5 12h14"></path><path d="M5 5h5v5H5zM14 14h5v5h-5z"></path></svg></span>
+                    <h3>Contribua</h3>
+                    <p>Compartilhe informações que possam ajudar outra pessoa a planejar uma visita.</p>
+                    <a class="button secondary" href="cadastro_estabelecimento.html">Cadastrar local</a>
+                </li>
+            </ol>
+        </section>
+
+        <section class="about-section" aria-labelledby="titulo-principios">
+            <h2 id="titulo-principios">Nossos princípios</h2>
+            <ul class="principles-list">
+                <li><h3>Missão</h3><p>Ampliar o acesso à informação sobre espaços acessíveis.</p></li>
+                <li><h3>Visão</h3><p>Ser uma referência comunitária para escolhas mais inclusivas.</p></li>
+                <li><h3>Colaboração</h3><p>Valorizar relatos e contribuições da comunidade.</p></li>
+                <li class="principle-responsibility"><h3>Responsabilidade</h3><p>Comunicar limites e evitar promessas que os dados não comprovam.</p><a href="acessibilidade.html#titulo-leitura-dados">Como ler os dados</a></li>
             </ul>
-        </article>
+        </section>
+
+        <section class="about-section" aria-labelledby="titulo-quem-somos">
+            <h2 id="titulo-quem-somos">Quem somos</h2>
+            <p>Projeto desenvolvido por estudantes de Ciência da Computação da UNICID.</p>
+            <ul class="members-list">
+                <li><strong>Antonio Dantas da Silva Neto</strong><span>Integrante do projeto</span><a href="https://github.com/AntonioDS">GitHub: AntonioDS</a></li>
+                <li><strong>Arthur de Jesus Salviano Oliveira</strong><span>Integrante do projeto</span><a href="https://github.com/arthurjso12-dev">GitHub: arthurjso12-dev</a></li>
+                <li><strong>Gustavo Frutuoso José</strong><span>Integrante do projeto</span><a href="https://github.com/gustavofjose">GitHub: gustavofjose</a></li>
+                <li><strong>Heitor Tureck de Oliveira</strong><span>Integrante do projeto</span><a href="https://github.com/syndaflod">GitHub: syndaflod</a></li>
+            </ul>
+            <p class="about-data-count" data-locais-count aria-live="polite">Carregando locais cadastrados...</p>
+        </section>
+
+        <section class="about-section about-closing" aria-labelledby="titulo-comecar">
+            <h2 id="titulo-comecar">Comece pelo que você precisa</h2>
+            <div class="hero-actions"><a class="button" href="mapa.html">Ver o mapa</a><a class="button secondary" href="cadastro_estabelecimento.html">Cadastrar local</a></div>
+        </section>
     </main>
-    <footer class="site-footer">
-        <div class="footer-shell">
-            <p><strong>IncluiMais</strong><br>Informação para uma cidade mais acessível.</p>
-            <p><a href="contato.html">Fale com a equipe</a></p>
-        </div>
-    </footer>
+    <footer class="site-footer" data-site-footer></footer>
     <script src="js/site.js"></script>
 </body>
 

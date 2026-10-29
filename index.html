@@ -6,9 +6,10 @@
   <title>IncluiMais | Acessibilidade perto de você</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/site.css">
+  <script src="js/accessibility-init.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="accessibility-bar" data-accessibility-controls></div>
   <header class="site-header"><div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">+</span>IncluiMais</a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">Menu</button><nav id="menu-principal" class="site-nav" aria-label="Menu principal"><a href="index.html" aria-current="page">Início</a><a href="mapa.html">Mapa</a><a href="acessibilidade.html">Acessibilidade</a><a href="cadastro_estabelecimento.html">Cadastrar local</a><a href="contato.html">Contato</a></nav></div></header>
   <main id="conteudo" class="page-main">
     <section class="hero" aria-labelledby="titulo-principal"><div><h1 id="titulo-principal">Acessibilidade começa quando a informação chega.</h1><p>O IncluiMais ajuda pessoas a encontrar locais com recursos de acessibilidade e convida a comunidade a melhorar esses dados.</p><div class="hero-actions"><a class="button" href="mapa.html">Explorar o mapa</a><a class="button secondary" href="cadastro_estabelecimento.html">Indicar um local</a></div></div><div class="hero-art" aria-hidden="true"></div></section>
@@ -16,7 +17,7 @@
     <section class="section" aria-labelledby="proximo-passo"><div class="surface"><div class="section-heading"><h2 id="proximo-passo">Comece pela sua necessidade</h2><p>Você pode buscar um local, registrar uma informação ou aprender mais sobre a iniciativa.</p></div><div class="hero-actions"><a class="button" href="midia.html">Conheça a UNICID</a><a class="button secondary" href="contato.html">Enviar sugestão</a></div></div></section>
   </main>
   <div class="chatbot"><section class="chatbot-panel" hidden aria-label="Assistente de dúvidas"><div class="chatbot-messages" aria-live="polite"><p class="chatbot-message"><strong>IncluiMais:</strong> Posso responder dúvidas sobre mapa, filtros, cadastro, contato e privacidade.</p></div><form class="chatbot-form"><label class="visually-hidden" for="chatbot-pergunta">Sua pergunta</label><input id="chatbot-pergunta" type="text" placeholder="Digite sua dúvida" autocomplete="off"><button type="submit">Enviar</button></form></section><button class="chatbot-toggle" type="button" aria-expanded="false">Dúvidas?</button></div>
-  <footer class="site-footer"><div class="footer-shell"><p><strong>IncluiMais</strong><br>Informação para uma cidade mais acessível.</p><p><a href="sobre.html">Sobre o projeto</a> · <a href="contato.html">Contato</a></p></div></footer>
+  <footer class="site-footer" data-site-footer></footer>
   <script src="js/site.js"></script>
 </body>
 </html>
