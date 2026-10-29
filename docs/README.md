@@ -6,7 +6,7 @@ O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. E
 
 ## Estado atual
 
-A primeira versão do site já possui 9 páginas, navegação compartilhada, mapa interativo, formulários HTML5, chatbot FAQ e recursos básicos de acessibilidade.
+A primeira versão do site já possui 10 páginas, navegação compartilhada, mapa interativo, formulários HTML5, chatbot FAQ e recursos básicos de acessibilidade.
 
 ## Páginas
 
@@ -110,12 +110,8 @@ IncluiMais/
 
 ## Pendências antes da entrega
 
-- Conferir autorização e fontes das imagens e textos.
-- Revisar todos os links e testar a navegação entre as páginas.
 - Testar os formulários com dados válidos e inválidos.
 - Testar teclado, foco visível, contraste, zoom e leitor de tela.
-- Validar o HTML e o CSS no W3C Validator.
-- Testar o mapa com e sem conexão com os serviços externos.
 - Registrar prints ou descrições dos testes em `docs/`.
 - Completar o diário de bordo e a divisão de tarefas da equipe.
 - Atualizar o orçamento com preços e fontes consultados na data da entrega.
