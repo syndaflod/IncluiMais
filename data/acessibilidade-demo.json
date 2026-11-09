@@ -1,0 +1,303 @@
+{
+  "_aviso": "Marcações de demonstração para a apresentação. Não vêm de vistoria nem do OpenStreetMap.",
+  "locais": {
+    "20307221": {
+      "nome": "Spani Supermercado",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "375977786": {
+      "nome": "Hospital Municipal Doutor Cármino Caricchio",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "sign_language": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "452896309": {
+      "nome": "Praça Doutor Odilon Ventania",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "tactile_paving": "yes",
+        "braille": "no"
+      }
+    },
+    "503281083": {
+      "nome": "52º Distrito Policial do Parque São Jorge",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "no"
+      }
+    },
+    "715107489": {
+      "nome": "Smart Fit",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "715108965": {
+      "nome": "A+ Fitness",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "sign_language": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "715109275": {
+      "nome": "Dra. Keith Endodontista",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "toilets:wheelchair": "yes",
+        "parking:wheelchair": "no"
+      }
+    },
+    "715113587": {
+      "nome": "CIC",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "sign_language": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "715115946": {
+      "nome": "Oxxo",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "tactile_paving": "yes",
+        "toilets:wheelchair": "no"
+      }
+    },
+    "715117784": {
+      "nome": "Fatec Tatuapé - Victor Civita",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "sign_language": "no",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "962339566": {
+      "nome": "Posto Radial",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "toilets:wheelchair": "yes",
+        "parking:wheelchair": "yes"
+      }
+    },
+    "962339568": {
+      "nome": "Ragazzo",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "no",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "1046873261": {
+      "nome": "Burger King",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "sign_language": "no",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "1047197025": {
+      "nome": "Loterica Valente",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "toilets:wheelchair": "no"
+      }
+    },
+    "1047197028": {
+      "nome": "Ultrafarma Popular",
+      "tags": {
+        "entrance:wheelchair": "yes"
+      }
+    },
+    "1047431861": {
+      "nome": "Cobasi",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes"
+      }
+    },
+    "1467470341": {
+      "nome": "Droga Raia",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "tactile_paving": "yes"
+      }
+    },
+    "1486962631": {
+      "nome": "E.E Joao Dias da Silveira",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "toilets:wheelchair": "yes",
+        "tactile_paving": "yes",
+        "sign_language": "no"
+      }
+    },
+    "1488015882": {
+      "nome": "Forum Regional VIII",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "no",
+        "sign_language": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "1489869678": {
+      "nome": "E.E Carlos Escobar",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "toilets:wheelchair": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "sign_language": "no"
+      }
+    },
+    "1490221226": {
+      "nome": "Henri Car",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "ramp:wheelchair": "no"
+      }
+    },
+    "1490999691": {
+      "nome": "Oxxo",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes"
+      }
+    },
+    "1491007828": {
+      "nome": "Oxxo",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "no"
+      }
+    },
+    "2344641640": {
+      "nome": "Mercado Extra",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "tactile_paving": "no",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "2344643812": {
+      "nome": "Big Bread",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "no"
+      }
+    },
+    "3062192756": {
+      "nome": "Wayne Tattoo",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "no",
+        "sign_language": "no",
+        "tactile_paving": "yes",
+        "braille": "no",
+        "toilets:wheelchair": "no"
+      }
+    },
+    "3945083682": {
+      "nome": "Farto Drogarias",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "no"
+      }
+    },
+    "13658813935": {
+      "nome": "Chapadão",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    },
+    "6721262856": {
+      "nome": "Itaú",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "sign_language": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "no"
+      }
+    },
+    "11110241749": {
+      "nome": "Casa do Pastel - Carrão",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "toilets:wheelchair": "no"
+      }
+    },
+    "incluimais-terminal-carrao-norte": {
+      "nome": "Terminal Urbano Carrão - Norte",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "sign_language": "yes",
+        "toilets:wheelchair": "yes",
+        "parking:wheelchair": "no"
+      }
+    },
+    "incluimais-terminal-carrao-sul": {
+      "nome": "Terminal Urbano Carrão - Sul",
+      "tags": {
+        "entrance:wheelchair": "yes",
+        "ramp:wheelchair": "yes",
+        "parking:wheelchair": "yes",
+        "sign_language": "yes",
+        "tactile_paving": "yes",
+        "braille": "yes",
+        "toilets:wheelchair": "yes"
+      }
+    }
+  }
+}

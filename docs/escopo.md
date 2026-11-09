@@ -146,8 +146,8 @@ index.html
 
 ## 11. Riscos e restrições
 
-- **Dados incompletos:** dos 87 registros, só os 2 da UNICID têm informação de acessibilidade. Os demais aparecem como “não informado”.
-- **Navegação limitada:** o centro do mapa fica restrito a 100 m do ponto inicial, enquanto os dados vão até cerca de 1.000 m. Parte dos locais pode ficar fora da área visível.
+- **Dados incompletos:** dos 87 registros, só os 2 da UNICID têm informação de acessibilidade verificada. Outros 32 locais têm marcações fictícias para a apresentação (lista em `data/acessibilidade-demo.json`). Os demais aparecem como “não informado”.
+- **Navegação limitada:** o mapa fica preso a um retângulo em volta dos locais atuais e não afasta além do necessário para mostrar a área inteira. Locais adicionados fora desse retângulo ficariam fora do alcance até o limite ser ampliado.
 - **Serviços externos:** mapa-base, bibliotecas, fontes e VLibras dependem de internet. O plano B é um vídeo ou prints da demonstração.
 - **Sem back-end:** os formulários são demonstrativos e não enviam dados.
 - **Vídeo:** o arquivo ainda não tem legendas.

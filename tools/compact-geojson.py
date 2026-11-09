@@ -5,9 +5,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data" / "UNICID_2.geojson"
 OUTPUT = ROOT / "data" / "locais.json"
+# Marcações de demonstração aplicadas por cima dos dados do OpenStreetMap.
+DEMO = ROOT / "data" / "acessibilidade-demo.json"
 NEEDED_TAGS = {
     "osm_id", "name", "amenity", "shop", "leisure", "healthcare", "tourism",
     "addr_street", "addr_housenumber", "entrance:wheelchair", "wheelchair",
+    "ramp:wheelchair", "ramp", "entrance:ramp",
     "toilets:wheelchair", "wheelchair:toilets", "parking:wheelchair",
     "sign_language:pt-BR", "sign_language", "communication:sign_language",
     "tactile_paving", "tactile_paving:floor", "braille", "information:braille",
@@ -25,6 +28,7 @@ def points_in(value, output):
 
 def main():
     source = json.loads(SOURCE.read_text(encoding="utf-8"))
+    demo = json.loads(DEMO.read_text(encoding="utf-8")).get("locais", {}) if DEMO.exists() else {}
     features = []
     for feature in source.get("features", []):
         properties = feature.get("properties") or {}
@@ -47,10 +51,12 @@ def main():
                 sum(value[1] for value in points) / len(points),
             ]
 
+        compact = {key: value for key, value in properties.items() if key in NEEDED_TAGS and value is not None}
+        compact.update(demo.get(str(properties.get("osm_id")), {}).get("tags", {}))
         features.append({
             "type": "Feature",
             "geometry": {"type": "Point", "coordinates": point},
-            "properties": {key: value for key, value in properties.items() if key in NEEDED_TAGS and value is not None},
+            "properties": compact,
         })
 
     OUTPUT.write_text(json.dumps({"type": "FeatureCollection", "features": features}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

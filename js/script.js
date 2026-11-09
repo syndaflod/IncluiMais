@@ -1,10 +1,9 @@
-import { categoriaDoLocal, deduplicarLocais, localBaseDoGeoJson } from "./locais-dados.js";
+import { categoriaDoLocal, deduplicarLocais, localBaseDoGeoJson } from "./locais-dados.js?v=20261109-unicid";
 import { CATEGORIAS, iconeCategoria } from "../assets/categorias.js?v=transport-icons-20261028";
 
 const CENTRO_INICIAL = [-23.53598, -46.55948];
 const MODO_EMBED = new URLSearchParams(window.location.search).get("embed") === "1";
-const RAIO_DESLOCAMENTO_METROS = 100;
-const RAIO_TERRA_METROS = 6371000;
+const RAIO_DESLOCAMENTO_METROS = 1050;
 let locais = [];
 let estadoCarregamentoLocais = "carregando";
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
@@ -326,7 +325,7 @@ async function carregarLocaisGeoJson() {
   estadoCarregamentoLocais = "carregando";
   filtrarLocais();
   try {
-    const resposta = await fetch("data/locais.json");
+    const resposta = await fetch("data/locais.json", { cache: "no-cache" });
     if (!resposta.ok) throw new Error(`O arquivo de locais respondeu ${resposta.status}`);
     const dados = await resposta.json();
     locais = deduplicarLocais(dados.features.map(localDoGeoJson).filter(Boolean));
@@ -360,68 +359,26 @@ async function carregarLocaisOverpass() {
   }
 }
 
-function limitarCentro(latlng) {
-  const distancia = mapa.distance(CENTRO_INICIAL, latlng);
-  if (distancia <= RAIO_DESLOCAMENTO_METROS) return latlng;
+// Retângulo que envolve todos os locais da área piloto (data/locais.json), com ~110 m de folga.
+const LIMITES_AREA = [[-23.5425, -46.5690], [-23.5279, -46.5514]];
 
-  const rad = Math.PI / 180;
-  const latitudeOrigem = CENTRO_INICIAL[0] * rad;
-  const longitudeOrigem = CENTRO_INICIAL[1] * rad;
-  const latitudeDestino = latlng.lat * rad;
-  const diferencaLongitude = (latlng.lng - CENTRO_INICIAL[1]) * rad;
-  const rumo = Math.atan2(
-    Math.sin(diferencaLongitude) * Math.cos(latitudeDestino),
-    Math.cos(latitudeOrigem) * Math.sin(latitudeDestino) -
-      Math.sin(latitudeOrigem) * Math.cos(latitudeDestino) * Math.cos(diferencaLongitude)
-  );
-  const angulo = RAIO_DESLOCAMENTO_METROS / RAIO_TERRA_METROS;
-  const latitudeLimitada = Math.asin(
-    Math.sin(latitudeOrigem) * Math.cos(angulo) +
-      Math.cos(latitudeOrigem) * Math.sin(angulo) * Math.cos(rumo)
-  );
-  const longitudeLimitada = longitudeOrigem + Math.atan2(
-    Math.sin(rumo) * Math.sin(angulo) * Math.cos(latitudeOrigem),
-    Math.cos(angulo) - Math.sin(latitudeOrigem) * Math.sin(latitudeLimitada)
-  );
-  return L.latLng(latitudeLimitada / rad, longitudeLimitada / rad);
-}
-
-// Limita o centro ao raio definido em RAIO_DESLOCAMENTO_METROS com operações simples em pixels durante o arrasto.
-// A correção geográfica mais cara acontece apenas ao terminar o gesto ou mudar o zoom.
-function configurarLimiteCircular() {
-  const arraste = mapa.dragging._draggable;
-  let posicaoBrutaAnterior;
-  arraste.on("dragstart", () => {
-    posicaoBrutaAnterior = arraste._startPos.clone();
-  });
-  // Limita mouse e toque antes de o Leaflet mover o painel do mapa.
-  arraste.on("predrag", () => {
-    const posicaoBruta = arraste._newPos.clone();
-    const deslocamento = posicaoBruta.subtract(posicaoBrutaAnterior || arraste._startPos);
-    posicaoBrutaAnterior = posicaoBruta;
-    const posicaoAtual = mapa._getMapPanePos();
-    const centroProjetado = mapa.project(mapa.getCenter());
-    const centroPretendido = mapa.unproject(centroProjetado.subtract(deslocamento));
-    const centroLimitado = limitarCentro(centroPretendido);
-    arraste._newPos = posicaoAtual.add(centroProjetado.subtract(mapa.project(centroLimitado)));
-  });
-
-  let corrigindo = false;
-  const corrigirCentro = () => {
-    if (corrigindo) return;
-    const centroLimitado = limitarCentro(mapa.getCenter());
-    if (mapa.distance(centroLimitado, mapa.getCenter()) < 0.01) return;
-    corrigindo = true;
-    mapa.setView(centroLimitado, mapa.getZoom(), { animate: false });
-    corrigindo = false;
+// Mantém a vista dentro da área dos locais. O zoom mínimo é o que faz a área
+// inteira caber na tela, então não dá para afastar até ver a cidade toda.
+function configurarLimiteDaArea() {
+  const limites = L.latLngBounds(LIMITES_AREA);
+  mapa.setMaxBounds(limites);
+  const ajustarZoomMinimo = () => {
+    mapa.setMinZoom(Math.min(mapa.getBoundsZoom(limites), mapa.getMaxZoom()));
   };
-  mapa.on("moveend zoomend", corrigirCentro);
+  ajustarZoomMinimo();
+  mapa.on("resize", ajustarZoomMinimo);
 }
 
 function inicializarMapa() {
   mapa = L.map("mapa", {
-    minZoom: MODO_EMBED ? 16 : 17,
-    maxZoom: 19,
+    minZoom: MODO_EMBED ? 16 : 15,
+    maxBoundsViscosity: 1,
+    maxZoom: 20,
     inertia: false,
     dragging: !MODO_EMBED,
     scrollWheelZoom: !MODO_EMBED,
@@ -431,8 +388,8 @@ function inicializarMapa() {
     touchZoom: !MODO_EMBED,
     zoomControl: false,
     attributionControl: false
-  }).setView(CENTRO_INICIAL, 19);
-  if (!MODO_EMBED) configurarLimiteCircular();
+  }).setView(CENTRO_INICIAL, MODO_EMBED ? 19 : 20);
+  if (!MODO_EMBED) configurarLimiteDaArea();
   if (!MODO_EMBED) {
     L.control.zoom({
       position: "bottomright",
@@ -472,6 +429,20 @@ function inicializarMapa() {
     document.querySelector(".campo-busca").getBoundingClientRect();
   };
   mapa.whenReady(() => requestAnimationFrame(atualizarLayoutMapa));
+
+  // Quando o contêiner muda de tamanho (por exemplo, o iframe da home cresce depois de carregar),
+  // o Leaflet e a camada do MapLibre precisam ser remedidos; sem isso sobra uma faixa sem mapa embaixo.
+  if ("ResizeObserver" in window) {
+    let medida = "";
+    new ResizeObserver(([entrada]) => {
+      const { width, height } = entrada.contentRect;
+      const atual = `${Math.round(width)}x${Math.round(height)}`;
+      if (!width || !height || atual === medida) return;
+      medida = atual;
+      mapa.invalidateSize({ animate: false, pan: false });
+      glMap.resize();
+    }).observe(document.getElementById("mapa"));
+  }
 }
 
 function recursosDoLocal(local) {
@@ -495,15 +466,76 @@ function conteudoPopup(local) {
     if (estado !== "available") return `<span class="tile tile-${estado} estado-${estado}" role="img" aria-label="${descricao}" title="${descricao}"><img src="${iconesRecursos[chave]}" alt=""></span>`;
     return `<button type="button" class="tile tile-disponivel estado-available" aria-label="${nome}" title="${nome}" aria-pressed="false" data-recurso-nome="${nome}"><img src="${iconesRecursos[chave]}" alt=""></button>`;
   };
-  const gruposDisponiveis = grupos.map((grupo) => grupo.filter((chave) => acessibilidade[chave] === "available"))
+  // Mantém sempre a mesma disposição em grupos, independentemente do estado de cada recurso.
+  const extras = recursosOrdenados.filter((chave) => !ordem.includes(chave));
+  const gruposDeRecursos = [...grupos, extras]
     .filter((grupo) => grupo.length)
     .map((grupo) => `<div class="grp">${grupo.map(renderTile).join("")}</div>`).join("");
-  const estados = recursosOrdenados.filter((chave) => acessibilidade[chave] !== "available");
-  const gruposDeRecursos = `${gruposDisponiveis}${estados.length ? `<div class="grp grp-estados">${estados.map(renderTile).join("")}</div>` : ""}`;
   const dica = MODO_EMBED || !disponiveis.length ? "" : " · toque num ícone";
   const cap = `<p class="cap" aria-live="polite"><strong>${disponiveis.length} ${disponiveis.length === 1 ? "disponível" : "disponíveis"}</strong>${dica}</p>`;
   const destino = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${local.latitude},${local.longitude}`)}`;
   return `<article class="popup-estabelecimento" style="--categoria-cor:${corDaCategoria(local)}"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${gruposDeRecursos}</div>${cap}<div class="popup-acoes"><a class="popup-como-chegar" href="${destino}" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>Como chegar</a><a class="popup-detalhes" href="acessibilidade.html">Ver detalhes</a></div></article>`;
+}
+
+// Escolhe de que lado do marcador o cartão aparece para ele caber na área visível do mapa:
+// marcador perto da borda esquerda → cartão à direita; perto da direita → à esquerda;
+// perto do topo → abaixo; nos demais casos → acima (padrão). A seta acompanha o marcador.
+const POPUP_LADOS = ["popup-pos-acima", "popup-pos-abaixo", "popup-pos-direita", "popup-pos-esquerda"];
+function posicionarPopup(marcador) {
+  const popup = marcador.getPopup();
+  const elemento = popup?.getElement();
+  const wrapper = elemento?.querySelector(".leaflet-popup-content-wrapper");
+  if (!wrapper) return;
+  const margem = 12;
+  const seta = 20;
+  const largura = elemento.offsetWidth;
+  const altura = wrapper.offsetHeight;
+  const tamanho = mapa.getSize();
+  const caixa = mapa.getContainer().getBoundingClientRect();
+  const area = {
+    esquerda: Math.max(0, -caixa.left) + margem,
+    topo: Math.max(0, -caixa.top) + margem,
+    direita: Math.min(tamanho.x, (window.innerWidth || caixa.right) - caixa.left) - margem,
+    baixo: Math.min(tamanho.y, (window.innerHeight || caixa.bottom) - caixa.top) - margem
+  };
+  const ponto = mapa.latLngToContainerPoint(marcador.getLatLng());
+  const icone = marcador.options.icon.options;
+  const ancora = ponto.add(L.point(icone.popupAnchor));
+  const meioMarcadorY = ponto.y - icone.iconAnchor[1] + icone.iconSize[1] / 2;
+  const meiaLarguraMarcador = icone.iconSize[0] / 2;
+  const limitar = (valor, minimo, maximo) => Math.max(minimo, Math.min(valor, Math.max(minimo, maximo)));
+
+  const topoAcima = ancora.y + 7 - seta - altura;
+  const topoAbaixo = ponto.y + 4 + seta;
+  const cabeAcima = topoAcima >= area.topo;
+  const cabeAbaixo = topoAbaixo + altura <= area.baixo;
+  const lateral = meiaLarguraMarcador + seta + largura;
+  const pertoEsquerda = ponto.x - area.esquerda < largura / 2;
+  const pertoDireita = area.direita - ponto.x < largura / 2;
+
+  let lado;
+  if (pertoEsquerda && area.direita - ponto.x >= lateral) lado = "direita";
+  else if (pertoDireita && ponto.x - area.esquerda >= lateral) lado = "esquerda";
+  else if (cabeAcima) lado = "acima";
+  else if (cabeAbaixo) lado = "abaixo";
+  else lado = area.direita - ponto.x >= ponto.x - area.esquerda ? "direita" : "esquerda";
+
+  let x0;
+  let y0;
+  if (lado === "acima" || lado === "abaixo") {
+    x0 = limitar(ponto.x - largura / 2, area.esquerda, area.direita - largura);
+    y0 = lado === "acima" ? topoAcima : topoAbaixo;
+    elemento.style.setProperty("--popup-seta-x", `${limitar(ponto.x - x0, 24, largura - 24)}px`);
+  } else {
+    x0 = lado === "direita" ? ponto.x + meiaLarguraMarcador + seta : ponto.x - meiaLarguraMarcador - seta - largura;
+    y0 = limitar(meioMarcadorY - altura / 2, area.topo, area.baixo - altura);
+    elemento.style.setProperty("--popup-seta-y", `${limitar(meioMarcadorY - y0, 24, altura - 24)}px`);
+  }
+  // O Leaflet posiciona a base do popup (com a margem da seta) no ponto ancora + offset.
+  popup.options.offset = L.point(Math.round(x0 + largura / 2 - ancora.x), Math.round(y0 + altura + seta - ancora.y));
+  elemento.classList.remove(...POPUP_LADOS);
+  elemento.classList.add(`popup-pos-${lado}`);
+  popup._updatePosition();
 }
 
 // Remove os marcadores anteriores e cria apenas os que correspondem à busca atual.
@@ -518,8 +550,9 @@ function criarMarcadores(locaisFiltrados) {
       alt: local.nome,
       keyboard: !MODO_EMBED,
       icon: L.divIcon({ className: `pin-estabelecimento${MODO_EMBED && !/UNICID|Universidade Cidade de S[aã]o Paulo/i.test(local.nome) ? " pin-preview-secundario" : ""}`, html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
-    }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade", autoPan: !MODO_EMBED });
+    }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade", autoPan: false });
     marcador.on("popupopen", (evento) => {
+      if (!MODO_EMBED) posicionarPopup(marcador);
       const popup = evento.popup.getElement();
       popup.querySelector(".fechar-estabelecimento").addEventListener("click", () => marcador.closePopup());
       const cap = popup.querySelector(".cap");
@@ -615,7 +648,7 @@ function abrirLocal(id) {
   const marcador = marcadores[id];
   const marcadorDoLocal = marcador || (local && marcadores[local.id]);
   if (!local || !marcadorDoLocal) return;
-  mapa.setView([local.latitude, local.longitude], MODO_EMBED ? 17 : 19, { animate: false });
+  mapa.setView([local.latitude, local.longitude], MODO_EMBED ? 17 : 20, { animate: false });
   marcadorDoLocal.openPopup();
   if (MODO_EMBED) requestAnimationFrame(() => centralizarPopupComMarcador(marcadorDoLocal));
 }

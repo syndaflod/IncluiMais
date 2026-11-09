@@ -149,6 +149,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
 .popup-acessibilidade .leaflet-popup-content-wrapper { padding: 0; overflow: hidden; background: #fff; border-radius: 14px; box-shadow: 0 7px 20px rgba(25, 52, 80, .22); }
 .popup-acessibilidade .leaflet-popup-content { width: 280px !important; margin: 0; }
 .popup-acessibilidade .leaflet-popup-tip { background: #fff; }
+/* Lado do cartão em relação ao marcador (definido por posicionarPopup em js/script.js). */
+.popup-acessibilidade.popup-pos-acima .leaflet-popup-tip-container { left: var(--popup-seta-x, 50%); }
+.popup-acessibilidade.popup-pos-abaixo .leaflet-popup-tip-container { top: -19px; left: var(--popup-seta-x, 50%); margin-top: 0; transform: rotate(180deg); }
+.popup-acessibilidade.popup-pos-direita .leaflet-popup-tip-container { top: var(--popup-seta-y, 50%); left: -29px; margin: -10px 0 0; transform: rotate(90deg); }
+.popup-acessibilidade.popup-pos-esquerda .leaflet-popup-tip-container { top: var(--popup-seta-y, 50%); left: calc(100% - 11px); margin: -10px 0 0; transform: rotate(-90deg); }
 .popup-acessibilidade .popup-estabelecimento { position: relative; min-height: 142px; padding: 14px 15px 12px; }
 .popup-acessibilidade .popup-titulo { margin: 0; color: var(--texto); font-size: 17px; line-height: 1.1; letter-spacing: -.02em; }
 .popup-acessibilidade .popup-texto { margin: 0; color: var(--texto-suave); font-size: 12px; }
@@ -242,10 +247,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
 .estado-available img,
 .estado-unavailable img { filter: invert(1); }
 
-/* Estado do recurso visivel sem depender so da cor. */
+/* Estado do recurso: verde = disponível, vermelho = indisponível, cinza = não informado (o nome e o estado ficam no aria-label e no title). */
 .popup-acessibilidade .tile { position: relative; }
 .popup-acessibilidade .tile.estado-unknown img { filter: none; }
-.popup-acessibilidade .tile.estado-unavailable::after,
-.popup-acessibilidade .tile.estado-unknown::after { position: absolute; inset-block-start: -5px; inset-inline-end: -5px; width: 16px; height: 16px; color: #202124; background: #fff; border: 1px solid #202124; border-radius: 50%; font: 700 11px/14px Arial, sans-serif; text-align: center; }
-.popup-acessibilidade .tile.estado-unavailable::after { content: "\00D7"; }
-.popup-acessibilidade .tile.estado-unknown::after { content: "?"; }
