@@ -1,0 +1,30 @@
+IncluiMais - Encontre lugares mais acessíveis
+Atividade A1 - Roteiro da 2ª Entrega - Projeto de Site Concluído (AV A1)
+Disciplina: DEV. Front-End - Curso Superior de Informática - UNICID
+Professor: Paulo Fratta
+Data de entrega: 09/11/2026
+
+INTEGRANTES
+Nome completo                          RA
+Antonio Dantas da Silva Neto           47788356
+Arthur de Jesus Salviano Oliveira      47764988
+Gustavo Frutuoso José                  47604565
+Gustavo Reis                           47455152
+Heitor Tureck de Oliveira              47104503
+
+LINKS
+Site publicado: https://projetoincluimais.vercel.app
+Repositório no GitHub: https://github.com/syndaflod/IncluiMais
+
+DESCRIÇÃO DA ATIVIDADE
+O IncluiMais é um site sobre inclusão social e acessibilidade para pessoas com
+deficiência. Ele reúne informações sobre recursos de acessibilidade em
+estabelecimentos próximos à UNICID, como rampa, banheiro acessível, piso tátil,
+atendimento em Libras e material em braille, e convida a comunidade a indicar
+novos locais. O projeto se relaciona às ODS 10 (Redução das desigualdades) e
+11 (Cidades e comunidades sustentáveis).
+
+Nesta entrega final, o site foi feito com HTML5, CSS3 e JavaScript e publicado
+na Vercel com HTTPS. Ele tem 12 páginas interligadas, mapa interativo,
+formulários validados com JavaScript, preferências de acessibilidade salvas no
+localStorage, chatbot com IA e documentação na pasta /docs.

@@ -9,23 +9,36 @@ O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. E
 - **Site publicado:** https://projetoincluimais.vercel.app
 - **Repositório:** https://github.com/syndaflod/IncluiMais
 
+## Documentos da entrega
+
+| Documento | Conteúdo |
+|---|---|
+| [`escopo.md`](escopo.md) | Problema, público, requisitos, tecnologias, cronograma e divisão de tarefas |
+| [`diario-de-bordo.md`](diario-de-bordo.md) | Decisões, divisão do trabalho e uso de IA |
+| [`testes.md`](testes.md) | Validação W3C, Lighthouse, teclado, formulários e celular, com prints em [`evidencias/`](evidencias/) |
+| [`orcamento.md`](orcamento.md) | Comparação de hospedagem e domínio |
+| [`chatbot-make.md`](chatbot-make.md) | Integração do chatbot com o Make e a IA |
+| [`mapa.md`](mapa.md) | Funcionamento e dados do mapa |
+
 ## Estado atual
 
-A primeira versão do site já possui 12 páginas, navegação compartilhada, mapa interativo, formulários HTML5, chatbot com IA e recursos básicos de acessibilidade.
+O site está publicado na Vercel com 12 páginas, navegação compartilhada, mapa interativo, formulários com validação em JavaScript, chatbot com IA e recursos de acessibilidade.
+
+Resultados dos testes em 09/11/2026: nenhuma página teve erro apontado pelo W3C Validator, e a página inicial teve nota **100 em acessibilidade** no Lighthouse. Os detalhes e as ressalvas estão em [`testes.md`](testes.md).
 
 ## Páginas
 
 - `index.html`: página inicial, apresentação do problema e chamadas para as principais ações.
 - `mapa.html`: busca de locais, categorias, filtros de acessibilidade e mapa interativo.
 - `sobre.html`: contexto, problema, proposta, missão, visão e valores do projeto.
-- `projetos.html`: eixos de atuação do IncluiMais e placeholders para organizar projetos relacionados à acessibilidade e à participação comunitária.
-- `galeria.html`: espaços visuais pendentes para os mesmos eixos e títulos apresentados em `projetos.html`.
+- `projetos.html`: projetos e áreas de atuação do IncluiMais, com objetivo e público de cada um.
+- `galeria.html`: imagens com legenda e fonte, carregadas de `data/galeria.json`.
 - `acessibilidade.html`: explicação dos recursos de acessibilidade exibidos no mapa.
 - `impacto.html`: situação atual, indicadores, metas propostas e relação entre acessibilidade, participação social e sustentabilidade.
 - `midia.html`: vídeo, áudio e iframe relacionados à UNICID.
 - `cadastro_estabelecimento.html`: formulário para sugerir um novo estabelecimento.
 - `noticias.html`: textos sobre inclusão, acessibilidade, tecnologia e participação social.
-- `contato.html`: formulário de contato, sugestões e correções de informações.
+- `contato.html`: formulário de contato, sugestões e correções, além da área “Apoie”, com voluntariado e outras formas de ajudar.
 - `orcamento_hospedagem.html`: comparação de opções de hospedagem e domínio.
 
 O antigo mapa que estava no `index.html` foi transferido para `mapa.html`. O `index.html` funciona como entrada institucional do projeto.
@@ -38,12 +51,15 @@ O antigo mapa que estava no `index.html` foi transferido para `mapa.html`. O `in
 - Lista de resultados sincronizada com os marcadores do mapa.
 - Área piloto com locais em um raio de cerca de 1.000 metros do ponto inicial e mapa-base que acompanha o alto contraste.
 - Ícones nos marcadores e nos indicadores de acessibilidade dos locais.
-- Menu responsivo compartilhado entre as páginas.
-- Botão para pular diretamente ao conteúdo principal.
+- Menu responsivo compartilhado entre as páginas e rodapé gerado por JavaScript.
+- Atalhos para pular ao conteúdo, ao menu e ao rodapé.
 - Indicador de página atual com `aria-current`.
-- Widget VLibras carregado nas páginas institucionais.
-- Formulários com validação nativa do HTML5 e mensagens com `aria-live`.
+- Ajuste do tamanho da fonte e modo de alto contraste, com a preferência salva no `localStorage`.
+- Widget VLibras carregado pelo `js/site.js`.
+- Formulários com validação em JavaScript, erro exibido em cada campo e mensagens com `aria-live`.
+- Filtro de notícias por categoria.
 - Chatbot com IA integrado ao Make por uma função da Vercel, com FAQ local como alternativa.
+- Frase sobre as ODS 10 e 11 no rodapé de todas as páginas, exceto o mapa.
 
 ## Dados do mapa
 
@@ -65,7 +81,7 @@ As perguntas digitadas no chat saem do navegador e passam pela Vercel, pelo Make
 
 ## Formulários
 
-`cadastro_estabelecimento.html` e `contato.html` usam validação HTML5 com `required`, `email`, `tel`, `pattern`, `label` associado e mensagens acessíveis.
+`cadastro_estabelecimento.html` e `contato.html` usam `novalidate` e validação em JavaScript. Os campos mantêm os atributos HTML5 (`required`, `email`, `tel`, `pattern`) e `label` associado. Ao enviar, cada campo inválido mostra a própria mensagem de erro, como “Informe um e-mail válido, como nome@exemplo.com”.
 
 No estado atual, os formulários são demonstrativos: a validação e a mensagem de confirmação acontecem no navegador, sem envio para um servidor e sem armazenamento dos dados. Para uma versão publicada, será necessário conectar os formulários a um backend, serviço de formulário ou endpoint serverless.
 
@@ -111,10 +127,13 @@ IncluiMais/
 │   ├── site.css
 │   └── style.css
 ├── data/
+│   ├── galeria.json
 │   ├── locais.json
 │   └── UNICID_2.geojson
 ├── docs/
+│   └── evidencias/
 ├── js/
+│   ├── accessibility-init.js
 │   ├── locais-dados.js
 │   ├── script.js
 │   ├── projetos-data.js
@@ -127,10 +146,8 @@ IncluiMais/
 
 ## Pendências antes da entrega
 
-- Testar os formulários com dados válidos e inválidos.
-- Testar teclado, foco visível, contraste, zoom e leitor de tela.
-- Registrar prints ou descrições dos testes em `docs/`.
-- Completar o diário de bordo e a divisão de tarefas da equipe.
+- Repetir o W3C do mapa com a opção “errors & warnings only” e testar zoom e leitor de tela.
+- Completar o diário de bordo: aprendizados e uso de IA.
 - Revisar o orçamento se a entrega ocorrer depois de 09/11/2026, data da última consulta de preços.
 - Criar o arquivo final compactado com o nome dos integrantes e da atividade.
 
@@ -140,10 +157,12 @@ O IncluiMais é um protótipo acadêmico. As informações do mapa não represen
 
 ## Equipe
 
-| Integrante | RGM | GitHub |
-|---|---:|---|
-| Antonio Dantas da Silva Neto | 47788356 | [AntonioDS](https://github.com/AntonioDS) |
-| Arthur de Jesus Salviano Oliveira | 47764988 | [arthurjso12-dev](https://github.com/arthurjso12-dev) |
-| Gustavo Frutuoso José | 47604565 | [gustavofjose](https://github.com/gustavofjose) |
-| Gustavo Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) |
-| Heitor Tureck de Oliveira | 47104503 | [syndaflod](https://github.com/syndaflod) |
+| Integrante | RGM | GitHub | Função |
+|---|---:|---|---|
+| Antonio Dantas da Silva Neto | 47788356 | [AntonioDS](https://github.com/AntonioDS) | Concepção do site e conteúdo das páginas |
+| Arthur de Jesus Salviano Oliveira | 47764988 | [arthurjso12-dev](https://github.com/arthurjso12-dev) | Chatbot com IA e integração com o Make |
+| Gustavo Frutuoso José | 47604565 | [gustavofjose](https://github.com/gustavofjose) | Concepção do site e conteúdo das páginas |
+| Gustavo Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) | Slides da apresentação |
+| Heitor Tureck de Oliveira | 47104503 | [syndaflod](https://github.com/syndaflod) | Design, CSS e JavaScript |
+
+Detalhes em [`escopo.md`](escopo.md), seção 10.
