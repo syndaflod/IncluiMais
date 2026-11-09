@@ -71,7 +71,7 @@ Informado pela equipe: e-mail inválido no Contato mostra “Informe um e-mail v
 
 | Tela | Resultado | Evidência |
 |---|---|---|
-| Home no computador | Título, mapa e menu visíveis; chatbot aberto no print | [print](evidencias/home-desktop.png) |
+| Home no computador | Título, mapa e menu visíveis, com o endereço da Vercel na barra do navegador | [print](evidencias/home-desktop.png), [sem a barra](evidencias/home-desktop-2.png) |
 | Home no celular | Layout em uma coluna, com menu recolhido | [print](evidencias/home-celular.png) |
 | Mapa no celular | Mapa no topo com um local selecionado e o cartão de recursos; busca e filtros abaixo | [print](evidencias/celular-mapa-local.png) |
 | Mídia no celular | Vídeo com controles e descrição em texto, sem rolagem lateral | [print](evidencias/celular-midia.png) |
@@ -110,7 +110,7 @@ Lighthouse 13.4.1, em 09/11/2026, no site publicado já com as correções. A au
 | Cartão de um local sem recursos disponíveis mostrava os 7 ícones numa fila única, com o último cortado, diferente do cartão da UNICID | Ícones sempre nos mesmos 3 grupos, seja qual for o estado; versão do script atualizada para evitar cache | Corrigido localmente, falta publicar |
 | Selo redondo com “×” ou “?” sobre os ícones poluía o cartão | Selo removido; o estado aparece pela cor do ícone e fica no `aria-label` e no `title` | Corrigido localmente, falta publicar |
 | Mapa abria afastado demais para ler marcadores e ruas | Zoom inicial e máximo passaram de 19 para 20 | Corrigido localmente, falta publicar |
-| Não era possível chegar a locais como os Oxxo e os Terminais Carrão, porque o centro do mapa só andava 100 m e o zoom mínimo era 17 | A navegação passou a ficar presa a um retângulo em volta de todos os locais, com o zoom mínimo calculado para a área caber na tela (sem afastar até a cidade toda) | Corrigido localmente, falta publicar |
+| Não era possível chegar a locais como os Oxxo e os Terminais Carrão, porque o centro do mapa só andava 100 m e o zoom mínimo era 17 | A navegação passou a ficar presa a um retângulo em volta de todos os locais, com o zoom mínimo um nível acima do que faria a área inteira caber na tela (sem afastar até a cidade toda) | Corrigido localmente, falta publicar |
 | Cartão de um local na borda do mapa ficava cortado, porque o mapa não pode se mover para fora da área | O cartão passou a abrir do lado com espaço (abaixo, acima, à esquerda ou à direita do marcador); testado no navegador com locais no topo, no meio e na borda direita | Corrigido localmente, falta publicar |
 | Só um dos dois prédios da UNICID aparecia no mapa, porque o código juntava instituições de mesmo nome | O segundo prédio recebeu o endereço Rua Cesário Galeno, 475, e locais de mesmo nome com números diferentes deixaram de ser juntados; o mapa passou de 82 para 83 locais | Corrigido localmente, falta publicar |
 | Sustentabilidade/ODS presente em poucas páginas | Frase sobre as ODS 10 e 11 no rodapé, exceto em `mapa.html`, que não tem rodapé | Corrigido e publicado |

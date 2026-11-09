@@ -362,13 +362,13 @@ async function carregarLocaisOverpass() {
 // Retângulo que envolve todos os locais da área piloto (data/locais.json), com ~110 m de folga.
 const LIMITES_AREA = [[-23.5425, -46.5690], [-23.5279, -46.5514]];
 
-// Mantém a vista dentro da área dos locais. O zoom mínimo é o que faz a área
-// inteira caber na tela, então não dá para afastar até ver a cidade toda.
+// Mantém a vista dentro da área dos locais. O zoom mínimo fica um nível acima do que
+// faria a área inteira caber na tela, para não afastar demais.
 function configurarLimiteDaArea() {
   const limites = L.latLngBounds(LIMITES_AREA);
   mapa.setMaxBounds(limites);
   const ajustarZoomMinimo = () => {
-    mapa.setMinZoom(Math.min(mapa.getBoundsZoom(limites), mapa.getMaxZoom()));
+    mapa.setMinZoom(Math.min(mapa.getBoundsZoom(limites) + 1, mapa.getMaxZoom()));
   };
   ajustarZoomMinimo();
   mapa.on("resize", ajustarZoomMinimo);
