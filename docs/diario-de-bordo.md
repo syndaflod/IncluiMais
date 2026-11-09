@@ -8,6 +8,15 @@
 
 O site foi publicado em https://projetoincluimais.vercel.app. A Vercel foi escolhida porque a integração com o Make é fácil, o uso é gratuito e a URL é personalizável.
 
+### Divisão do trabalho
+
+- **Antonio e Gustavo Frutuoso:** concepção do site e definição do conteúdo de cada página.
+- **Heitor:** design, CSS e JavaScript.
+- **Arthur:** chatbot com IA integrado ao Make.
+- **Gustavo Reis:** slides da apresentação final.
+
+Os detalhes estão na seção 10 do [escopo](escopo.md).
+
 ## Aprendizados e dificuldades
 
 [preencher]

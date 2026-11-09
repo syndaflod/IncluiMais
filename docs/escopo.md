@@ -10,6 +10,7 @@
   - Antonio Dantas da Silva Neto (RGM 47788356)
   - Arthur de Jesus Salviano Oliveira (RGM 47764988)
   - Gustavo Frutuoso José (RGM 47604565)
+  - Gustavo Reis (RGM 47455152)
   - Heitor Tureck de Oliveira (RGM 47104503)
 - **Data:** 8 de novembro de 2026
 - **Professor/disciplina:** Prof. Paulo Fratta, Front-End para Web (UNICID)
@@ -118,9 +119,9 @@ index.html
 - Leaflet e MapLibre GL JS.
 - Git e GitHub.
 - W3C Validator e Lighthouse.
-- Assistentes de IA, com uso registrado em `docs/`.
+- **Assistentes de IA:** Claude Code e Codex, com uso registrado em `docs/`.
 - **Hospedagem:** Vercel (https://projetoincluimais.vercel.app).
-- **Editor:** [preencher]
+- **Editor:** Visual Studio Code.
 
 ## 10. Cronograma e divisão de tarefas
 
@@ -135,10 +136,11 @@ index.html
 
 | Integrante | Páginas e funções |
 |---|---|
-| Antonio Dantas da Silva Neto | [preencher] |
-| Arthur de Jesus Salviano Oliveira | [preencher] |
-| Gustavo Frutuoso José | [preencher] |
-| Heitor Tureck de Oliveira | [preencher] |
+| Antonio Dantas da Silva Neto | Concepção do site: ajudou a definir a proposta do IncluiMais e o conteúdo e o objetivo de cada página |
+| Arthur de Jesus Salviano Oliveira | Chatbot com IA: integração do assistente de dúvidas com o Make e o serviço de IA, incluindo o fluxo do webhook e o prompt de resposta |
+| Gustavo Frutuoso José | Concepção do site: ajudou a definir a proposta do IncluiMais e o conteúdo e o objetivo de cada página |
+| Gustavo Reis | Slides da apresentação final |
+| Heitor Tureck de Oliveira | Design e JavaScript: identidade visual, layout responsivo e CSS das páginas, além das interações em JavaScript, como mapa, filtros, validação dos formulários e recursos de acessibilidade |
 
 **Gestão de tarefas:** GitHub. Outras ferramentas: [preencher]
 

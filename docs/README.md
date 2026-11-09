@@ -145,4 +145,5 @@ O IncluiMais é um protótipo acadêmico. As informações do mapa não represen
 | Antonio Dantas da Silva Neto | 47788356 | [AntonioDS](https://github.com/AntonioDS) |
 | Arthur de Jesus Salviano Oliveira | 47764988 | [arthurjso12-dev](https://github.com/arthurjso12-dev) |
 | Gustavo Frutuoso José | 47604565 | [gustavofjose](https://github.com/gustavofjose) |
+| Gustavo Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) |
 | Heitor Tureck de Oliveira | 47104503 | [syndaflod](https://github.com/syndaflod) |
