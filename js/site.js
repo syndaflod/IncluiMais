@@ -349,6 +349,7 @@
           <a class="footer-title" href="index.html"><img src="assets/logo-footer.svg" alt=""><span>IncluiMais</span></a>
           <p>O IncluiMais reúne informações sobre acessibilidade em locais e espaços próximos à UNICID.</p>
           <p>Você pode consultar o mapa, filtrar recursos, contribuir com indicações e enviar sugestões.</p>
+          <p class="footer-ods">Cidade sustentável é cidade acessível: o projeto apoia as ODS 10 (redução das desigualdades) e 11 (cidades e comunidades sustentáveis) da ONU. <a href="impacto.html">Veja o impacto</a>.</p>
         </div>
         <nav class="footer-navigation" aria-label="Navegação do rodapé">
           ${navigation}
