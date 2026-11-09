@@ -6,13 +6,15 @@ O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. E
 
 ## Estado atual
 
-A primeira versão do site já possui 10 páginas, navegação compartilhada, mapa interativo, formulários HTML5, chatbot FAQ e recursos básicos de acessibilidade.
+A primeira versão do site já possui 12 páginas, navegação compartilhada, mapa interativo, formulários HTML5, chatbot com IA e recursos básicos de acessibilidade.
 
 ## Páginas
 
 - `index.html`: página inicial, apresentação do problema e chamadas para as principais ações.
 - `mapa.html`: busca de locais, categorias, filtros de acessibilidade e mapa interativo.
 - `sobre.html`: contexto, problema, proposta, missão, visão e valores do projeto.
+- `projetos.html`: eixos de atuação do IncluiMais e placeholders para organizar projetos relacionados à acessibilidade e à participação comunitária.
+- `galeria.html`: espaços visuais pendentes para os mesmos eixos e títulos apresentados em `projetos.html`.
 - `acessibilidade.html`: explicação dos recursos de acessibilidade exibidos no mapa.
 - `impacto.html`: objetivos, indicadores e relação entre acessibilidade, participação social e sustentabilidade.
 - `midia.html`: vídeo, áudio e iframe relacionados à UNICID.
@@ -27,16 +29,16 @@ O antigo mapa que estava no `index.html` foi transferido para `mapa.html`. O `in
 
 - Pesquisa de estabelecimentos por nome.
 - Filtros por categoria, incluindo banheiros, restaurantes, lojas, estacionamentos, farmácias, academias, instituições de ensino e espaços de lazer.
-- Filtros por entrada acessível, banheiro acessível, estacionamento acessível, atendimento em Libras, piso tátil e material em braille.
+- Filtros por entrada acessível, rampa acessível, banheiro acessível, estacionamento acessível, atendimento em Libras, piso tátil e material em braille.
 - Lista de resultados sincronizada com os marcadores do mapa.
-- Cinco estilos de mapa e navegação limitada a um raio de 100 metros do ponto inicial.
+- Área piloto com locais em um raio de cerca de 1.000 metros do ponto inicial e mapa-base que acompanha o alto contraste.
 - Ícones nos marcadores e nos indicadores de acessibilidade dos locais.
 - Menu responsivo compartilhado entre as páginas.
 - Botão para pular diretamente ao conteúdo principal.
 - Indicador de página atual com `aria-current`.
 - Widget VLibras carregado nas páginas institucionais.
 - Formulários com validação nativa do HTML5 e mensagens com `aria-live`.
-- Chatbot FAQ local em JavaScript, sem API externa e sem coleta de dados pessoais.
+- Chatbot com IA integrado por webhook do Make, com FAQ local como alternativa.
 
 ## Dados do mapa
 
@@ -50,9 +52,11 @@ Os dados geográficos vêm do OpenStreetMap. A disponibilidade dos recursos pode
 
 ## Chatbot
 
-O chatbot da página inicial é um FAQ local implementado em `js/site.js`. Ele responde por palavras-chave sobre mapa, filtros, cadastro, contato e privacidade.
+O chatbot da página inicial envia cada pergunta a um webhook do Make, cujo cenário chama um modelo de IA e devolve a resposta em texto. O código está em `js/site.js` e a URL do webhook fica no atributo `data-webhook-url` do `.chatbot` em `index.html`.
 
-Essa implementação não exige servidor nem chave de API. Se uma API de IA for adicionada no futuro, a chave deverá permanecer no servidor, nunca no JavaScript enviado ao navegador.
+A chave da API de IA fica somente na conexão do Make, nunca no JavaScript enviado ao navegador. A URL do webhook é pública, por isso o cenário deve ter limites de uso. Se a URL estiver vazia ou o webhook falhar, o chatbot responde com o FAQ local por palavras-chave.
+
+As perguntas digitadas no chat saem do navegador e passam pelo Make e pelo serviço de IA. O passo a passo e o prompt estão em [`chatbot-make.md`](chatbot-make.md).
 
 ## Formulários
 
@@ -85,6 +89,8 @@ IncluiMais/
 ├── index.html
 ├── mapa.html
 ├── sobre.html
+├── projetos.html
+├── galeria.html
 ├── acessibilidade.html
 ├── impacto.html
 ├── midia.html
@@ -103,6 +109,9 @@ IncluiMais/
 ├── docs/
 ├── js/
 │   ├── script.js
+│   ├── projetos-data.js
+│   ├── projetos.js
+│   ├── galeria.js
 │   └── site.js
 └── tools/
     └── compact-geojson.py

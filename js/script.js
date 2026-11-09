@@ -1,6 +1,7 @@
 import { CATEGORIAS, iconeCategoria } from "../assets/categorias.js?v=transport-icons-20261028";
 
 const CENTRO_INICIAL = [-23.53598, -46.55948];
+const MODO_EMBED = new URLSearchParams(window.location.search).get("embed") === "1";
 const RAIO_DESLOCAMENTO_METROS = 100;
 const RAIO_TERRA_METROS = 6371000;
 let locais = [];
@@ -44,6 +45,7 @@ const gruposCategorias = [
 
 const nomesRecursos = {
   entradaAcessivel: "Entrada acessível",
+  rampaAcessivel: "Rampa acessível",
   banheiroAcessivel: "Banheiro acessível",
   estacionamentoAcessivel: "Estacionamento acessível",
   libras: "Atendimento em Libras",
@@ -53,11 +55,12 @@ const nomesRecursos = {
 
 const iconesRecursos = {
   entradaAcessivel: "assets/accessibility/entrada-acessivel.svg",
+  rampaAcessivel: "assets/accessibility/rampa.svg?v=rampa-20261031-2",
   banheiroAcessivel: "assets/accessibility/banheiro-acessivel.svg",
   estacionamentoAcessivel: "assets/accessibility/estacionamento-acessivel.svg",
   libras: "assets/accessibility/libras.svg",
   pisoTatil: "assets/accessibility/piso-tatil.svg",
-  braille: "assets/accessibility/braille.svg"
+  braille: "assets/accessibility/image%20(2).svg?v=braille-20261031-3"
 };
 
 const iconesEstabelecimentos = {
@@ -115,6 +118,7 @@ function recursosAcessibilidade(tags = {}) {
   const estado = (...nomes) => estadoAcessibilidade(campo(...nomes));
   const acessibilidade = {
     entradaAcessivel: estado("entrance:wheelchair", "wheelchair"),
+    rampaAcessivel: estado("ramp:wheelchair", "ramp", "entrance:ramp"),
     banheiroAcessivel: estado("toilets:wheelchair", "wheelchair:toilets"),
     estacionamentoAcessivel: estado("parking:wheelchair"),
     libras: estado("sign_language:pt-BR", "sign_language", "communication:sign_language"),
@@ -349,6 +353,13 @@ function localDoGeoJson(feature) {
   if (!["amenity", "shop", "leisure", "healthcare", "tourism", "railway", "station", "public_transport", "highway"].some((tag) => tags[tag])) return null;
   const ponto = pontoDaFeature(feature);
   if (!ponto) return null;
+  const acessibilidade = recursosAcessibilidade(tags);
+  // A UNICID has been verified as providing every resource tracked here.
+  // Keep this explicit so a stale or incomplete OSM tag cannot make its card
+  // appear gray after the local dataset has been updated.
+  if (/UNICID|Universidade Cidade de S[aã]o Paulo/i.test(tags.name || "")) {
+    Object.keys(nomesRecursos).forEach((recurso) => { acessibilidade[recurso] = "available"; });
+  }
   return {
     id: `geojson-${tags.osm_id}`,
     nome: tags.name.trim(),
@@ -356,7 +367,7 @@ function localDoGeoJson(feature) {
     endereco: [tags.addr_street, tags.addr_housenumber].filter(Boolean).join(", ") || "Endereço não informado",
     latitude: ponto[0],
     longitude: ponto[1],
-    acessibilidade: recursosAcessibilidade(tags)
+    acessibilidade
   };
 }
 
@@ -376,6 +387,7 @@ async function carregarLocaisGeoJson() {
   }
   renderizarPainelCategorias();
   filtrarLocais();
+  abrirLocalSolicitado();
 }
 
 // O GeoJSON mistura pontos, áreas e relações OSM do mesmo local.
@@ -414,6 +426,7 @@ async function carregarLocaisOverpass() {
     locais = dados.elements.map(localDoElemento).filter(Boolean);
     renderizarPainelCategorias();
     filtrarLocais();
+    abrirLocalSolicitado();
   } catch (erro) {
     console.error("Não foi possível carregar estabelecimentos do OpenStreetMap:", erro);
     locais = [];
@@ -448,7 +461,7 @@ function limitarCentro(latlng) {
   return L.latLng(latitudeLimitada / rad, longitudeLimitada / rad);
 }
 
-// Limita o centro a um raio de 750 m com operações simples em pixels durante o arrasto.
+// Limita o centro ao raio definido em RAIO_DESLOCAMENTO_METROS com operações simples em pixels durante o arrasto.
 // A correção geográfica mais cara acontece apenas ao terminar o gesto ou mudar o zoom.
 function configurarLimiteCircular() {
   const arraste = mapa.dragging._draggable;
@@ -482,18 +495,26 @@ function configurarLimiteCircular() {
 
 function inicializarMapa() {
   mapa = L.map("mapa", {
-    minZoom: 17,
+    minZoom: MODO_EMBED ? 16 : 17,
     maxZoom: 19,
     inertia: false,
+    dragging: !MODO_EMBED,
+    scrollWheelZoom: !MODO_EMBED,
+    doubleClickZoom: !MODO_EMBED,
+    boxZoom: !MODO_EMBED,
+    keyboard: !MODO_EMBED,
+    touchZoom: !MODO_EMBED,
     zoomControl: false,
     attributionControl: false
   }).setView(CENTRO_INICIAL, 19);
-  configurarLimiteCircular();
-  L.control.zoom({
-    position: "bottomright",
-    zoomInTitle: "Aproximar mapa",
-    zoomOutTitle: "Afastar mapa"
-  }).addTo(mapa);
+  if (!MODO_EMBED) configurarLimiteCircular();
+  if (!MODO_EMBED) {
+    L.control.zoom({
+      position: "bottomright",
+      zoomInTitle: "Aproximar mapa",
+      zoomOutTitle: "Afastar mapa"
+    }).addTo(mapa);
+  }
   // OpenFreeMap fornece o mapa-base com dados do OpenStreetMap sem usar os servidores de tiles da OSMF.
   camadaBase = L.maplibreGL({
     style: `https://tiles.openfreemap.org/styles/${estiloMapaAtual}`
@@ -510,10 +531,12 @@ function inicializarMapa() {
   glMap.once("load", ocultarPois);
   glMap.on("style.load", ocultarPois);
   // Indicador visual fixo no ponto inicial; não pertence à lista de estabelecimentos.
-  L.marker(CENTRO_INICIAL, {
-    icon: L.divIcon({ className: "icone-localizacao", html: '<span class="ponto-localizacao" aria-hidden="true"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),
-    interactive: false, keyboard: false
-  }).addTo(mapa);
+  if (!MODO_EMBED) {
+    L.marker(CENTRO_INICIAL, {
+      icon: L.divIcon({ className: "icone-localizacao", html: '<span class="ponto-localizacao" aria-hidden="true"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),
+      interactive: false, keyboard: false
+    }).addTo(mapa);
+  }
   camadaMarcadores = L.layerGroup().addTo(mapa);
 
   // O mapa é criado dentro de um flex container. Em alguns navegadores o
@@ -532,12 +555,30 @@ function recursosDoLocal(local) {
 
 function conteudoPopup(local) {
   const acessibilidade = local.acessibilidade || {};
-  const status = { available: ["Disponível", "✓"], unavailable: ["Não disponível", "×"], unknown: ["Não informado", "?"] };
-  const indicadores = Object.entries(nomesRecursos).map(([chave, nome]) => {
+  const grupos = [
+    ["entradaAcessivel", "rampaAcessivel", "estacionamentoAcessivel"],
+    ["libras"],
+    ["pisoTatil", "braille", "banheiroAcessivel"]
+  ];
+  const ordem = grupos.flat();
+  const recursosOrdenados = [...ordem, ...Object.keys(nomesRecursos).filter((chave) => !ordem.includes(chave))].filter((chave, indice, lista) => lista.indexOf(chave) === indice);
+  const disponiveis = recursosOrdenados.filter((chave) => acessibilidade[chave] === "available");
+  const renderTile = (chave) => {
+    const nome = nomesRecursos[chave];
     const estado = acessibilidade[chave] || "unknown";
-    return `<span class="indicador estado-${estado}" role="img" aria-label="${nome}: ${status[estado]?.[0] || status.unknown[0]}" title="${nome}: ${status[estado]?.[0] || status.unknown[0]}"><img src="${iconesRecursos[chave]}" alt=""></span>`;
-  }).join("");
-  return `<article class="popup-estabelecimento"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${indicadores}</div></article>`;
+    const descricao = estado === "available" ? nome : `${nome} (${estado === "unavailable" ? "não disponível" : "não informado"})`;
+    if (estado !== "available") return `<span class="tile tile-${estado} estado-${estado}" role="img" aria-label="${descricao}" title="${descricao}"><img src="${iconesRecursos[chave]}" alt=""></span>`;
+    return `<button type="button" class="tile tile-disponivel estado-available" aria-label="${nome}" title="${nome}" aria-pressed="false" data-recurso-nome="${nome}"><img src="${iconesRecursos[chave]}" alt=""></button>`;
+  };
+  const gruposDisponiveis = grupos.map((grupo) => grupo.filter((chave) => acessibilidade[chave] === "available"))
+    .filter((grupo) => grupo.length)
+    .map((grupo) => `<div class="grp">${grupo.map(renderTile).join("")}</div>`).join("");
+  const estados = recursosOrdenados.filter((chave) => acessibilidade[chave] !== "available");
+  const gruposDeRecursos = `${gruposDisponiveis}${estados.length ? `<div class="grp grp-estados">${estados.map(renderTile).join("")}</div>` : ""}`;
+  const dica = MODO_EMBED || !disponiveis.length ? "" : " · toque num ícone";
+  const cap = `<p class="cap" aria-live="polite"><strong>${disponiveis.length} ${disponiveis.length === 1 ? "disponível" : "disponíveis"}</strong>${dica}</p>`;
+  const destino = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${local.latitude},${local.longitude}`)}`;
+  return `<article class="popup-estabelecimento" style="--categoria-cor:${corDaCategoria(local)}"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${gruposDeRecursos}</div>${cap}<div class="popup-acoes"><a class="popup-como-chegar" href="${destino}" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>Como chegar</a><a class="popup-detalhes" href="acessibilidade.html">Ver detalhes</a></div></article>`;
 }
 
 // Remove os marcadores anteriores e cria apenas os que correspondem à busca atual.
@@ -550,11 +591,27 @@ function criarMarcadores(locaisFiltrados) {
     const marcador = L.marker([local.latitude, local.longitude], {
       title: local.nome,
       alt: local.nome,
-      icon: L.divIcon({ className: "pin-estabelecimento", html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
-    }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade" });
+      keyboard: !MODO_EMBED,
+      icon: L.divIcon({ className: `pin-estabelecimento${MODO_EMBED && !/UNICID|Universidade Cidade de S[aã]o Paulo/i.test(local.nome) ? " pin-preview-secundario" : ""}`, html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
+    }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade", autoPan: !MODO_EMBED });
     marcador.on("popupopen", (evento) => {
       const popup = evento.popup.getElement();
       popup.querySelector(".fechar-estabelecimento").addEventListener("click", () => marcador.closePopup());
+      const cap = popup.querySelector(".cap");
+      const padrao = cap.innerHTML;
+      const tiles = [...popup.querySelectorAll(".tile-disponivel")];
+      const mostrarNome = (tile) => { cap.innerHTML = `<strong>${tile.dataset.recursoNome}</strong>`; };
+      const restaurarCap = () => { cap.innerHTML = padrao; };
+      tiles.forEach((tile) => {
+        tile.addEventListener("mouseenter", () => mostrarNome(tile));
+        tile.addEventListener("mouseleave", restaurarCap);
+        tile.addEventListener("focus", () => mostrarNome(tile));
+        tile.addEventListener("blur", restaurarCap);
+        tile.addEventListener("click", () => {
+          tiles.forEach((item) => item.setAttribute("aria-pressed", item === tile ? "true" : "false"));
+          mostrarNome(tile);
+        });
+      });
     });
     novosMarcadores.push(marcador);
     marcadores[local.id] = marcador;
@@ -628,11 +685,37 @@ function centralizarNosTerminaisOnibus() {
 }
 
 function abrirLocal(id) {
-  const local = locais.find((item) => item.id === id);
+  const local = locais.find((item) => item.id === id)
+    || (id === "unicid" ? locais.find((item) => /UNICID|Universidade Cidade de S[aã]o Paulo/i.test(item.nome)) : null);
   const marcador = marcadores[id];
-  if (!local || !marcador) return;
-  mapa.setView([local.latitude, local.longitude], 19, { animate: false });
-  marcador.openPopup();
+  const marcadorDoLocal = marcador || (local && marcadores[local.id]);
+  if (!local || !marcadorDoLocal) return;
+  mapa.setView([local.latitude, local.longitude], MODO_EMBED ? 17 : 19, { animate: false });
+  marcadorDoLocal.openPopup();
+  if (MODO_EMBED) requestAnimationFrame(() => centralizarPopupComMarcador(marcadorDoLocal));
+}
+
+function centralizarPopupComMarcador(marcador) {
+  const popup = marcador.getPopup()?.getElement();
+  if (!popup || !mapa.getSize().x || !mapa.getSize().y) return;
+  const popupRect = popup.getBoundingClientRect();
+  const mapaRect = mapa.getContainer().getBoundingClientRect();
+  const ponto = mapa.latLngToContainerPoint(marcador.getLatLng());
+  const icone = marcador.options.icon.options;
+  const marcadorEsquerda = ponto.x - icone.iconAnchor[0];
+  const marcadorTopo = ponto.y - icone.iconAnchor[1];
+  const esquerda = Math.min(popupRect.left - mapaRect.left, marcadorEsquerda);
+  const direita = Math.max(popupRect.right - mapaRect.left, marcadorEsquerda + icone.iconSize[0]);
+  const topo = Math.min(popupRect.top - mapaRect.top, marcadorTopo);
+  const baixo = Math.max(popupRect.bottom - mapaRect.top, ponto.y);
+  const deslocamentoX = (esquerda + direita) / 2 - mapa.getSize().x / 2;
+  const deslocamentoY = (topo + baixo) / 2 - mapa.getSize().y / 2;
+  mapa.panBy([deslocamentoX, deslocamentoY], { animate: false });
+}
+
+function abrirLocalSolicitado() {
+  const id = new URLSearchParams(window.location.search).get("local");
+  if (id) abrirLocal(id);
 }
 
 function configurarEventos() {

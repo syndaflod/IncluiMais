@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>Pessoa em cadeira de rodas e pessoa com bengala em uma calçada arborizada</title>
+  <rect width="800" height="600" fill="#def3fb"/>
+  <rect y="460" width="800" height="140" fill="#c6cfca"/>
+  <circle cx="680" cy="110" r="52" fill="#f2b705"/>
+  <rect x="82" y="260" width="28" height="200" fill="#6d4c33"/>
+  <circle cx="96" cy="210" r="88" fill="#2e7d32"/>
+  <rect x="692" y="290" width="26" height="170" fill="#6d4c33"/>
+  <circle cx="705" cy="245" r="74" fill="#2e7d32"/>
+  <g fill="none" stroke="#075c43" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="300" cy="405" r="58"/>
+    <path d="M272 262v98h66l34 72M232 300h88"/>
+  </g>
+  <circle cx="272" cy="225" r="28" fill="#075c43"/>
+  <g fill="none" stroke="#a84e26" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M510 232v120l-34 108M510 352l34 108M510 262l48 66"/>
+  </g>
+  <circle cx="510" cy="192" r="30" fill="#a84e26"/>
+  <path d="M558 328l34 134" stroke="#17212b" stroke-width="7" stroke-linecap="round"/>
+</svg>

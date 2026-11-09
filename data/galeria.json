@@ -1,0 +1,74 @@
+[
+  {
+    "src": "assets/img/galeria/rampa-entrada.svg",
+    "alt": "Ilustração de uma pessoa em cadeira de rodas subindo uma rampa com corrimão até a porta de uma loja.",
+    "legenda": "Rampa com corrimão: acesso sem degraus na entrada.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "Acessibilidade urbana"
+  },
+  {
+    "src": "assets/img/galeria/piso-tatil-calcada.svg",
+    "alt": "Ilustração de uma pessoa com bengala seguindo uma faixa amarela de piso tátil até a faixa de pedestres.",
+    "legenda": "Piso tátil: orientação e alerta no caminho até a travessia.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "Acessibilidade urbana"
+  },
+  {
+    "src": "assets/img/galeria/atendimento-libras.svg",
+    "alt": "Ilustração de duas pessoas, uma de cada lado de um balcão, conversando com as mãos em Libras.",
+    "legenda": "Atendimento em Libras: comunicação direta no balcão.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "Inclusão"
+  },
+  {
+    "src": "assets/img/galeria/pessoas-na-rua.svg",
+    "alt": "Ilustração de uma pessoa em cadeira de rodas e outra com bengala em uma calçada com árvores.",
+    "legenda": "Cidade sustentável é aquela em que todas as pessoas conseguem circular.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "Inclusão"
+  },
+  {
+    "src": "assets/img/galeria/mapa-colaborativo.svg",
+    "alt": "Ilustração de um mapa de ruas com três marcadores coloridos indicando locais.",
+    "legenda": "O mapa reúne locais e recursos de acessibilidade perto da UNICID.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "O projeto"
+  },
+  {
+    "src": "assets/img/galeria/estados-dos-recursos.svg",
+    "alt": "Três cartões empilhados: verde escrito Disponível, vermelho escrito Não disponível e cinza escrito Não informado.",
+    "legenda": "Os três estados usados para descrever cada recurso.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "O projeto"
+  },
+  {
+    "src": "assets/img/galeria/comunidade-indicando.svg",
+    "alt": "Ilustração de três pessoas lado a lado com um balão de fala que mostra um marcador de mapa.",
+    "legenda": "A comunidade pode indicar locais e corrigir informações.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "Comunidade e UNICID"
+  },
+  {
+    "src": "assets/img/galeria/campus-arborizado.svg",
+    "alt": "Ilustração de um prédio universitário com rampa na entrada e árvores dos dois lados.",
+    "legenda": "O entorno da universidade é a área piloto do projeto.",
+    "fonte": "Ilustração produzida para o IncluiMais",
+    "fonteUrl": "",
+    "licenca": "Uso educacional no projeto",
+    "categoria": "Comunidade e UNICID"
+  }
+]

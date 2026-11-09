@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.css?v=20261108-chatbot">
   <script src="js/accessibility-init.js"></script>
 </head>
 <body id="topo" class="home-page">
@@ -31,7 +31,7 @@
     <section class="hero" aria-labelledby="titulo-principal">
       <div>
         <h1 id="titulo-principal">Esse lugar é acessível? Agora dá para saber antes de ir.</h1>
-        <p>Mapa colaborativo feito por estudantes de Ciência da Computação da UNICID. Veja se os locais ao redor da faculdade têm rampa, banheiro adaptado, piso tátil ou intérprete de Libras antes de ir.”</p>
+        <p>Mapa colaborativo feito por estudantes de Ciência da Computação da UNICID. Veja se os locais ao redor da faculdade têm rampa, banheiro adaptado, piso tátil ou intérprete de Libras antes de ir.</p>
         <div class="hero-actions">
           <a class="button" href="mapa.html">Explorar o mapa</a>
           <a class="button secondary" href="cadastro_estabelecimento.html">Indicar um local</a>
@@ -42,15 +42,10 @@
         </p>
       </div>
 
-      <div class="hero-art" aria-hidden="true">
+      <div class="hero-art home-map-link">
         <div class="home-map-panel">
-          <div class="home-map-top"><span class="home-map-status">Visualização ilustrativa</span><span>mapa comunitário</span></div>
-          <div class="home-map-route"></div>
-          <span class="home-map-pin one"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-1 10H5L4 10ZM6 10l2-5h8l2 5M9 20v-6h6v6"/></svg></span>
-          <span class="home-map-pin two"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
-          <span class="home-map-pin three"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V10M7 21h10M5 10h14M7 10c0-3 2-5 5-5s5 2 5 5"/></svg></span>
-          <div class="home-map-legend"><span><i class="available"></i> recurso informado</span><span><i class="unknown"></i> conferir no local</span></div>
-          <div class="home-map-bottom"><span class="home-map-scale">sem localização em tempo real</span><span>consulte o mapa</span></div>
+          <iframe class="home-map-preview" src="mapa.html?local=unicid&amp;embed=1&amp;v=hero-map-preview-20261101-5" title="Prévia do mapa com o popup da UNICID aberto" tabindex="-1" loading="lazy" inert style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
+          <a class="home-map-overlay" href="mapa.html?local=unicid" aria-label="Abrir o mapa na UNICID"><span class="home-map-open-pill">Abrir o mapa →</span></a>
         </div>
       </div>
     </section>
@@ -80,20 +75,22 @@
     <section class="section" aria-labelledby="titulo-contribuicao">
       <div class="surface home-contribution">
         <div><h2 id="titulo-contribuicao">Você sabe de um lugar? Compartilhe.</h2><p>Esta indicação é demonstrativa. Ainda assim, uma observação bem descrita pode ajudar a orientar a próxima visita e apontar o que precisa ser verificado.</p></div>
-        <div class="hero-actions"><a class="button" href="cadastro_estabelecimento.html">Indicar um local</a><a class="button secondary" href="contato.html">Enviar sugestão</a><a class="home-card-link" href="midia.html">Conhecer a UNICID<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
+        <div class="hero-actions"><a class="button" href="cadastro_estabelecimento.html">Indicar um local</a><a class="button secondary" href="contato.html">Enviar sugestão</a><a class="button secondary" href="contato.html#apoie">Apoiar o projeto</a><a class="home-card-link" href="midia.html">Conhecer a UNICID<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
       </div>
     </section>
   </main>
 
-  <div class="chatbot">
+  <!-- data-webhook-url: URL do webhook do Make (ver docs/chatbot-make.md). Vazio = usa só o FAQ local. -->
+  <div class="chatbot" data-webhook-url="">
     <section id="painel-duvidas" class="chatbot-panel" hidden aria-label="Assistente de dúvidas">
-      <div class="chatbot-messages" aria-live="polite"><p class="chatbot-message"><strong>IncluiMais:</strong> Posso responder dúvidas sobre mapa, indicação, filtros, contato e privacidade.</p></div>
-      <form class="chatbot-form"><label class="visually-hidden" for="chatbot-pergunta">Sua pergunta</label><input id="chatbot-pergunta" name="pergunta" type="text" placeholder="Digite sua dúvida" autocomplete="off"><button type="submit">Enviar</button></form>
+      <div class="chatbot-messages" aria-live="polite"><p class="chatbot-message"><strong>IncluiMais:</strong> Posso responder dúvidas sobre o projeto, o mapa, indicações e acessibilidade.</p></div>
+      <form class="chatbot-form"><label class="visually-hidden" for="chatbot-pergunta">Sua pergunta</label><input id="chatbot-pergunta" name="pergunta" type="text" placeholder="Digite sua dúvida" autocomplete="off" maxlength="500"><button type="submit">Enviar</button></form>
+      <p class="chatbot-note">Respostas geradas por IA podem conter erros. Não informe dados pessoais.</p>
     </section>
     <button class="chatbot-toggle" type="button" aria-expanded="false" aria-controls="painel-duvidas">Dúvidas?</button>
   </div>
 
   <footer class="site-footer" data-site-footer></footer>
-  <script src="js/site.js"></script>
+  <script src="js/site.js?v=20261108-chatbot"></script>
 </body>
 </html>

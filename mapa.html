@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Mapa demonstrativo de recursos de acessibilidade em São Paulo." />
     <meta name="theme-color" content="#075c43" />
+    <script>if (new URLSearchParams(location.search).get("embed") === "1") document.documentElement.classList.add("map-embed");</script>
+    <style>
+      html.map-embed, html.map-embed body.map-page { width: 100%; height: 100%; min-width: 0; overflow: hidden; scrollbar-gutter: auto; }
+      html.map-embed body.map-page > :not(.aplicacao) { display: none !important; }
+      html.map-embed body.map-page > .aplicacao { position: fixed; inset: 0; display: block; width: 100%; height: 100%; min-height: 0; overflow: hidden; }
+      html.map-embed body.map-page .sidebar, html.map-embed body.map-page .creditos-mapa, html.map-embed body.map-page .leaflet-control-container, html.map-embed body.map-page [vw] { display: none !important; }
+      html.map-embed body.map-page .area-mapa, html.map-embed body.map-page #mapa { position: absolute; inset: 0; width: 100%; height: 100%; }
+    </style>
     <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="assets/icon.svg" />
     <title>IncluiMais | Mapa de acessibilidade</title>
@@ -14,9 +22,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" />
-    <link rel="stylesheet" href="css/style.css?v=category-panel-scroll-20261028" />
+    <link rel="stylesheet" href="css/style.css?v=20261108-a11y" />
     <script src="js/accessibility-init.js"></script>
-    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="css/site.css?v=20261108-a11y" />
   </head>
   <body class="map-page">
     <div class="accessibility-bar" data-accessibility-controls></div>
@@ -34,10 +42,13 @@
             <button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg></button>
             <div class="nav-more-menu" role="menu" hidden>
               <a role="menuitem" href="sobre.html">Sobre</a>
+              <a role="menuitem" href="projetos.html">Projetos</a>
+              <a role="menuitem" href="galeria.html">Galeria</a>
               <a role="menuitem" href="impacto.html">Impacto</a>
               <a role="menuitem" href="midia.html">Mídia</a>
               <a role="menuitem" href="noticias.html">Notícias</a>
               <a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a>
+              <a role="menuitem" href="contato.html#apoie">Apoie</a>
             </div>
           </div>
         </nav>
@@ -69,6 +80,7 @@
             <summary>Recursos de acessibilidade <span class="recursos-contador" aria-live="polite">(0)</span></summary>
             <div class="recursos-grade">
               <label><input type="checkbox" data-recurso="entradaAcessivel" /><span>Entrada acessível</span></label>
+              <label><input type="checkbox" data-recurso="rampaAcessivel" /><span>Rampa acessível</span></label>
               <label><input type="checkbox" data-recurso="banheiroAcessivel" /><span>Banheiro acessível</span></label>
               <label><input type="checkbox" data-recurso="estacionamentoAcessivel" /><span>Estacionamento acessível</span></label>
               <label><input type="checkbox" data-recurso="libras" /><span>Atendimento em Libras</span></label>
@@ -115,9 +127,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
     <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl.js"></script>
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js" defer></script>
-    <script type="module" src="js/script.js?v=map-bus-keep-zoom-20261028"></script>
-    <script src="js/site.js"></script>
+    <script type="module" src="js/script.js?v=20261108-a11y"></script>
+    <script src="js/site.js?v=20261108-a11y"></script>
   </body>
 </html>
 

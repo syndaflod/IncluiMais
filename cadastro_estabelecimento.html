@@ -25,21 +25,22 @@
                     href="contato.html">Contato</a></nav>
         </div>
     </header>
-    <main id="conteudo" class="page-main">
+    <main id="conteudo" class="page-main cadastro-page">
         <header class="page-heading">
             <h1>Indique um local</h1>
             <p>Viu um local com recursos de acessibilidade? Conte para quem vai depois de você.</p>
             <aside class="form-guide" aria-labelledby="titulo-como-preencher"><h2 id="titulo-como-preencher">Como preencher</h2><ul><li>Confirme o nome e o endereço do local.</li><li>Marque apenas o que você verificou.</li><li>Se não tiver certeza, escolha “Não sei”.</li></ul></aside>
         </header>
-        <form class="form" data-demo-form novalidate>
-            <p class="form-intro">Os campos marcados como <span aria-hidden="true">*</span> são obrigatórios.</p>
+        <form class="form" data-demo-form novalidate data-success="Esta é uma demonstração: a indicação foi validada no navegador, mas não é enviada nem publicada no mapa.">
+            <p class="form-intro">Os campos obrigatórios estão identificados no próprio rótulo.</p>
             <div class="form-grid">
                 <div class="field"><label for="nome-local">Nome do local <span class="required-label">(obrigatório)</span></label><input id="nome-local" name="nome-local" type="text" required autocomplete="organization" aria-describedby="erro-nome-local"><span class="field-error" id="erro-nome-local" data-error-for="nome-local"></span></div>
                 <div class="field"><label for="categoria">Categoria <span class="required-label">(obrigatório)</span></label><select id="categoria" name="categoria" required aria-describedby="erro-categoria"><option value="">Selecione</option><option>Restaurante</option><option>Loja</option><option>Instituição de ensino</option><option>Farmácia</option><option>Espaço de lazer</option></select><span class="field-error" id="erro-categoria" data-error-for="categoria"></span></div>
                 <div class="field"><label for="rua">Rua e número <span class="required-label">(obrigatório)</span></label><input id="rua" name="rua" type="text" required autocomplete="address-line1" aria-describedby="erro-rua"><span class="field-error" id="erro-rua" data-error-for="rua"></span></div>
-                <div class="field"><label for="cep">CEP <span class="required-label">(obrigatório)</span></label><input id="cep" name="cep" type="text" required inputmode="numeric" pattern="[0-9]{5}-?[0-9]{3}" aria-describedby="dica-cep erro-cep"><small id="dica-cep">Use o formato 00000-000.</small><span class="field-error" id="erro-cep" data-error-for="cep"></span></div>
+                <div class="field"><label for="cep">CEP <span class="required-label">(obrigatório)</span></label><input id="cep" name="cep" type="text" required inputmode="numeric" pattern="[0-9]{5}-?[0-9]{3}" aria-describedby="dica-cep erro-cep" data-error-pattern="Informe o CEP no formato 00000-000."><small id="dica-cep">Use o formato 00000-000.</small><span class="field-error" id="erro-cep" data-error-for="cep"></span></div>
                 <fieldset class="field full resource-fieldset"><legend>Recursos observados <span class="required-label">(obrigatório)</span></legend><p class="field-hint" id="dica-recursos">Para cada recurso, escolha uma opção. “Não sei” já vem selecionado.</p><div class="resource-groups" aria-describedby="dica-recursos erro-recursos">
                     <fieldset class="resource-group"><legend>Entrada acessível</legend><label><input type="radio" name="recurso-entrada" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-entrada" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-entrada" value="unknown" checked> <span>Não sei</span></label></fieldset>
+                    <fieldset class="resource-group"><legend>Rampa acessível</legend><label><input type="radio" name="recurso-rampa" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-rampa" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-rampa" value="unknown" checked> <span>Não sei</span></label></fieldset>
                     <fieldset class="resource-group"><legend>Banheiro acessível</legend><label><input type="radio" name="recurso-banheiro" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-banheiro" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-banheiro" value="unknown" checked> <span>Não sei</span></label></fieldset>
                     <fieldset class="resource-group"><legend>Estacionamento acessível</legend><label><input type="radio" name="recurso-estacionamento" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-estacionamento" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-estacionamento" value="unknown" checked> <span>Não sei</span></label></fieldset>
                     <fieldset class="resource-group"><legend>Atendimento em Libras</legend><label><input type="radio" name="recurso-libras" value="available" required> <span>Tem</span></label><label><input type="radio" name="recurso-libras" value="unavailable"> <span>Não tem</span></label><label><input type="radio" name="recurso-libras" value="unknown" checked> <span>Não sei</span></label></fieldset>
@@ -53,7 +54,7 @@
         </form>
     </main>
     <footer class="site-footer" data-site-footer></footer>
-    <script src="js/site.js"></script>
+    <script src="js/site.js?v=20261108-a11y"></script>
 </body>
 
 </html>

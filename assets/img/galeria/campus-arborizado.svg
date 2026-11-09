@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>Prédio universitário com árvores e rampa de acesso</title>
+  <rect width="800" height="600" fill="#def3fb"/>
+  <rect y="480" width="800" height="120" fill="#8fbf8f"/>
+  <rect x="210" y="120" width="380" height="360" fill="#fff" stroke="#075c43" stroke-width="6"/>
+  <rect x="210" y="90" width="380" height="42" fill="#075c43"/>
+  <g fill="#cfe6f5" stroke="#075c43" stroke-width="5">
+    <rect x="250" y="170" width="70" height="70"/><rect x="365" y="170" width="70" height="70"/><rect x="480" y="170" width="70" height="70"/>
+    <rect x="250" y="280" width="70" height="70"/><rect x="365" y="280" width="70" height="70"/><rect x="480" y="280" width="70" height="70"/>
+  </g>
+  <rect x="355" y="385" width="90" height="95" fill="#b9f4d7" stroke="#075c43" stroke-width="6"/>
+  <polygon points="445,480 445,462 600,480" fill="#6f817a"/>
+  <rect x="96" y="340" width="24" height="140" fill="#6d4c33"/>
+  <circle cx="108" cy="300" r="74" fill="#2e7d32"/>
+  <rect x="678" y="340" width="24" height="140" fill="#6d4c33"/>
+  <circle cx="690" cy="300" r="74" fill="#2e7d32"/>
+</svg>

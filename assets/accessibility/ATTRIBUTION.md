@@ -2,6 +2,7 @@
 
 The following SVG pictograms are from [Accesibiliconos](https://accesibiliconos.org/):
 
+- `rampa` — [Rampa](https://accesibiliconos.org/rampa.html)
 - `entrada-acessivel.svg` — [Entrada accesible](https://accesibiliconos.org/entrada-accesible.html)
 - `banheiro-acessivel.svg` — [Baño accesible](https://accesibiliconos.org/bano-accesible.html)
 - `estacionamento-acessivel.svg` — [Aparcamiento reservado](https://accesibiliconos.org/aparcamiento-reservado.html)

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>Mapa de ruas com marcadores de locais</title>
+  <rect width="800" height="600" fill="#eef4ee"/>
+  <rect x="520" y="60" width="210" height="150" rx="18" fill="#c8ead2"/>
+  <g fill="none" stroke="#fff" stroke-width="30">
+    <path d="M0 150H800M0 400H800M180 0V600M470 0V600M0 560 800 40"/>
+  </g>
+  <g>
+    <path d="M300 300c-46-62-66-92-66-122a66 66 0 0 1 132 0c0 30-20 60-66 122z" fill="#075c43"/>
+    <circle cx="300" cy="178" r="26" fill="#fff"/>
+    <path d="M590 470c-36-48-52-72-52-96a52 52 0 0 1 104 0c0 24-16 48-52 96z" fill="#a84e26"/>
+    <circle cx="590" cy="374" r="20" fill="#fff"/>
+    <path d="M130 520c-36-48-52-72-52-96a52 52 0 0 1 104 0c0 24-16 48-52 96z" fill="#3949ab"/>
+    <circle cx="130" cy="424" r="20" fill="#fff"/>
+  </g>
+</svg>

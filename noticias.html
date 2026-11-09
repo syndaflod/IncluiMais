@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Notícias e conteúdos sobre inclusão e acessibilidade.">
+    <meta name="description" content="Notícias e conteúdos sobre inclusão, acessibilidade e cidades sustentáveis.">
     <title>Notícias | IncluiMais</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/site.css">
+    <link rel="stylesheet" href="css/site.css?v=20261108-a11y">
     <script src="js/accessibility-init.js"></script>
 </head>
 
@@ -30,26 +30,57 @@
             <p>Conteúdos para entender como acessibilidade, tecnologia e participação social se relacionam.</p>
         </header>
         <div class="section">
+            <div class="news-filters" role="group" aria-label="Filtrar conteúdos por tema">
+                <button class="news-filter" type="button" data-news-filter="todas" aria-pressed="true">Todos</button>
+                <button class="news-filter" type="button" data-news-filter="dados" aria-pressed="false">Dados</button>
+                <button class="news-filter" type="button" data-news-filter="direitos" aria-pressed="false">Direitos</button>
+                <button class="news-filter" type="button" data-news-filter="tecnologia" aria-pressed="false">Tecnologia</button>
+                <button class="news-filter" type="button" data-news-filter="sustentabilidade" aria-pressed="false">Sustentabilidade</button>
+                <button class="news-filter" type="button" data-news-filter="comunidade" aria-pressed="false">Comunidade</button>
+            </div>
+            <p class="news-status" data-news-status role="status">6 conteúdos em exibição.</p>
             <div class="grid">
-                <article class="surface">
+                <article class="surface news-card" data-news-category="dados">
+                    <p class="news-meta">Dados · <time datetime="2026-11-08">8 de novembro de 2026</time></p>
+                    <h2>Censo 2022 contou 14,4 milhões de pessoas com deficiência</h2>
+                    <p>Segundo o IBGE, elas representam cerca de 7,3% da população com 2 anos ou mais. O número mostra o tamanho do público que depende de informação clara sobre acesso.</p>
+                    <a class="news-source" href="https://educa.ibge.gov.br/jovens/materias-especiais/22695-censo-2022-7-3-da-populacao-com-2-anos-ou-mais-tinha-alguma-deficiencia.html">Fonte: IBGE</a>
+                </article>
+                <article class="surface news-card" data-news-category="direitos">
+                    <p class="news-meta">Direitos · <time datetime="2026-11-08">8 de novembro de 2026</time></p>
+                    <h2>Lei Brasileira de Inclusão trata acessibilidade como direito</h2>
+                    <p>A Lei nº 13.146/2015 reconhece a acessibilidade como condição para a pessoa com deficiência viver com autonomia e participar da vida social.</p>
+                    <a class="news-source" href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13146.htm">Fonte: Planalto</a>
+                </article>
+                <article class="surface news-card" data-news-category="tecnologia">
+                    <p class="news-meta">Tecnologia · <time datetime="2026-11-08">8 de novembro de 2026</time></p>
                     <h2>Acessibilidade digital também é acesso</h2>
-                    <p>Sites com teclado, contraste, textos claros e alternativas para mídia reduzem barreiras de
-                        informação.</p>
+                    <p>As diretrizes WCAG 2.2 orientam recursos como contraste, navegação por teclado e alternativas para mídia, que reduzem barreiras de informação.</p>
+                    <a class="news-source" href="https://www.w3.org/TR/WCAG22/">Fonte: W3C</a>
                 </article>
-                <article class="surface">
+                <article class="surface news-card" data-news-category="tecnologia">
+                    <p class="news-meta">Tecnologia · <time datetime="2026-11-08">8 de novembro de 2026</time></p>
+                    <h2>VLibras aproxima conteúdos digitais da Língua de Sinais</h2>
+                    <p>A ferramenta pública traduz textos de páginas para Libras por meio de um avatar. O IncluiMais usa o widget nas páginas institucionais.</p>
+                    <a class="news-source" href="https://vlibras.gov.br/">Fonte: VLibras</a>
+                </article>
+                <article class="surface news-card" data-news-category="sustentabilidade">
+                    <p class="news-meta">Sustentabilidade · <time datetime="2026-11-08">8 de novembro de 2026</time></p>
+                    <h2>Cidade sustentável também é cidade acessível</h2>
+                    <p>O ODS 11 da ONU pede cidades inclusivas, com transporte e espaços públicos acessíveis, com atenção às pessoas com deficiência.</p>
+                    <a class="news-source" href="https://brasil.un.org/pt-br/sdgs/11">Fonte: ONU Brasil</a>
+                </article>
+                <article class="surface news-card" data-news-category="comunidade">
+                    <p class="news-meta">Comunidade · <time datetime="2026-11-08">8 de novembro de 2026</time></p>
                     <h2>Dados colaborativos precisam de contexto</h2>
-                    <p>Relatos de usuários são valiosos quando informam data, fonte e limites da observação.</p>
-                </article>
-                <article class="surface">
-                    <h2>Espaços educacionais inclusivos</h2>
-                    <p>Conhecer recursos de acessibilidade em instituições de ensino ajuda estudantes a planejar sua
-                        rotina.</p>
+                    <p>Relatos de usuários são valiosos quando informam data, fonte e limites da observação. Por isso, o formulário de indicação pergunta a origem de cada informação.</p>
+                    <a class="news-source" href="cadastro_estabelecimento.html">Indicar um local</a>
                 </article>
             </div>
         </div>
     </main>
     <footer class="site-footer" data-site-footer></footer>
-    <script src="js/site.js"></script>
+    <script src="js/site.js?v=20261108-a11y"></script>
 </body>
 
 </html>

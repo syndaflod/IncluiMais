@@ -3,6 +3,8 @@
 ```text
 index.html
 ├── sobre.html
+├── projetos.html
+│   └── galeria.html
 ├── mapa.html
 │   ├── busca por nome
 │   ├── categorias
@@ -16,4 +18,4 @@ index.html
 └── orcamento_hospedagem.html
 ```
 
-O chatbot FAQ é um componente compartilhado, não uma página separada.
+O chatbot é um componente da página inicial, não uma página separada.

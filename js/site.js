@@ -15,10 +15,10 @@
     document.querySelector("#menu-principal")?.setAttribute("tabindex", "-1");
     document.querySelector("[data-site-footer]")?.setAttribute("tabindex", "-1");
     if (!bar.querySelector("[role=group]")) bar.innerHTML = `
-      <div class="accessibility-skip-links" aria-label="Atalhos de navegação">
+      <div class="accessibility-skip-links" role="group" aria-label="Atalhos de navegação">
         <a href="#conteudo">Ir para o conteúdo</a>
         <a href="#menu-principal">Ir para o menu</a>
-        <a href="#rodape-site">Ir para o rodapé</a>
+        ${document.querySelector("[data-site-footer]") ? '<a href="#rodape-site">Ir para o rodapé</a>' : ""}
       </div>
       <span class="accessibility-bar-label">Ajustes de leitura</span>
       <span class="accessibility-controls-slot" data-controls-slot>
@@ -106,12 +106,210 @@
     const mobileMenu = control?.closest(".site-nav");
     if (mobileMenu) {
       mobileMenu.classList.add("is-open");
+      document.querySelector(".nav-toggle")?.setAttribute("aria-expanded", "true");
       mobileMenu.querySelector(".mobile-accessibility-toggle")?.setAttribute("aria-expanded", "true");
       control.closest(".accessibility-controls")?.classList.add("is-open");
     }
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     document.querySelector("[data-accessibility-controls]")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
     requestAnimationFrame(() => control?.focus({ preventScroll: true }));
+  };
+
+  const renderProjects = () => {
+    const grid = document.querySelector("[data-projects-grid]");
+    if (!grid) return;
+    const projetos = window.INCLUIMAIS_PROJETOS;
+    if (!Array.isArray(projetos)) return;
+
+    const text = (tag, value, className) => {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = value || "";
+      return element;
+    };
+    const detail = (label, value) => {
+      const row = document.createElement("div");
+      row.append(text("dt", label), text("dd", value));
+      return row;
+    };
+    const cards = projetos.map((projeto) => {
+      const card = document.createElement("article");
+      card.className = "project-card";
+
+      const content = document.createElement("div");
+      content.className = "project-card-content";
+      content.append(
+        text("h3", projeto.titulo, "project-card-title"),
+        text("p", projeto.descricao, "project-card-description")
+      );
+      const details = document.createElement("dl");
+      details.className = "project-card-details";
+      details.append(detail("Objetivo", projeto.objetivo), detail("Público", projeto.publico));
+      content.append(details);
+
+      const imageSource = typeof projeto.imagem === "string" ? projeto.imagem.trim() : "";
+      if (imageSource && imageSource !== "TODO") {
+        const figure = document.createElement("figure");
+        figure.className = "project-card-figure";
+        const image = document.createElement("img");
+        image.className = "project-card-image";
+        image.src = imageSource;
+        image.alt = projeto.textoAlternativo || "";
+        figure.append(image);
+        if (projeto.creditoImagem && projeto.creditoImagem !== "TODO") {
+          const caption = text("figcaption", projeto.creditoImagem, "project-card-credit");
+          figure.append(caption);
+        }
+        card.append(figure);
+      }
+      card.append(content);
+      return card;
+    });
+    grid.replaceChildren(...cards);
+  };
+
+  const renderGallery = async () => {
+    const grid = document.querySelector("[data-gallery-grid]");
+    const dialog = document.querySelector("[data-gallery-dialog]");
+    const frame = document.querySelector("[data-lightbox-frame]");
+    const caption = document.querySelector("[data-lightbox-caption]");
+    const closeButton = document.querySelector("[data-gallery-close]");
+    if (!grid || !dialog || !frame || !caption || !closeButton) return;
+
+    const makeText = (tag, value, className) => {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = value || "";
+      return element;
+    };
+    const renderSource = (item, target) => {
+      const sourceLine = document.createElement("p");
+      sourceLine.className = "gallery-source";
+      sourceLine.append(document.createTextNode("Fonte: "));
+      if (item.fonteUrl) {
+        try {
+          const url = new URL(item.fonteUrl, window.location.href);
+          if (url.protocol === "https:" || url.protocol === "http:") {
+            const sourceLink = makeText("a", item.fonte);
+            sourceLink.href = url.href;
+            sourceLink.target = "_blank";
+            sourceLink.rel = "noopener noreferrer";
+            sourceLine.append(sourceLink);
+          } else {
+            sourceLine.append(document.createTextNode(item.fonte || ""));
+          }
+        } catch {
+          sourceLine.append(document.createTextNode(item.fonte || ""));
+        }
+      } else {
+        sourceLine.append(document.createTextNode(item.fonte || ""));
+      }
+      sourceLine.append(document.createTextNode(` · ${item.licenca || ""}`));
+      target.append(sourceLine);
+    };
+    const makePending = () => {
+      const placeholder = makeText("div", "Imagem pendente", "gallery-image-placeholder");
+      placeholder.setAttribute("role", "img");
+      placeholder.setAttribute("aria-label", "Imagem pendente");
+      return placeholder;
+    };
+
+    let imageItems = [];
+    let returnFocusTo = null;
+    let currentDialogIndex = -1;
+    const showInDialog = (item) => {
+      frame.replaceChildren();
+      caption.replaceChildren();
+      const image = document.createElement("img");
+      image.src = item.src;
+      image.alt = item.alt || "";
+      frame.append(image);
+      caption.append(makeText("p", item.legenda, "gallery-caption"));
+      renderSource(item, caption);
+    };
+    const openImage = (item, trigger) => {
+      if (!item || !trigger || !trigger.querySelector("img")?.naturalWidth) return;
+      returnFocusTo = trigger;
+      currentDialogIndex = imageItems.indexOf(item);
+      showInDialog(item);
+      dialog.showModal();
+      closeButton.focus();
+    };
+    closeButton.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("close", () => {
+      if (returnFocusTo?.isConnected) returnFocusTo.focus();
+      returnFocusTo = null;
+    });
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      if (!imageItems.length) return;
+      event.preventDefault();
+      currentDialogIndex = (currentDialogIndex + direction + imageItems.length) % imageItems.length;
+      showInDialog(imageItems[currentDialogIndex]);
+    });
+    grid.addEventListener("click", (event) => {
+      const trigger = event.target.closest(".gallery-open");
+      if (!trigger || !grid.contains(trigger)) return;
+      openImage(imageItems[Number.parseInt(trigger.dataset.galleryIndex, 10)], trigger);
+    });
+
+    try {
+      const response = await fetch("data/galeria.json");
+      if (!response.ok) throw new Error("Não foi possível carregar os dados da galeria.");
+      const items = await response.json();
+      if (!Array.isArray(items)) return;
+
+      const figures = items.map((item, index) => {
+        const figure = document.createElement("figure");
+        figure.className = "gallery-item";
+        const source = typeof item.src === "string" ? item.src.trim() : "";
+        const isPending = !source || source === "TODO";
+
+        if (isPending) {
+          const imageFrame = document.createElement("div");
+          imageFrame.className = "gallery-image-frame";
+          imageFrame.append(makePending());
+          figure.append(imageFrame);
+        } else {
+          const trigger = document.createElement("button");
+          trigger.type = "button";
+          trigger.className = "gallery-open";
+          trigger.dataset.galleryIndex = String(imageItems.length);
+          trigger.setAttribute("aria-label", `Abrir imagem: ${item.legenda || item.alt || "Imagem"}`);
+          const imageFrame = document.createElement("span");
+          imageFrame.className = "gallery-image-frame";
+          const image = document.createElement("img");
+          image.className = "gallery-image";
+          image.src = source;
+          image.alt = item.alt || "";
+          image.onerror = () => {
+            const pendingFrame = document.createElement("div");
+            pendingFrame.className = "gallery-image-frame";
+            pendingFrame.append(makePending());
+            trigger.replaceWith(pendingFrame);
+            imageItems = imageItems.filter((candidate) => candidate !== item);
+            grid.querySelectorAll(".gallery-open").forEach((button, buttonIndex) => {
+              button.dataset.galleryIndex = String(buttonIndex);
+            });
+          };
+          imageFrame.append(image);
+          trigger.append(imageFrame);
+          imageItems.push(item);
+          figure.append(trigger);
+        }
+
+        const figcaption = document.createElement("figcaption");
+        figcaption.className = "gallery-caption-block";
+        figcaption.append(makeText("p", item.legenda, "gallery-caption"));
+        renderSource(item, figcaption);
+        figure.append(figcaption);
+        return figure;
+      });
+      grid.replaceChildren(...figures);
+    } catch {
+      grid.replaceChildren();
+    }
   };
 
   const renderFooter = () => {
@@ -131,8 +329,8 @@
     const currentPath = window.location.pathname.split("/").pop() || "index.html";
     const grupos = [
       { titulo: "Explorar", destinos: ["index.html", "mapa.html", "cadastro_estabelecimento.html"] },
-      { titulo: "O projeto", destinos: ["sobre.html", "impacto.html", "midia.html", "noticias.html", "orcamento_hospedagem.html"] },
-      { titulo: "Ajuda", destinos: ["acessibilidade.html", "contato.html"] }
+      { titulo: "O projeto", destinos: ["sobre.html", "projetos.html", "galeria.html", "impacto.html", "midia.html", "noticias.html", "orcamento_hospedagem.html"] },
+      { titulo: "Ajuda", destinos: ["acessibilidade.html", "contato.html", "contato.html#apoie"] }
     ];
     const navigation = grupos.map(({ titulo, destinos }) => {
       const items = destinos.map((destino) => links.find((link) => link.href === destino)).filter(Boolean).map(({ href, label }) => {
@@ -179,9 +377,10 @@
       const locais = Array.isArray(dados?.features) ? dados.features : [];
       alvo.textContent = locais.length
         ? `${locais.length} locais registrados no mapa`
-        : "Número de locais: [PREENCHER]";
+        : "";
+      alvo.hidden = !locais.length;
     } catch {
-      alvo.textContent = "Número de locais: [PREENCHER]";
+      alvo.hidden = true;
     }
   };
 
@@ -207,6 +406,8 @@
 
   configurarIdentidade();
   configurarControlesAcessibilidade();
+  renderProjects();
+  renderGallery();
 
   const configurarMovimento = () => {
     const hero = document.querySelector(".hero");
@@ -245,7 +446,7 @@
 
   configurarMovimento();
 
-  if (!document.querySelector("[vw]")) {
+  if (!document.documentElement.classList.contains("map-embed") && !document.querySelector("[vw]")) {
     document.body.insertAdjacentHTML("beforeend", '<div vw class="enabled"><div vw-access-button class="active"></div><div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>');
     const vlibrasScript = document.createElement("script");
     vlibrasScript.src = "https://vlibras.gov.br/app/vlibras-plugin.js";
@@ -260,9 +461,9 @@
   document.querySelectorAll("nav.site-nav, .map-header nav").forEach((menu) => {
     const oldMore = menu.querySelector("details.nav-more");
     if (oldMore) {
-      oldMore.outerHTML = '<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden><a role="menuitem" href="sobre.html">Sobre</a><a role="menuitem" href="impacto.html">Impacto</a><a role="menuitem" href="midia.html">Mídia</a><a role="menuitem" href="noticias.html">Notícias</a><a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a></div></div>';
+      oldMore.outerHTML = '<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden><a role="menuitem" href="sobre.html">Sobre</a><a role="menuitem" href="projetos.html">Projetos</a><a role="menuitem" href="galeria.html">Galeria</a><a role="menuitem" href="impacto.html">Impacto</a><a role="menuitem" href="midia.html">Mídia</a><a role="menuitem" href="noticias.html">Notícias</a><a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a><a role="menuitem" href="contato.html#apoie">Apoie</a></div></div>';
     } else if (!menu.querySelector(".nav-more")) {
-      menu.insertAdjacentHTML("beforeend", '<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden><a role="menuitem" href="sobre.html">Sobre</a><a role="menuitem" href="impacto.html">Impacto</a><a role="menuitem" href="midia.html">Mídia</a><a role="menuitem" href="noticias.html">Notícias</a><a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a></div></div>');
+      menu.insertAdjacentHTML("beforeend", '<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden><a role="menuitem" href="sobre.html">Sobre</a><a role="menuitem" href="projetos.html">Projetos</a><a role="menuitem" href="galeria.html">Galeria</a><a role="menuitem" href="impacto.html">Impacto</a><a role="menuitem" href="midia.html">Mídia</a><a role="menuitem" href="noticias.html">Notícias</a><a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a><a role="menuitem" href="contato.html#apoie">Apoie</a></div></div>');
     }
     menu.querySelector('a[href="cadastro_estabelecimento.html"]')?.classList.add("nav-cta");
   });
@@ -306,6 +507,10 @@
     });
     more.addEventListener("focusout", (event) => { if (!more.contains(event.relatedTarget)) close(); });
   });
+  const currentPath = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".site-nav a[href]").forEach((link) => {
+    if (link.getAttribute("href") === currentPath) link.setAttribute("aria-current", "page");
+  });
   renderFooter();
   carregarContagemDeLocais();
   document.querySelectorAll("[data-reading-settings]").forEach((button) => button.addEventListener("click", focarAjustesLeitura));
@@ -314,6 +519,17 @@
       const isOpen = nav.classList.toggle("is-open");
       navToggle.setAttribute("aria-expanded", String(isOpen));
     });
+    document.querySelector('.accessibility-skip-links a[href="#menu-principal"]')?.addEventListener("click", () => {
+      if (getComputedStyle(navToggle).display === "none") return;
+      nav.classList.add("is-open");
+      navToggle.setAttribute("aria-expanded", "true");
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || event.defaultPrevented || !nav.classList.contains("is-open")) return;
+      nav.classList.remove("is-open");
+      navToggle.setAttribute("aria-expanded", "false");
+      navToggle.focus();
+    });
   }
 
   const form = document.querySelector("[data-demo-form]");
@@ -321,8 +537,12 @@
   if (form && status) {
     const mensagensDeErro = new Map([
       ["valueMissing", "Preencha este campo."],
-      ["patternMismatch", "Informe o CEP no formato 00000-000."],
-      ["typeMismatch", "Informe um valor válido."]
+      ["patternMismatch", "Confira o formato deste campo."],
+      ["typeMismatch", "Informe um valor válido."],
+      ["badInput", "Informe um valor válido."],
+      ["rangeUnderflow", "Informe um valor dentro do limite."],
+      ["rangeOverflow", "Informe um valor dentro do limite."],
+      ["stepMismatch", "Informe um valor dentro do limite."]
     ]);
     const limparErro = (controle) => {
       controle.removeAttribute("aria-invalid");
@@ -334,12 +554,28 @@
       if (!erro) return;
       controle.setAttribute("aria-invalid", "true");
       const estado = controle.validity;
-      const chaveDoErro = ["valueMissing", "patternMismatch", "typeMismatch"].find((chave) => estado[chave]);
-      erro.textContent = mensagensDeErro.get(chaveDoErro) || "Revise esta informação.";
+      const chaveDoErro = [...mensagensDeErro.keys()].find((chave) => estado[chave]);
+      const mensagemDoCampo = {
+        patternMismatch: controle.dataset.errorPattern,
+        typeMismatch: controle.dataset.errorType,
+        badInput: controle.dataset.errorType || controle.dataset.errorRange,
+        rangeUnderflow: controle.dataset.errorRange,
+        rangeOverflow: controle.dataset.errorRange,
+        stepMismatch: controle.dataset.errorRange
+      }[chaveDoErro];
+      erro.textContent = mensagemDoCampo || mensagensDeErro.get(chaveDoErro) || "Revise esta informação.";
     };
     form.querySelectorAll("input, select, textarea").forEach((controle) => {
       controle.addEventListener("input", () => limparErro(controle));
       controle.addEventListener("change", () => limparErro(controle));
+    });
+    document.querySelectorAll("[data-assunto]").forEach((link) => {
+      link.addEventListener("click", () => {
+        const assunto = form.querySelector("#assunto");
+        if (!assunto) return;
+        assunto.value = link.dataset.assunto;
+        limparErro(assunto);
+      });
     });
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -351,23 +587,47 @@
         status.textContent = "Revise os campos destacados antes de enviar.";
         return;
       }
-      status.textContent = "Esta é uma demonstração: a indicação foi validada no navegador, mas não é enviada nem publicada no mapa.";
+      status.textContent = form.dataset.success || "Formulário validado no navegador.";
       form.reset();
     });
   }
 
+  const filtrosNoticias = [...document.querySelectorAll("[data-news-filter]")];
+  const noticias = [...document.querySelectorAll("[data-news-category]")];
+  const statusNoticias = document.querySelector("[data-news-status]");
+  filtrosNoticias.forEach((botao) => {
+    botao.addEventListener("click", () => {
+      const categoria = botao.dataset.newsFilter;
+      filtrosNoticias.forEach((item) => item.setAttribute("aria-pressed", String(item === botao)));
+      let visiveis = 0;
+      noticias.forEach((noticia) => {
+        const mostrar = categoria === "todas" || noticia.dataset.newsCategory === categoria;
+        noticia.hidden = !mostrar;
+        if (mostrar) visiveis += 1;
+      });
+      if (statusNoticias) statusNoticias.textContent = `${visiveis} ${visiveis === 1 ? "conteúdo" : "conteúdos"} em exibição.`;
+    });
+  });
+
+  const chatbot = document.querySelector(".chatbot");
   const toggle = document.querySelector(".chatbot-toggle");
   const panel = document.querySelector(".chatbot-panel");
   const chatForm = document.querySelector(".chatbot-form");
   const input = document.querySelector("#chatbot-pergunta");
   const messages = document.querySelector(".chatbot-messages");
-  if (!toggle || !panel || !chatForm || !input || !messages) return;
+  const sendButton = chatForm?.querySelector("button[type=submit]");
+  if (!chatbot || !toggle || !panel || !chatForm || !input || !messages || !sendButton) return;
 
+  const CHAT_TIMEOUT_MS = 45000;
+  const CHAT_HISTORY_LIMIT = 6;
+  const chatHistory = [];
+
+  // Usado quando o webhook não está configurado ou não responde.
   const faq = [
     { terms: ["mapa", "local", "encontrar"], answer: "Abra o mapa para buscar locais por nome, categoria e recursos como entrada, banheiro ou estacionamento acessível." },
     { terms: ["indicar", "indicação", "sugerir"], answer: "Use a página Indicar um local para sugerir um local e informar os recursos de acessibilidade disponíveis." },
     { terms: ["filtro", "categoria"], answer: "No mapa, escolha uma categoria e marque os recursos desejados. Os resultados são atualizados na mesma tela." },
-    { terms: ["dados", "privacidade", "lgpd"], answer: "Esta versão é demonstrativa e não envia seus dados para um servidor. Confira sempre as informações do local antes de visitá-lo." },
+    { terms: ["dados", "privacidade", "lgpd"], answer: "Com o assistente de IA ativo, as perguntas deste chat são enviadas ao Make e ao serviço de IA para gerar a resposta, então não informe dados pessoais. Os formulários do site são demonstrativos e não enviam dados." },
     { terms: ["contato", "sugestão", "erro"], answer: "Envie uma sugestão ou corrija uma informação pela página Contato. O retorno aparece no próprio formulário." }
   ];
 
@@ -378,15 +638,73 @@
     if (open) input.focus();
   });
 
-  chatForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const question = input.value.trim();
-    if (!question) return;
+  // Texto vindo da IA nunca passa por innerHTML: textContent impede a injeção de HTML.
+  const addChatMessage = (author, text) => {
+    const message = document.createElement("p");
+    message.className = "chatbot-message";
+    const label = document.createElement("strong");
+    label.textContent = `${author}:`;
+    const body = document.createElement("span");
+    body.textContent = ` ${text}`;
+    message.append(label, body);
+    messages.append(message);
+    messages.scrollTop = messages.scrollHeight;
+    return body;
+  };
+
+  const askWebhook = async (url, question) => {
+    // Corpo de formulário não dispara preflight CORS, que o webhook do Make pode não atender.
+    const response = await fetch(url, {
+      method: "POST",
+      body: new URLSearchParams({
+        pergunta: question,
+        historico: chatHistory.map(({ author, text }) => `${author}: ${text}`).join("\n")
+      }),
+      signal: AbortSignal.timeout(CHAT_TIMEOUT_MS)
+    });
+    if (!response.ok) throw new Error(`Webhook respondeu ${response.status}`);
+    const answer = (await response.text()).trim();
+    // "Accepted" é a resposta padrão do Make quando o cenário não usa o módulo Webhook response.
+    if (!answer || answer === "Accepted") throw new Error("Webhook não devolveu uma resposta");
+    return answer;
+  };
+
+  const answerFromFaq = (question, webhookFailed) => {
     const normalized = question.toLocaleLowerCase("pt-BR");
     const match = faq.find((item) => item.terms.some((term) => normalized.includes(term)));
-    const answer = match?.answer || "Ainda não tenho essa resposta. Tente perguntar sobre mapa, indicação, filtros, contato ou privacidade.";
-    messages.insertAdjacentHTML("beforeend", `<p class="chatbot-message"><strong>Você:</strong> ${question.replace(/[<>]/g, "")}</p><p class="chatbot-message"><strong>IncluiMais:</strong> ${answer}</p>`);
+    if (match) return match.answer;
+    return webhookFailed
+      ? "O assistente está indisponível no momento. Enquanto isso, posso ajudar com mapa, indicação, filtros, contato ou privacidade."
+      : "Ainda não tenho essa resposta. Tente perguntar sobre mapa, indicação, filtros, contato ou privacidade.";
+  };
+
+  chatForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const question = input.value.trim();
+    if (!question || sendButton.disabled) return;
+    const webhookUrl = chatbot.dataset.webhookUrl?.trim();
+
+    addChatMessage("Você", question);
     input.value = "";
-    messages.scrollTop = messages.scrollHeight;
+
+    if (!webhookUrl) {
+      addChatMessage("IncluiMais", answerFromFaq(question, false));
+      return;
+    }
+
+    sendButton.disabled = true;
+    const reply = addChatMessage("IncluiMais", "Pensando…");
+    try {
+      const answer = await askWebhook(webhookUrl, question);
+      reply.textContent = ` ${answer}`;
+      chatHistory.push({ author: "Usuário", text: question }, { author: "IncluiMais", text: answer });
+      chatHistory.splice(0, Math.max(chatHistory.length - CHAT_HISTORY_LIMIT, 0));
+    } catch (error) {
+      console.warn("Chatbot: usando FAQ local.", error);
+      reply.textContent = ` ${answerFromFaq(question, true)}`;
+    } finally {
+      sendButton.disabled = false;
+      messages.scrollTop = messages.scrollHeight;
+    }
   });
 })();

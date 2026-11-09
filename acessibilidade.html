@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/site.css">
+    <link rel="stylesheet" href="css/site.css?v=20261108-a11y">
     <script src="js/accessibility-init.js"></script>
 </head>
 
@@ -35,22 +35,23 @@
                 <div><h2 id="titulo-leitura-dados">Como ler os dados</h2><p>O mapa apresenta o estado registrado para cada recurso.</p></div>
             </div>
             <div class="accessibility-notice">
-                <p>Um recurso marcado como “Não informado” ainda não tem dados registrados. Esse estado não permite concluir se o recurso existe ou não. Quando a informação for importante para sua visita, confirme as condições diretamente com o estabelecimento.</p>
-                <div class="accessibility-states" aria-label="Estados dos recursos de acessibilidade">
-                    <span class="accessibility-state state-available"><span aria-hidden="true">✓</span> Disponível</span>
-                    <span class="accessibility-state state-unavailable"><span aria-hidden="true">×</span> Não disponível</span>
-                    <span class="accessibility-state state-unknown"><span aria-hidden="true">?</span> Não informado</span>
+                <p>Verde indica que o recurso está disponível. Vermelho indica que o recurso não está disponível. Cinza indica que ainda não há informação registrada; confirme as condições diretamente com o estabelecimento quando isso for importante para sua visita.</p>
+                <div class="accessibility-states" role="group" aria-label="Estados dos recursos de acessibilidade">
+                    <span class="accessibility-state state-available">Disponível</span>
+                    <span class="accessibility-state state-unavailable">Não disponível</span>
+                    <span class="accessibility-state state-unknown">Não informado</span>
                 </div>
             </div>
         </section>
 
         <section class="accessibility-section" aria-labelledby="titulo-recursos-mapa">
-            <div class="accessibility-section-heading"><div><h2 id="titulo-recursos-mapa">Recursos que você encontra no mapa</h2><p>Os seis recursos aparecem nos filtros e nas informações de cada local.</p></div></div>
+            <div class="accessibility-section-heading"><div><h2 id="titulo-recursos-mapa">Recursos que você encontra no mapa</h2><p>Os sete recursos aparecem nos filtros e nas informações de cada local.</p></div></div>
             <div class="resource-groups">
                 <section class="resource-group" aria-labelledby="titulo-mobilidade">
                     <h3 id="titulo-mobilidade">Mobilidade</h3>
                     <dl class="resource-list">
                         <div class="resource-card"><dt><img src="assets/accessibility/entrada-acessivel.svg" alt="" aria-hidden="true">Entrada acessível</dt><dd>Registra a informação disponível sobre a acessibilidade da entrada.</dd></div>
+                        <div class="resource-card"><dt><img src="assets/accessibility/rampa.svg" alt="" aria-hidden="true">Rampa acessível</dt><dd>Indica se há uma rampa que permite acesso sem degraus.</dd></div>
                         <div class="resource-card"><dt><img src="assets/accessibility/banheiro-acessivel.svg" alt="" aria-hidden="true">Banheiro acessível</dt><dd>Registra a informação disponível sobre a acessibilidade do banheiro.</dd></div>
                         <div class="resource-card"><dt><img src="assets/accessibility/estacionamento-acessivel.svg" alt="" aria-hidden="true">Estacionamento acessível</dt><dd>Registra a informação disponível sobre estacionamento acessível.</dd></div>
                     </dl>
@@ -59,7 +60,7 @@
                     <h3 id="titulo-visual">Deficiência visual</h3>
                     <dl class="resource-list">
                         <div class="resource-card"><dt><img src="assets/accessibility/piso-tatil.svg" alt="" aria-hidden="true">Piso tátil</dt><dd>Registra a informação disponível sobre a presença de piso tátil.</dd></div>
-                        <div class="resource-card"><dt><img src="assets/accessibility/braille.svg" alt="" aria-hidden="true">Material em braille</dt><dd>Registra a informação disponível sobre braille ou informação tátil.</dd></div>
+                        <div class="resource-card"><dt><img src="assets/accessibility/image%20(2).svg?v=braille-20261031-3" alt="" aria-hidden="true">Material em braille</dt><dd>Registra a informação disponível sobre braille ou informação tátil.</dd></div>
                     </dl>
                 </section>
                 <section class="resource-group" aria-labelledby="titulo-comunicacao">
@@ -85,7 +86,7 @@
         </section>
     </main>
     <footer class="site-footer" data-site-footer></footer>
-    <script src="js/site.js"></script>
+    <script src="js/site.js?v=20261108-a11y"></script>
 </body>
 
 </html>

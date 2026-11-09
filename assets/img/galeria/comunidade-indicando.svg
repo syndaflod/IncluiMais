@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>Grupo de pessoas compartilhando a indicação de um local</title>
+  <rect width="800" height="600" fill="#fdf2e9"/>
+  <rect y="480" width="800" height="120" fill="#075c43"/>
+  <path d="M250 60h300a30 30 0 0 1 30 30v110a30 30 0 0 1-30 30H440l-40 50-40-50H250a30 30 0 0 1-30-30V90a30 30 0 0 1 30-30z" fill="#fff" stroke="#075c43" stroke-width="6"/>
+  <path d="M400 205c-26-34-38-52-38-68a38 38 0 0 1 76 0c0 16-12 34-38 68z" fill="#a84e26"/>
+  <circle cx="400" cy="136" r="14" fill="#fff"/>
+  <circle cx="185" cy="320" r="42" fill="#3949ab"/>
+  <path d="M120 480V425a65 58 0 0 1 130 0v55z" fill="#3949ab"/>
+  <circle cx="400" cy="340" r="42" fill="#a84e26"/>
+  <path d="M335 480v-40a65 56 0 0 1 130 0v40z" fill="#a84e26"/>
+  <circle cx="615" cy="320" r="42" fill="#2e7d32"/>
+  <path d="M550 480V425a65 58 0 0 1 130 0v55z" fill="#2e7d32"/>
+</svg>

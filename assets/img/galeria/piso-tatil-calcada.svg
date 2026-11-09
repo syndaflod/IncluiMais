@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>Calçada com piso tátil até a faixa de pedestres</title>
+  <rect width="800" height="600" fill="#e8efe9"/>
+  <rect y="360" width="800" height="240" fill="#4b5a57"/>
+  <g fill="#fff"><rect x="60" y="390" width="680" height="24"/><rect x="60" y="440" width="680" height="24"/><rect x="60" y="490" width="680" height="24"/><rect x="60" y="540" width="680" height="24"/></g>
+  <rect y="0" width="800" height="360" fill="#cfd8d3"/>
+  <rect x="345" y="0" width="110" height="360" fill="#f2b705"/>
+  <g stroke="#8a6800" stroke-width="7" stroke-linecap="round">
+    <path d="M370 20v70M400 20v70M430 20v70M370 120v70M400 120v70M430 120v70"/>
+  </g>
+  <g fill="#8a6800">
+    <circle cx="370" cy="240" r="9"/><circle cx="400" cy="240" r="9"/><circle cx="430" cy="240" r="9"/>
+    <circle cx="370" cy="280" r="9"/><circle cx="400" cy="280" r="9"/><circle cx="430" cy="280" r="9"/>
+    <circle cx="370" cy="320" r="9"/><circle cx="400" cy="320" r="9"/><circle cx="430" cy="320" r="9"/>
+  </g>
+  <g fill="none" stroke="#075c43" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M565 150v95l-26 90M565 245l30 90M565 175l-52 56 -70 104"/>
+  </g>
+  <circle cx="565" cy="118" r="26" fill="#075c43"/>
+</svg>

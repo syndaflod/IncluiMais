@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <title>Duas pessoas conversando em Libras em um balcão de atendimento</title>
+  <rect width="800" height="600" fill="#e7f6ef"/>
+  <rect y="430" width="800" height="170" fill="#075c43"/>
+  <rect x="330" y="370" width="140" height="230" fill="#0b6f50"/>
+  <circle cx="220" cy="175" r="48" fill="#a84e26"/>
+  <path d="M145 430V295a75 65 0 0 1 150 0v135z" fill="#a84e26"/>
+  <circle cx="580" cy="175" r="48" fill="#3949ab"/>
+  <path d="M505 430V295a75 65 0 0 1 150 0v135z" fill="#3949ab"/>
+  <g fill="none" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M285 310l60-50 20-60" stroke="#a84e26"/>
+    <path d="M515 310l-60 20-20 70" stroke="#3949ab"/>
+  </g>
+  <g fill="none" stroke="#17212b" stroke-width="9" stroke-linecap="round">
+    <path d="M352 175l8-34M368 178l14-30M382 190l20-22"/>
+    <path d="M420 410l-12 26M436 416l-4 28M452 414l6 26"/>
+  </g>
+</svg>
