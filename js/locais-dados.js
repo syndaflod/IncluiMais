@@ -55,6 +55,7 @@ export function localBaseDoGeoJson(feature) {
     id: `geojson-${tags.osm_id}`,
     nome: tags.name.trim(),
     categoria: categoriaDoLocal(tags),
+    numero: tags.addr_housenumber ? String(tags.addr_housenumber).trim() : "",
     latitude: ponto[0],
     longitude: ponto[1]
   };
@@ -71,6 +72,8 @@ export function deduplicarLocais(itens) {
       if (existente.categoria !== local.categoria) return false;
       const outroNome = existente.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
       if (outroNome !== nome) return false;
+      // Mesmo nome em números diferentes da rua são prédios distintos (ex.: UNICID 448 e 475).
+      if (local.numero && existente.numero && local.numero !== existente.numero) return false;
       // Praças e instituições podem vir duplicadas como way e relation OSM,
       // com centroides diferentes para o mesmo espaço ou campus.
       if (["Espaço de lazer", "Instituição de ensino"].includes(local.categoria)) return true;
