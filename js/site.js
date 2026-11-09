@@ -374,11 +374,13 @@
       const resposta = await fetch("data/locais.json");
       if (!resposta.ok) throw new Error("Falha ao carregar os dados");
       const dados = await resposta.json();
-      const locais = Array.isArray(dados?.features) ? dados.features : [];
-      alvo.textContent = locais.length
-        ? `${locais.length} locais registrados no mapa`
-        : "";
-      alvo.hidden = !locais.length;
+      const features = Array.isArray(dados?.features) ? dados.features : [];
+      const { contarLocaisDoMapa } = await import("./locais-dados.js");
+      const total = contarLocaisDoMapa(features);
+      const numero = alvo.querySelector("[data-locais-numero]");
+      if (numero) numero.textContent = total;
+      else alvo.textContent = total ? `${total} locais registrados no mapa` : "";
+      alvo.hidden = !total;
     } catch {
       alvo.hidden = true;
     }

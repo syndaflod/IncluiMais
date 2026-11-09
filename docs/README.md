@@ -4,6 +4,11 @@
 
 O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. Ele reúne informações sobre recursos de acessibilidade em estabelecimentos, incentiva contribuições da comunidade e ajuda pessoas a planejarem seus deslocamentos com mais autonomia. O mapa piloto cobre uma área próxima à Universidade Cidade de São Paulo (UNICID), na capital paulista.
 
+## Links
+
+- **Site publicado:** https://projetoincluimais.vercel.app
+- **Repositório:** https://github.com/syndaflod/IncluiMais
+
 ## Estado atual
 
 A primeira versão do site já possui 12 páginas, navegação compartilhada, mapa interativo, formulários HTML5, chatbot com IA e recursos básicos de acessibilidade.
@@ -16,7 +21,7 @@ A primeira versão do site já possui 12 páginas, navegação compartilhada, ma
 - `projetos.html`: eixos de atuação do IncluiMais e placeholders para organizar projetos relacionados à acessibilidade e à participação comunitária.
 - `galeria.html`: espaços visuais pendentes para os mesmos eixos e títulos apresentados em `projetos.html`.
 - `acessibilidade.html`: explicação dos recursos de acessibilidade exibidos no mapa.
-- `impacto.html`: objetivos, indicadores e relação entre acessibilidade, participação social e sustentabilidade.
+- `impacto.html`: situação atual, indicadores, metas propostas e relação entre acessibilidade, participação social e sustentabilidade.
 - `midia.html`: vídeo, áudio e iframe relacionados à UNICID.
 - `cadastro_estabelecimento.html`: formulário para sugerir um novo estabelecimento.
 - `noticias.html`: textos sobre inclusão, acessibilidade, tecnologia e participação social.
@@ -110,6 +115,7 @@ IncluiMais/
 │   └── UNICID_2.geojson
 ├── docs/
 ├── js/
+│   ├── locais-dados.js
 │   ├── script.js
 │   ├── projetos-data.js
 │   ├── projetos.js
@@ -125,7 +131,7 @@ IncluiMais/
 - Testar teclado, foco visível, contraste, zoom e leitor de tela.
 - Registrar prints ou descrições dos testes em `docs/`.
 - Completar o diário de bordo e a divisão de tarefas da equipe.
-- Atualizar o orçamento com preços e fontes consultados na data da entrega.
+- Revisar o orçamento se a entrega ocorrer depois de 09/11/2026, data da última consulta de preços.
 - Criar o arquivo final compactado com o nome dos integrantes e da atividade.
 
 ## Limites do protótipo

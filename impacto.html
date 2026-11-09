@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Impacto social e indicadores do IncluiMais.">
+    <meta name="description" content="Indicadores do IncluiMais: situação atual dos dados, metas propostas e relação com as ODS 10 e 11.">
     <title>Impacto | IncluiMais</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,49 +24,108 @@
                     href="cadastro_estabelecimento.html">Indicar local</a><a href="contato.html">Contato</a></nav>
         </div>
     </header>
-    <main id="conteudo" class="page-main">
+    <main id="conteudo" class="page-main report-page">
         <header class="page-heading">
             <h1>Impacto que pode ser acompanhado</h1>
-            <p>O projeto usa informação como infraestrutura de participação social. Estes são os indicadores que
-                orientam a evolução da proposta.</p>
+            <p>O que o IncluiMais já reúne, o que ainda falta e como vamos medir o avanço do projeto.</p>
+            <p class="report-date">Dados de <time datetime="2026-11-09">9 de novembro de 2026</time>.</p>
         </header>
-        <section class="content">
-            <h2>Indicadores do projeto</h2>
-            <div class="table-scroll" role="region" aria-label="Tabela de indicadores" tabindex="0"><table class="data-table"><caption>Indicadores acompanhados pelo projeto e meta inicial de cada um.</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Indicador</th>
-                        <th scope="col">O que representa</th>
-                        <th scope="col">Meta inicial</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Locais registrados</td>
-                        <td>Oferta de pontos consultáveis no mapa</td>
-                        <td>Ampliar por região</td>
-                    </tr>
-                    <tr>
-                        <td>Recursos informados</td>
-                        <td>Qualidade dos dados de acessibilidade</td>
-                        <td>Reduzir “não informado”</td>
-                    </tr>
-                    <tr>
-                        <td>Contribuições recebidas</td>
-                        <td>Participação da comunidade</td>
-                        <td>Estimular relatos úteis</td>
-                    </tr>
-                    <tr>
-                        <td>Páginas acessíveis</td>
-                        <td>Qualidade da própria experiência digital</td>
-                        <td>Validar teclado e contraste</td>
-                    </tr>
-                </tbody>
-            </table></div>
-            <h2>Por que isso é sustentabilidade?</h2>
-            <p>Uma cidade sustentável também precisa permitir que as pessoas participem dela. Informações sobre
-                acessibilidade reduzem deslocamentos frustrados, apoiam negócios mais inclusivos e ajudam a tornar
-                barreiras visíveis.</p>
+
+        <section class="report-section" aria-labelledby="hoje-titulo">
+            <h2 id="hoje-titulo">Onde estamos hoje</h2>
+            <ul class="report-summary">
+                <li class="report-card">
+                    <span class="report-card-label">Locais no mapa</span>
+                    <strong>82</strong>
+                    <p>Pontos que podem ser consultados perto da UNICID.</p>
+                </li>
+                <li class="report-card report-card-current">
+                    <span class="report-card-label">Com recursos informados</span>
+                    <strong>1 de 82</strong>
+                    <div class="report-meter" aria-hidden="true"><span style="inline-size: 1.2%"></span></div>
+                    <p>Só a UNICID tem esses dados. Este é o maior desafio do projeto.</p>
+                </li>
+                <li class="report-card">
+                    <span class="report-card-label">Contribuições recebidas</span>
+                    <strong>Sem registro</strong>
+                    <p>O site ainda não guarda um histórico das indicações enviadas.</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="report-section" aria-labelledby="metas-titulo">
+            <h2 id="metas-titulo">Indicadores e metas</h2>
+            <p class="report-note">As metas são uma proposta inicial e ainda dependem da aprovação da equipe.</p>
+            <p class="report-scroll-hint">Deslize a tabela para ver todas as colunas.</p>
+            <div class="table-scroll" role="region" aria-labelledby="metas-titulo" tabindex="0">
+                <table class="data-table report-table">
+                    <caption>O que cada indicador mostra, sua situação atual e a meta proposta até dezembro de 2027.</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Indicador</th>
+                            <th scope="col">O que mostra</th>
+                            <th scope="col">Hoje</th>
+                            <th scope="col">Meta proposta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Locais no mapa</th>
+                            <td>Quantos pontos podem ser consultados</td>
+                            <td>82</td>
+                            <td>120</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Locais com recursos informados</th>
+                            <td>Se os dados ajudam a planejar uma visita</td>
+                            <td>1 (1,2%)</td>
+                            <td>30 (25% de 120)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Contribuições recebidas</th>
+                            <td>Quanto a comunidade participa</td>
+                            <td>Sem registro</td>
+                            <td>Registrar todas e chegar a 20 revisadas</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Páginas testadas</th>
+                            <td>Se o próprio site é acessível</td>
+                            <td>Testes em andamento</td>
+                            <td>Todas testadas com teclado, contraste, zoom e leitor de tela</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="report-section" aria-labelledby="ods-titulo">
+            <h2 id="ods-titulo">Por que isso é sustentabilidade</h2>
+            <p class="report-lead">Uma cidade sustentável também precisa permitir que as pessoas participem dela. Saber como é o acesso antes de sair de casa pode evitar deslocamentos frustrados, valorizar locais mais inclusivos e tornar barreiras visíveis.</p>
+            <ul class="report-goals">
+                <li class="report-card">
+                    <span class="report-card-label">ODS 10</span>
+                    <h3>Redução das desigualdades</h3>
+                    <p>Amplia o acesso à informação para quem enfrenta barreiras.</p>
+                </li>
+                <li class="report-card">
+                    <span class="report-card-label">ODS 11</span>
+                    <h3>Cidades e comunidades sustentáveis</h3>
+                    <p>Torna visíveis as barreiras urbanas e ajuda a planejar deslocamentos.</p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="report-section report-columns" aria-label="Limites da medição e participação">
+            <div>
+                <h2>O que ainda não medimos</h2>
+                <p>Os números mostram a situação dos dados, não o efeito na vida das pessoas. Ainda não medimos quantos deslocamentos foram evitados nem quantas pessoas usaram o mapa.</p>
+                <p class="report-note">Contagem feita no mapa do site, depois de juntar registros duplicados. O arquivo de dados tem 87 registros.</p>
+            </div>
+            <div>
+                <h2>Ajude a mudar esses números</h2>
+                <p>Conhece um local? Conte como é o acesso e ajude outras pessoas a planejar a visita.</p>
+                <a class="button" href="cadastro_estabelecimento.html">Indicar um local</a>
+            </div>
         </section>
     </main>
     <footer class="site-footer" data-site-footer></footer>

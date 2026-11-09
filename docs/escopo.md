@@ -119,7 +119,8 @@ index.html
 - Git e GitHub.
 - W3C Validator e Lighthouse.
 - Assistentes de IA, com uso registrado em `docs/`.
-- **Editor e hospedagem final:** [preencher]
+- **Hospedagem:** Vercel (https://projetoincluimais.vercel.app).
+- **Editor:** [preencher]
 
 ## 10. Cronograma e divisão de tarefas
 

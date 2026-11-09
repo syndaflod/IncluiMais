@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Orçamento comparativo de hospedagem e domínio do IncluiMais.">
+    <meta name="description" content="Orçamento comparativo de hospedagem e domínio do IncluiMais, com valores e fontes consultados em 9 de novembro de 2026.">
     <title>Orçamento | IncluiMais</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,47 +24,118 @@
                     href="cadastro_estabelecimento.html">Indicar local</a><a href="contato.html">Contato</a></nav>
         </div>
     </header>
-    <main id="conteudo" class="page-main">
+    <main id="conteudo" class="page-main report-page">
         <header class="page-heading">
             <h1>Orçamento de hospedagem e domínio</h1>
-            <p>Comparação inicial para documentar uma escolha de publicação com custo, limites e adequação ao projeto.
-            </p>
+            <p>Quanto custa manter o IncluiMais no ar, o que cada serviço oferece e por que escolhemos a Vercel.</p>
+            <p class="report-date">Valores consultados em <time datetime="2026-11-09">9 de novembro de 2026</time>.</p>
         </header>
-        <section class="content">
-            <div class="table-scroll" role="region" aria-label="Tabela do orçamento" tabindex="0"><table class="data-table"><caption>Comparação de opções de hospedagem e domínio.</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Serviço</th>
-                        <th scope="col">Hospedagem</th>
-                        <th scope="col">Domínio</th>
-                        <th scope="col">Observação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>GitHub Pages</td>
-                        <td>Gratuita</td>
-                        <td>.github.io gratuito</td>
-                        <td>Boa para site estático</td>
-                    </tr>
-                    <tr>
-                        <td>Netlify</td>
-                        <td>Plano gratuito</td>
-                        <td>Domínio próprio contratado à parte</td>
-                        <td>Deploy simples por Git</td>
-                    </tr>
-                    <tr>
-                        <td>Railway</td>
-                        <td>Plano com uso variável</td>
-                        <td>Domínio próprio contratado à parte</td>
-                        <td>Mais adequada se houver servidor</td>
-                    </tr>
-                </tbody>
-            </table></div>
-            <h2>Escolha preliminar</h2>
-            <p>Para a primeira versão estática do IncluiMais, GitHub Pages ou Netlify atendem ao escopo com menor
-                complexidade. Valores comerciais devem ser pesquisados novamente na data da entrega e registrados na
-                documentação.</p>
+
+        <section class="report-section" aria-labelledby="custos-titulo">
+            <h2 id="custos-titulo">Quanto custa por ano</h2>
+            <ul class="report-summary">
+                <li class="report-card report-card-current">
+                    <span class="report-card-label">Situação atual</span>
+                    <strong>R$ 0</strong>
+                    <p>Vercel Hobby com o endereço gratuito projetoincluimais.vercel.app.</p>
+                </li>
+                <li class="report-card">
+                    <span class="report-card-label">Com domínio próprio</span>
+                    <strong>R$ 40</strong>
+                    <p>Mesma hospedagem, com um domínio .com.br registrado por um ano.</p>
+                </li>
+                <li class="report-card">
+                    <span class="report-card-label">Se virar uso comercial</span>
+                    <strong>R$ 1.360,31</strong>
+                    <p>Vercel Pro por 12 meses, com um assento, mais o domínio .com.br.</p>
+                </li>
+            </ul>
+            <p class="report-note">Os valores em reais usam o dólar de R$ 5,5013, cotação de venda do Banco Central em 06/11/2026.
+                Não incluem impostos, tarifas do cartão, uso excedente nem o custo do serviço de IA do chatbot.</p>
+        </section>
+
+        <section class="report-section" aria-labelledby="comparacao-titulo">
+            <h2 id="comparacao-titulo">Comparação dos serviços</h2>
+            <p class="report-scroll-hint">Deslize a tabela para ver todas as colunas.</p>
+            <div class="table-scroll" role="region" aria-labelledby="comparacao-titulo" tabindex="0">
+                <table class="data-table report-table">
+                    <caption>Plano gratuito e primeiro plano pago de cada serviço, em valores mensais.</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Serviço</th>
+                            <th scope="col">Plano gratuito</th>
+                            <th scope="col">Plano pago</th>
+                            <th scope="col">Limites do plano gratuito</th>
+                            <th scope="col">Endereço gratuito</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="report-row-chosen">
+                            <th scope="row">Vercel <span class="report-tag">Escolhida</span></th>
+                            <td>R$ 0</td>
+                            <td>Pro: US$ 20 (cerca de R$ 110,03)</td>
+                            <td>100 GB de transferência e 1 milhão de invocações de funções por mês; somente uso pessoal e não comercial</td>
+                            <td>.vercel.app</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">GitHub Pages</th>
+                            <td>R$ 0</td>
+                            <td>Não comparado</td>
+                            <td>Site de até 1 GB e 100 GB de banda por mês; sem funções de servidor; não se destina a comércio eletrônico ou SaaS</td>
+                            <td>.github.io</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Netlify</th>
+                            <td>R$ 0</td>
+                            <td>Personal: US$ 9 (cerca de R$ 49,51)</td>
+                            <td>300 créditos por mês; cada deploy de produção usa 15 e cada GB de banda usa 20; ao esgotar, os sites são pausados</td>
+                            <td>.netlify.app</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Railway</th>
+                            <td>R$ 0</td>
+                            <td>Hobby: US$ 5 (cerca de R$ 27,51), mais o uso acima de US$ 5</td>
+                            <td>US$ 1 de crédito por mês; sem domínio próprio</td>
+                            <td>.railway.app</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="report-section report-columns" aria-label="Decisão e limites">
+            <div>
+                <h2>Por que a Vercel</h2>
+                <ul>
+                    <li>A função <code>/api/chat</code> roda na própria Vercel e faz a ligação com o Make sem expor a URL do webhook.</li>
+                    <li>O plano gratuito cobre o projeto atual, sem custo de hospedagem.</li>
+                    <li>O endereço gratuito pode ser personalizado, como em projetoincluimais.vercel.app.</li>
+                </ul>
+            </div>
+            <div>
+                <h2>O que acompanhar</h2>
+                <ul>
+                    <li><strong>Uso comercial:</strong> anúncios, pagamentos ou equipe remunerada pelo site exigem o plano Pro. Pedir doações não conta como uso comercial.</li>
+                    <li><strong>Chatbot:</strong> o plano gratuito do Make tem 1.000 créditos por mês, e cada pergunta consome créditos. O serviço de IA pode ser cobrado à parte.</li>
+                    <li><strong>Domínio:</strong> o valor de R$ 40 por ano é o citado para registro direto no Registro.br e deve ser confirmado antes da compra.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="report-section" aria-labelledby="fontes-titulo">
+            <h2 id="fontes-titulo">Fontes</h2>
+            <p class="report-note">Páginas consultadas em 09/11/2026. Os preços podem mudar.</p>
+            <ul class="report-sources">
+                <li><a href="https://vercel.com/pricing">Vercel: preços</a></li>
+                <li><a href="https://vercel.com/docs/limits/fair-use-guidelines">Vercel: regras de uso justo e uso comercial</a></li>
+                <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits">GitHub Pages: limites</a></li>
+                <li><a href="https://www.netlify.com/pricing/">Netlify: preços</a></li>
+                <li><a href="https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/">Netlify: como funcionam os créditos</a></li>
+                <li><a href="https://railway.com/pricing">Railway: preços</a></li>
+                <li><a href="https://www.make.com/en/pricing">Make: preços e créditos</a></li>
+                <li><a href="https://www.nuvemshop.com.br/blog/registro-br">Nuvemshop: guia do Registro.br (fonte secundária)</a></li>
+                <li><a href="https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados/ultimos/3?formato=json">Banco Central: cotação do dólar, série 1 do SGS</a></li>
+            </ul>
         </section>
     </main>
     <footer class="site-footer" data-site-footer></footer>
