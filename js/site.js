@@ -622,7 +622,7 @@
   const CHAT_HISTORY_LIMIT = 6;
   const chatHistory = [];
 
-  // Usado quando o webhook não está configurado ou não responde.
+  // Usado quando o assistente não está configurado ou não responde.
   const faq = [
     { terms: ["mapa", "local", "encontrar"], answer: "Abra o mapa para buscar locais por nome, categoria e recursos como entrada, banheiro ou estacionamento acessível." },
     { terms: ["indicar", "indicação", "sugerir"], answer: "Use a página Indicar um local para sugerir um local e informar os recursos de acessibilidade disponíveis." },
@@ -652,9 +652,8 @@
     return body;
   };
 
-  const askWebhook = async (url, question) => {
-    // Corpo de formulário não dispara preflight CORS, que o webhook do Make pode não atender.
-    const response = await fetch(url, {
+  const askAssistant = async (endpoint, question) => {
+    const response = await fetch(endpoint, {
       method: "POST",
       body: new URLSearchParams({
         pergunta: question,
@@ -662,18 +661,17 @@
       }),
       signal: AbortSignal.timeout(CHAT_TIMEOUT_MS)
     });
-    if (!response.ok) throw new Error(`Webhook respondeu ${response.status}`);
+    if (!response.ok) throw new Error(`Assistente respondeu ${response.status}`);
     const answer = (await response.text()).trim();
-    // "Accepted" é a resposta padrão do Make quando o cenário não usa o módulo Webhook response.
-    if (!answer || answer === "Accepted") throw new Error("Webhook não devolveu uma resposta");
+    if (!answer) throw new Error("Assistente não devolveu uma resposta");
     return answer;
   };
 
-  const answerFromFaq = (question, webhookFailed) => {
+  const answerFromFaq = (question, assistantFailed) => {
     const normalized = question.toLocaleLowerCase("pt-BR");
     const match = faq.find((item) => item.terms.some((term) => normalized.includes(term)));
     if (match) return match.answer;
-    return webhookFailed
+    return assistantFailed
       ? "O assistente está indisponível no momento. Enquanto isso, posso ajudar com mapa, indicação, filtros, contato ou privacidade."
       : "Ainda não tenho essa resposta. Tente perguntar sobre mapa, indicação, filtros, contato ou privacidade.";
   };
@@ -682,12 +680,12 @@
     event.preventDefault();
     const question = input.value.trim();
     if (!question || sendButton.disabled) return;
-    const webhookUrl = chatbot.dataset.webhookUrl?.trim();
+    const endpoint = chatbot.dataset.chatEndpoint?.trim();
 
     addChatMessage("Você", question);
     input.value = "";
 
-    if (!webhookUrl) {
+    if (!endpoint) {
       addChatMessage("IncluiMais", answerFromFaq(question, false));
       return;
     }
@@ -695,7 +693,7 @@
     sendButton.disabled = true;
     const reply = addChatMessage("IncluiMais", "Pensando…");
     try {
-      const answer = await askWebhook(webhookUrl, question);
+      const answer = await askAssistant(endpoint, question);
       reply.textContent = ` ${answer}`;
       chatHistory.push({ author: "Usuário", text: question }, { author: "IncluiMais", text: answer });
       chatHistory.splice(0, Math.max(chatHistory.length - CHAT_HISTORY_LIMIT, 0));

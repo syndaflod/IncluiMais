@@ -4,7 +4,7 @@
 
 ## 1. Identificação
 
-- **Nome da equipe:** [preencher]
+- **Nome da equipe:** IncluiMais
 - **Projeto/site:** IncluiMais
 - **Integrantes:**
   - Antonio Dantas da Silva Neto (RGM 47788356)
@@ -67,9 +67,9 @@
 - Formulário de contato e voluntariado com validação em JavaScript.
 - Área de apoio com voluntariado e doação demonstrativa.
 - Preferências de fonte e contraste salvas com `localStorage`.
-- Menu responsivo, navegação compartilhada e assistente de dúvidas com IA via webhook do Make (FAQ em JavaScript como alternativa).
+- Menu responsivo, navegação compartilhada e assistente de dúvidas com IA via função da Vercel e webhook do Make (FAQ em JavaScript como alternativa).
 
-**Fora do escopo:** back-end, envio real de formulários, pagamentos, contas de usuário e publicação automática de indicações no mapa.
+**Fora do escopo:** back-end além da função do chatbot, envio real de formulários, pagamentos, contas de usuário e publicação automática de indicações no mapa.
 
 ## 6. Escopo não funcional
 

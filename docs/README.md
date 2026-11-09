@@ -38,7 +38,7 @@ O antigo mapa que estava no `index.html` foi transferido para `mapa.html`. O `in
 - Indicador de página atual com `aria-current`.
 - Widget VLibras carregado nas páginas institucionais.
 - Formulários com validação nativa do HTML5 e mensagens com `aria-live`.
-- Chatbot com IA integrado por webhook do Make, com FAQ local como alternativa.
+- Chatbot com IA integrado ao Make por uma função da Vercel, com FAQ local como alternativa.
 
 ## Dados do mapa
 
@@ -52,11 +52,11 @@ Os dados geográficos vêm do OpenStreetMap. A disponibilidade dos recursos pode
 
 ## Chatbot
 
-O chatbot da página inicial envia cada pergunta a um webhook do Make, cujo cenário chama um modelo de IA e devolve a resposta em texto. O código está em `js/site.js` e a URL do webhook fica no atributo `data-webhook-url` do `.chatbot` em `index.html`.
+O chatbot da página inicial (`js/site.js`) envia cada pergunta à função `api/chat.mjs` da Vercel. Ela repassa a pergunta a um webhook do Make, cujo cenário chama um modelo de IA e devolve a resposta em texto.
 
-A chave da API de IA fica somente na conexão do Make, nunca no JavaScript enviado ao navegador. A URL do webhook é pública, por isso o cenário deve ter limites de uso. Se a URL estiver vazia ou o webhook falhar, o chatbot responde com o FAQ local por palavras-chave.
+A URL do webhook fica na variável de ambiente `MAKE_WEBHOOK_URL`, e a chave da API de IA fica na conexão do Make. Nenhuma delas vai para o JavaScript enviado ao navegador. Se a função falhar ou não estiver disponível, como no `python -m http.server`, o chatbot responde com o FAQ local por palavras-chave.
 
-As perguntas digitadas no chat saem do navegador e passam pelo Make e pelo serviço de IA. O passo a passo e o prompt estão em [`chatbot-make.md`](chatbot-make.md).
+As perguntas digitadas no chat saem do navegador e passam pela Vercel, pelo Make e pelo serviço de IA. O passo a passo e o prompt estão em [`chatbot-make.md`](chatbot-make.md).
 
 ## Formulários
 
@@ -98,6 +98,8 @@ IncluiMais/
 ├── noticias.html
 ├── contato.html
 ├── orcamento_hospedagem.html
+├── api/
+│   └── chat.mjs
 ├── assets/
 │   └── accessibility/
 ├── css/

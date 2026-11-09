@@ -80,8 +80,8 @@
     </section>
   </main>
 
-  <!-- data-webhook-url: URL do webhook do Make (ver docs/chatbot-make.md). Vazio = usa só o FAQ local. -->
-  <div class="chatbot" data-webhook-url="">
+  <!-- data-chat-endpoint: função da Vercel que consulta o Make (ver docs/chatbot-make.md). Vazio = usa só o FAQ local. -->
+  <div class="chatbot" data-chat-endpoint="/api/chat">
     <section id="painel-duvidas" class="chatbot-panel" hidden aria-label="Assistente de dúvidas">
       <div class="chatbot-messages" aria-live="polite"><p class="chatbot-message"><strong>IncluiMais:</strong> Posso responder dúvidas sobre o projeto, o mapa, indicações e acessibilidade.</p></div>
       <form class="chatbot-form"><label class="visually-hidden" for="chatbot-pergunta">Sua pergunta</label><input id="chatbot-pergunta" name="pergunta" type="text" placeholder="Digite sua dúvida" autocomplete="off" maxlength="500"><button type="submit">Enviar</button></form>
