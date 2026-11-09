@@ -23,8 +23,9 @@
       <span class="accessibility-bar-label">Ajustes de leitura</span>
       <span class="accessibility-controls-slot" data-controls-slot>
         <span class="accessibility-controls" role="group" aria-label="Ajustes de leitura">
-          <button type="button" data-font-increase aria-label="Aumentar tamanho da fonte">A+</button>
           <button type="button" data-font-decrease aria-label="Diminuir tamanho da fonte">A-</button>
+          <button type="button" data-font-reset aria-label="Restaurar tamanho padrão da fonte" title="Tamanho padrão da fonte">A</button>
+          <button type="button" data-font-increase aria-label="Aumentar tamanho da fonte">A+</button>
           <button type="button" class="contrast-button" data-contrast-toggle aria-label="Ativar alto contraste" aria-pressed="false">
             <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 2v14a7 7 0 0 1 0-14Z" fill="currentColor"/></svg>
             <span>Alto contraste</span>
@@ -35,6 +36,7 @@
 
     const increase = document.querySelector("[data-font-increase]");
     const decrease = document.querySelector("[data-font-decrease]");
+    const reset = document.querySelector("[data-font-reset]");
     const contrast = document.querySelector("[data-contrast-toggle]");
     const controls = document.querySelector(".accessibility-controls");
     const nav = document.querySelector(".site-nav");
@@ -69,26 +71,25 @@
       const scale = currentScale();
       increase.disabled = scale === FONT_SCALES.at(-1);
       decrease.disabled = scale === FONT_SCALES[0];
+      if (reset) reset.disabled = scale === FONT_SCALES[0];
       const isContrast = root.classList.contains("alto-contraste");
       contrast.setAttribute("aria-pressed", String(isContrast));
       contrast.setAttribute("aria-label", isContrast ? "Desativar alto contraste" : "Ativar alto contraste");
     };
 
-    increase.addEventListener("click", () => {
-      const next = FONT_SCALES[Math.min(FONT_SCALES.indexOf(currentScale()) + 1, FONT_SCALES.length - 1)];
+    const setScale = (next, message = `Fonte ${next}%`) => {
       root.dataset.fontScale = String(next);
       root.style.setProperty("--im-font-scale", String(next / 100));
-      localStorage.setItem("incluimais-font-scale", String(next));
-      announce(`Fonte ${next}%`);
+      try { localStorage.setItem("incluimais-font-scale", String(next)); } catch {}
+      announce(message);
       update();
-    });
-    decrease.addEventListener("click", () => {
-      const next = FONT_SCALES[Math.max(FONT_SCALES.indexOf(currentScale()) - 1, 0)];
-      root.dataset.fontScale = String(next);
-      root.style.setProperty("--im-font-scale", String(next / 100));
-      localStorage.setItem("incluimais-font-scale", String(next));
-      announce(`Fonte ${next}%`);
-      update();
+    };
+    increase.addEventListener("click", () => setScale(FONT_SCALES[Math.min(FONT_SCALES.indexOf(currentScale()) + 1, FONT_SCALES.length - 1)]));
+    decrease.addEventListener("click", () => setScale(FONT_SCALES[Math.max(FONT_SCALES.indexOf(currentScale()) - 1, 0)]));
+    reset?.addEventListener("click", () => {
+      setScale(FONT_SCALES[0], "Tamanho padrão da fonte restaurado");
+      // O botão fica desabilitado no tamanho padrão; o foco segue para o A+.
+      increase.focus();
     });
     contrast.addEventListener("click", () => {
       root.classList.add("theme-switching");
@@ -376,7 +377,7 @@
       if (!resposta.ok) throw new Error("Falha ao carregar os dados");
       const dados = await resposta.json();
       const features = Array.isArray(dados?.features) ? dados.features : [];
-      const { contarLocaisDoMapa } = await import("./locais-dados.js");
+      const { contarLocaisDoMapa } = await import("./locais-dados.js?v=20261109-unicid");
       const total = contarLocaisDoMapa(features);
       const numero = alvo.querySelector("[data-locais-numero]");
       if (numero) numero.textContent = total;
@@ -397,6 +398,13 @@
         novoFavicon.href = "assets/icon.svg";
         document.head.appendChild(novoFavicon);
       }
+    }
+
+    if (!document.querySelector('meta[name="theme-color"]')) {
+      const themeColor = document.createElement("meta");
+      themeColor.name = "theme-color";
+      themeColor.content = "#f3efe6";
+      document.head.appendChild(themeColor);
     }
 
     document.querySelectorAll(".brand, .site-logo").forEach((brand) => {
@@ -461,31 +469,52 @@
 
   const navToggle = document.querySelector(".nav-toggle");
   const nav = document.querySelector(".site-nav");
+  const PROMOTED_LINKS = [["sobre.html", "Sobre"], ["impacto.html", "Impacto"]];
+  const MORE_LINKS = [["projetos.html", "Projetos"], ["galeria.html", "Galeria"], ["noticias.html", "Notícias"], ["midia.html", "Mídia"], ["orcamento_hospedagem.html", "Orçamento"], ["contato.html#apoie", "Apoie"]];
+  const moreMenuHtml = () => {
+    const extras = PROMOTED_LINKS.map(([href, label]) => `<a role="menuitem" class="nav-more-extra" href="${href}">${label}</a>`).join("");
+    const items = MORE_LINKS.map(([href, label]) => `<a role="menuitem" href="${href}">${label}</a>`).join("");
+    return `<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden>${extras}${items}</div></div>`;
+  };
   document.querySelectorAll("nav.site-nav, .map-header nav").forEach((menu) => {
+    const contato = menu.querySelector(':scope > a[href="contato.html"]');
+    PROMOTED_LINKS.forEach(([href, label]) => {
+      if (menu.querySelector(`:scope > a[href="${href}"]`)) return;
+      const link = document.createElement("a");
+      link.href = href;
+      link.className = "nav-link-extra";
+      link.textContent = label;
+      menu.insertBefore(link, contato);
+    });
     const oldMore = menu.querySelector("details.nav-more");
-    if (oldMore) {
-      oldMore.outerHTML = '<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden><a role="menuitem" href="sobre.html">Sobre</a><a role="menuitem" href="projetos.html">Projetos</a><a role="menuitem" href="galeria.html">Galeria</a><a role="menuitem" href="impacto.html">Impacto</a><a role="menuitem" href="midia.html">Mídia</a><a role="menuitem" href="noticias.html">Notícias</a><a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a><a role="menuitem" href="contato.html#apoie">Apoie</a></div></div>';
-    } else if (!menu.querySelector(".nav-more")) {
-      menu.insertAdjacentHTML("beforeend", '<div class="nav-more"><button type="button" aria-haspopup="menu" aria-expanded="false">Mais<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="nav-more-menu" role="menu" hidden><a role="menuitem" href="sobre.html">Sobre</a><a role="menuitem" href="projetos.html">Projetos</a><a role="menuitem" href="galeria.html">Galeria</a><a role="menuitem" href="impacto.html">Impacto</a><a role="menuitem" href="midia.html">Mídia</a><a role="menuitem" href="noticias.html">Notícias</a><a role="menuitem" href="orcamento_hospedagem.html">Orçamento</a><a role="menuitem" href="contato.html#apoie">Apoie</a></div></div>');
+    if (oldMore) oldMore.outerHTML = moreMenuHtml();
+    else if (!menu.querySelector(".nav-more")) menu.insertAdjacentHTML("beforeend", moreMenuHtml());
+    const cta = menu.querySelector(':scope > a[href="cadastro_estabelecimento.html"]');
+    if (cta) {
+      cta.classList.add("nav-cta");
+      menu.append(cta);
     }
-    menu.querySelector('a[href="cadastro_estabelecimento.html"]')?.classList.add("nav-cta");
   });
   document.querySelectorAll(".nav-more").forEach((more) => {
     const button = more.querySelector("button");
     const menu = more.querySelector(".nav-more-menu");
-    const items = [...menu.querySelectorAll("a")];
+    const allItems = [...menu.querySelectorAll("a")];
+    let items = allItems;
+    const refreshItems = () => { items = allItems.filter((item) => getComputedStyle(item).display !== "none"); };
     const close = (restore = false) => {
       menu.hidden = true;
       button.setAttribute("aria-expanded", "false");
       if (restore) button.focus();
     };
     button.addEventListener("click", () => {
+      refreshItems();
       const open = menu.hidden;
       menu.hidden = !open;
       button.setAttribute("aria-expanded", String(open));
       if (open) items[0]?.focus();
     });
     more.addEventListener("keydown", (event) => {
+      refreshItems();
       if (event.key === "Escape") { event.preventDefault(); close(true); }
       if ((event.key === "ArrowDown" || event.key === "ArrowRight") && event.target === button) {
         event.preventDefault();
@@ -514,6 +543,119 @@
   document.querySelectorAll(".site-nav a[href]").forEach((link) => {
     if (link.getAttribute("href") === currentPath) link.setAttribute("aria-current", "page");
   });
+  document.querySelectorAll(".nav-more").forEach((more) => {
+    more.classList.toggle("has-current", Boolean(more.querySelector('a[aria-current="page"]:not(.nav-more-extra)')));
+  });
+
+  // Pílula deslizante do menu (desktop): uma pílula marca a página atual e outra, mais leve, segue o ponteiro/foco.
+  // Ao trocar de página, a pílula parte da posição da página anterior e desliza até a nova.
+  const configurarPilulaMenu = () => {
+    const nav = document.querySelector("nav.site-nav");
+    if (!nav) return;
+    const desktop = window.matchMedia("(min-width: 821px)");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const STORAGE_KEY = "incluimais-nav-pill";
+    const active = document.createElement("span");
+    const hover = document.createElement("span");
+    active.className = "nav-pill nav-pill-active";
+    hover.className = "nav-pill nav-pill-hover";
+    active.setAttribute("aria-hidden", "true");
+    hover.setAttribute("aria-hidden", "true");
+    nav.prepend(hover);
+    nav.prepend(active);
+    nav.classList.add("nav-has-pill");
+
+    const items = () => [...nav.querySelectorAll(":scope > a:not(.nav-cta), :scope > .nav-more > button")]
+      .filter((item) => item.getClientRects().length > 0);
+    const currentItem = () => nav.querySelector(':scope > a[aria-current="page"]:not(.nav-cta)')
+      || (nav.querySelector(".nav-more.has-current") ? nav.querySelector(":scope > .nav-more > button") : null);
+    const rectOf = (item) => {
+      const navBox = nav.getBoundingClientRect();
+      const box = item.getBoundingClientRect();
+      return { x: box.left - navBox.left, y: box.top - navBox.top, w: box.width, h: box.height };
+    };
+    const place = (pill, rect, animate) => {
+      pill.classList.toggle("is-instant", !animate || reduced.matches);
+      pill.style.setProperty("--pill-x", `${rect.x}px`);
+      pill.style.setProperty("--pill-y", `${rect.y}px`);
+      pill.style.setProperty("--pill-w", `${rect.w}px`);
+      pill.style.setProperty("--pill-h", `${rect.h}px`);
+    };
+
+    const syncActive = (animate = false) => {
+      const item = currentItem();
+      active.hidden = !item || !desktop.matches;
+      if (!active.hidden) place(active, rectOf(item), animate);
+    };
+
+    // Entrada: desliza a partir da posição salva na página anterior.
+    const startActive = () => {
+      const item = currentItem();
+      if (!item || !desktop.matches) return syncActive();
+      let from = null;
+      try { from = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "null"); } catch {}
+      const to = rectOf(item);
+      if (!from || reduced.matches || Math.abs(from.x - to.x) < 1) return syncActive();
+      place(active, { ...to, x: from.x, w: from.w }, false);
+      active.hidden = false;
+      // Força o estilo inicial antes de mover; não depende de requestAnimationFrame (pausado em abas ocultas).
+      getComputedStyle(active).transform;
+      place(active, to, true);
+    };
+
+    let hoverVisible = false;
+    const showHover = (item) => {
+      if (!desktop.matches) return;
+      place(hover, rectOf(item), hoverVisible);
+      hover.classList.add("is-visible");
+      hoverVisible = true;
+    };
+    const hideHover = () => {
+      hover.classList.remove("is-visible");
+      hoverVisible = false;
+    };
+    nav.addEventListener("pointerover", (event) => {
+      if (event.pointerType && event.pointerType !== "mouse") return;
+      const item = event.target.closest("a, button");
+      if (item && items().includes(item)) showHover(item);
+    });
+    nav.addEventListener("pointerleave", hideHover);
+    nav.addEventListener("focusin", (event) => {
+      const item = event.target.closest("a, button");
+      if (item && items().includes(item) && item.matches(":focus-visible")) showHover(item);
+      else hideHover();
+    });
+    nav.addEventListener("focusout", (event) => { if (!nav.contains(event.relatedTarget)) hideHover(); });
+
+    // Guarda a posição atual para a próxima página animar a partir dela.
+    const remember = () => {
+      const item = currentItem();
+      if (!item || !desktop.matches) return;
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(rectOf(item))); } catch {}
+    };
+    window.addEventListener("pagehide", remember);
+
+    const refresh = () => { syncActive(false); if (hoverVisible) hideHover(); };
+    desktop.addEventListener("change", refresh);
+    let lastWidth = 0;
+    let started = false;
+    const begin = () => {
+      if (started) return;
+      started = true;
+      lastWidth = nav.getBoundingClientRect().width;
+      startActive();
+      if ("ResizeObserver" in window) new ResizeObserver(() => {
+        const width = nav.getBoundingClientRect().width;
+        if (Math.abs(width - lastWidth) < 0.5) return;
+        lastWidth = width;
+        refresh();
+      }).observe(nav);
+    };
+    // Espera as fontes para medir a largura final dos itens (com limite, para não travar sem rede).
+    if (document.fonts?.ready) Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 400))]).then(begin);
+    else begin();
+  };
+  configurarPilulaMenu();
   renderFooter();
   carregarContagemDeLocais();
   document.querySelectorAll("[data-reading-settings]").forEach((button) => button.addEventListener("click", focarAjustesLeitura));
