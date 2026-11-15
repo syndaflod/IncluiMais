@@ -2,7 +2,7 @@
 
 **Encontre lugares mais acessíveis.**
 
-O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. Ele reúne informações sobre recursos de acessibilidade em estabelecimentos, incentiva contribuições da comunidade e ajuda pessoas a planejarem seus deslocamentos com mais autonomia. O mapa piloto cobre uma área próxima à Universidade Cidade de São Paulo (UNICID), na capital paulista.
+O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. Ele reúne informações sobre recursos de acessibilidade em estabelecimentos para pessoas com deficiência, incentiva contribuições da comunidade e ajuda pessoas a planejarem seus deslocamentos com mais autonomia. O mapa piloto cobre uma área próxima à Universidade Cidade de São Paulo (UNICID), na capital paulista.
 
 ## Links
 
