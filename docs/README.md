@@ -186,7 +186,7 @@ O IncluiMais é um protótipo acadêmico. As informações do mapa não represen
 | Antonio Dantas da Silva Neto | 47788356 | [AntonioDS](https://github.com/AntonioDS) | Concepção do site e conteúdo das páginas |
 | Arthur de Jesus Salviano Oliveira | 47764988 | [arthurjso12-dev](https://github.com/arthurjso12-dev) | Chatbot com IA e integração com o Make |
 | Gustavo Frutuoso José | 47604565 | [gustavofjose](https://github.com/gustavofjose) | Concepção do site e conteúdo das páginas |
-| Gustavo Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) | Slides da apresentação |
+| Gustavo dos santos de almeida Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) | Slides da apresentação |
 | Heitor Tureck de Oliveira | 47104503 | [syndaflod](https://github.com/syndaflod) | Design, CSS e JavaScript |
 
 Detalhes em [`escopo.md`](escopo.md), seção 10.
