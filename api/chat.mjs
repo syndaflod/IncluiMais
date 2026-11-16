@@ -11,7 +11,7 @@ const textResponse = (body, status) => new Response(body, {
 });
 
 // O navegador sempre envia Origin em um POST. Isso barra outros sites usando esta função,
-// mas não impede scripts fora do navegador, que podem forjar o cabeçalho.
+// porém, não impede scripts fora do navegador, que podem forjar o cabeçalho.
 const isSameOrigin = (request) => {
   try {
     const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
