@@ -141,7 +141,9 @@ IncluiMais/
 │   ├── locais.json
 │   └── UNICID_2.geojson
 ├── docs/
-│   └── evidencias/
+│   ├── evidencias/
+│   ├── IncluiMais.pdf
+│   └── IncluiMais.pptx
 ├── js/
 │   ├── accessibility-init.js
 │   ├── locais-dados.js
@@ -156,24 +158,22 @@ IncluiMais/
 
 ## Checklist da 2ª entrega
 
-Situação em 09/11/2026, conforme o checklist do roteiro da 2ª entrega (AV A1).
+Situação em 16/11/2026, conforme o checklist do roteiro da 2ª entrega (AV A1).
 
 | Item do roteiro | Situação |
 |---|---|
 | Site abre pela URL publicada, com HTTPS, no computador e no celular | Feito ([`testes.md`](testes.md)) |
-| As 10 páginas funcionam online, sem links quebrados | Feito |
-| W3C Validator sem erros nas 10 páginas | Feito; repetir `mapa.html`, `projetos.html` e `orcamento_hospedagem.html` na versão publicada |
+| As 10 páginas funcionam online, sem links quebrados | Feito; o site tem 12 páginas |
+| W3C Validator sem erros nas 10 páginas | Feito nas 12 páginas ([`evidencias/`](evidencias/)); repetir `mapa.html`, `projetos.html` e `orcamento_hospedagem.html` na versão publicada |
 | Formulário validado com JavaScript e dados mantidos com `localStorage` | Feito; o `localStorage` guarda o alto contraste e o tamanho da fonte |
 | Navegação completa só com teclado | Feito pela equipe |
-| Todos os integrantes têm commits no GitHub; existe pelo menos um pull request | **Pendente:** só Heitor (syndaflod) e Gustavo Reis (GustaDoBronx) têm commits, e o repositório não tem nenhum pull request |
+| Todos os integrantes têm commits no GitHub; existe pelo menos um pull request | Pull requests feitos (#2 e #3). **Pendente:** só Heitor (syndaflod) e Gustavo Reis (GustaDoBronx) têm commits |
 | Pontos do MVP corrigidos e listados com antes e depois | Lista em [`melhorias-mvp.md`](melhorias-mvp.md); faltam os prints de antes e depois |
 | Uso de IA registrado no diário de bordo | Em andamento; faltam o que foi aceito e corrigido nos prompts 1 a 4 |
 | README, diário, escopo, orçamento e evidências de testes em `/docs` | Feito; o diário e o escopo ainda têm campos **[preencher]** |
-| Slides com os 14 itens do roteiro e texto com 20 pt ou mais | Responsável: Gustavo Reis |
+| Slides com os 14 itens do roteiro e texto com 20 pt ou mais | Feito por Gustavo Reis: [`IncluiMais.pdf`](IncluiMais.pdf) e [`IncluiMais.pptx`](IncluiMais.pptx) |
 | Demonstração ensaiada em 20 minutos, com plano B (vídeo ou prints) | A fazer |
 | Arquivos no Blackboard até 09/11 (.txt, URL, repositório, slides, prints, .zip) | A fazer; o `.txt` está em [`entrega.txt`](entrega.txt) |
-
-Antes da apresentação, publique na Vercel as mudanças locais do mapa (versões de cache `?v=20261109-*`).
 
 ## Limites do protótipo
 
@@ -186,7 +186,7 @@ O IncluiMais é um protótipo acadêmico. As informações do mapa não represen
 | Antonio Dantas da Silva Neto | 47788356 | [AntonioDS](https://github.com/AntonioDS) | Concepção do site e conteúdo das páginas |
 | Arthur de Jesus Salviano Oliveira | 47764988 | [arthurjso12-dev](https://github.com/arthurjso12-dev) | Chatbot com IA e integração com o Make |
 | Gustavo Frutuoso José | 47604565 | [gustavofjose](https://github.com/gustavofjose) | Concepção do site e conteúdo das páginas |
-| Gustavo dos santos de almeida Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) | Slides da apresentação |
+| Gustavo dos Santos de Almeida Reis | 47455152 | [GustaDoBronx](https://github.com/GustaDoBronx) | Slides da apresentação |
 | Heitor Tureck de Oliveira | 47104503 | [syndaflod](https://github.com/syndaflod) | Design, CSS e JavaScript |
 
 Detalhes em [`escopo.md`](escopo.md), seção 10.
