@@ -175,7 +175,9 @@ Situação em 16/11/2026, conforme o checklist do roteiro da 2ª entrega (AV A1)
 | Demonstração ensaiada em 20 minutos, com plano B (vídeo ou prints) | A fazer |
 | Arquivos no Blackboard até 09/11 (.txt, URL, repositório, slides, prints, .zip) | A fazer; o `.txt` está em [`entrega.txt`](entrega.txt) |
 
+## Limites do protótipo
 
+O IncluiMais é um protótipo acadêmico. As informações do mapa não representam uma vistoria presencial nem uma certificação dos estabelecimentos. Os dados podem estar incompletos ou desatualizados, e "não informado" não significa que o recurso não exista. Quando um recurso for essencial para a visita, confirme as condições diretamente com o local.
 ## Equipe
 
 | Integrante | RGM | GitHub | Função |
