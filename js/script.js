@@ -1,12 +1,14 @@
-import { categoriaDoLocal, deduplicarLocais, localBaseDoGeoJson } from "./locais-dados.js?v=20261109-unicid";
+import { deduplicarLocais, localBaseDoGeoJson } from "./locais-dados.js?v=20261116-review";
 import { CATEGORIAS, iconeCategoria } from "../assets/categorias.js?v=transport-icons-20261028";
 
 const CENTRO_INICIAL = [-23.53598, -46.55948];
 const MODO_EMBED = new URLSearchParams(window.location.search).get("embed") === "1";
-const RAIO_DESLOCAMENTO_METROS = 1050;
+const REGEX_UNICID = /UNICID|Universidade Cidade de S[aã]o Paulo/i;
 let locais = [];
 let estadoCarregamentoLocais = "carregando";
-const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
+
+// Nomes e endereços vêm do GeoJSON (OpenStreetMap) e entram em HTML gerado por template.
+const escaparHtml = (valor) => String(valor ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 let mapa;
 let camadaBase;
@@ -134,15 +136,16 @@ function estadoAcessibilidade(valor) {
   return "unknown";
 }
 
+const chavesPorCategoriaLocal = {
+  "Restaurante": "restaurante", "Farmácia": "farmacia", "Instituição de ensino": "ensino",
+  "Espaço de lazer": "lazer", "Estacionamento": "estacionamento", "Loja": "loja", "Banheiro": "banheiro", "Academia": "academia",
+  "Creche": "creche", "Posto de gasolina": "posto", "Metrô": "metro", "Ônibus": "onibus", "Bicicletário": "bicicletario",
+  "Corpo de Bombeiros": "bombeiros", "Igreja": "igreja", "Polícia": "policia", "Lava-jato": "lavajato",
+  "Dentista": "dentista", "Tatuagem": "tatuagem", "Banco": "banco", "Táxi": "taxi", "Hospital": "hospital"
+};
+
 function chaveCategoriaLocal(local) {
-  const categorias = {
-    "Restaurante": "restaurante", "Farmácia": "farmacia", "Instituição de ensino": "ensino",
-    "Espaço de lazer": "lazer", "Estacionamento": "estacionamento", "Loja": "loja", "Banheiro": "banheiro", "Academia": "academia",
-    "Creche": "creche", "Posto de gasolina": "posto", "Metrô": "metro", "Ônibus": "onibus", "Bicicletário": "bicicletario",
-    "Corpo de Bombeiros": "bombeiros", "Igreja": "igreja", "Polícia": "policia", "Lava-jato": "lavajato",
-    "Dentista": "dentista", "Tatuagem": "tatuagem", "Banco": "banco", "Táxi": "taxi", "Hospital": "hospital"
-  };
-  return categorias[local.categoria] || "padrao";
+  return chavesPorCategoriaLocal[local.categoria] || "padrao";
 }
 
 function iconeDoLocal(local) {
@@ -286,23 +289,6 @@ function sincronizarChecksDoPainel() {
   atualizarEstadoDosGrupos();
 }
 
-function localDoElemento(elemento) {
-  const tags = elemento.tags || {};
-  const latitude = elemento.lat ?? elemento.center?.lat;
-  const longitude = elemento.lon ?? elemento.center?.lon;
-  if (!tags.name || latitude == null || longitude == null) return null;
-
-  return {
-    id: `${elemento.type}-${elemento.id}`,
-    nome: tags.name,
-    categoria: categoriaDoLocal(tags),
-    endereco: [tags["addr:street"], tags["addr:housenumber"]].filter(Boolean).join(", ") || "Endereço não informado",
-    latitude,
-    longitude,
-    acessibilidade: recursosAcessibilidade(tags)
-  };
-}
-
 function localDoGeoJson(feature) {
   const tags = feature.properties || {};
   const base = localBaseDoGeoJson(feature);
@@ -311,7 +297,7 @@ function localDoGeoJson(feature) {
   // A UNICID has been verified as providing every resource tracked here.
   // Keep this explicit so a stale or incomplete OSM tag cannot make its card
   // appear gray after the local dataset has been updated.
-  if (/UNICID|Universidade Cidade de S[aã]o Paulo/i.test(tags.name || "")) {
+  if (REGEX_UNICID.test(tags.name || "")) {
     Object.keys(nomesRecursos).forEach((recurso) => { acessibilidade[recurso] = "available"; });
   }
   return {
@@ -338,25 +324,6 @@ async function carregarLocaisGeoJson() {
   renderizarPainelCategorias();
   filtrarLocais();
   abrirLocalSolicitado();
-}
-
-async function carregarLocaisOverpass() {
-  const [latitude, longitude] = CENTRO_INICIAL;
-  const consulta = `[out:json][timeout:20];(nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][amenity~"university|college|school|restaurant|cafe|fast_food|pharmacy|parking|toilets|fitness_centre|kindergarten|childcare|nursery|fuel|subway|bicycle_parking|fire_station|place_of_worship|police|car_wash|dentist|bank|taxi|hospital|bus_station"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][shop];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][leisure];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][railway~"station|subway_entrance"];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][public_transport=station];nwr(around:${RAIO_DESLOCAMENTO_METROS},${latitude},${longitude})[name][station=subway];);out center tags;`;
-  try {
-    const resposta = await fetch(`${OVERPASS_URL}?data=${encodeURIComponent(consulta)}`);
-    if (!resposta.ok) throw new Error(`Overpass respondeu ${resposta.status}`);
-    const dados = await resposta.json();
-    locais = dados.elements.map(localDoElemento).filter(Boolean);
-    renderizarPainelCategorias();
-    filtrarLocais();
-    abrirLocalSolicitado();
-  } catch (erro) {
-    console.error("Não foi possível carregar estabelecimentos do OpenStreetMap:", erro);
-    locais = [];
-    renderizarPainelCategorias();
-    filtrarLocais();
-  }
 }
 
 // Retângulo que envolve todos os locais da área piloto (data/locais.json), com ~110 m de folga.
@@ -474,7 +441,7 @@ function conteudoPopup(local) {
   const dica = MODO_EMBED || !disponiveis.length ? "" : " · toque num ícone";
   const cap = `<p class="cap" aria-live="polite"><strong>${disponiveis.length} ${disponiveis.length === 1 ? "disponível" : "disponíveis"}</strong>${dica}</p>`;
   const destino = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${local.latitude},${local.longitude}`)}`;
-  return `<article class="popup-estabelecimento" style="--categoria-cor:${corDaCategoria(local)}"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${local.nome}</h2><span class="endereco-estabelecimento">${local.endereco}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${gruposDeRecursos}</div>${cap}<div class="popup-acoes"><a class="popup-como-chegar" href="${destino}" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>Como chegar</a><a class="popup-detalhes" href="acessibilidade.html">Ver detalhes</a></div></article>`;
+  return `<article class="popup-estabelecimento" style="--categoria-cor:${corDaCategoria(local)}"><div class="cabecalho-estabelecimento"><span class="logo-estabelecimento categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}" aria-hidden="true">${iconeDoLocal(local)}</span><div class="identidade-estabelecimento"><h2 class="popup-titulo">${escaparHtml(local.nome)}</h2><span class="endereco-estabelecimento">${escaparHtml(local.endereco)}</span></div><button class="fechar-estabelecimento" type="button" aria-label="Fechar informações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div class="indicadores-resumo" role="group" aria-label="Recursos de acessibilidade">${gruposDeRecursos}</div>${cap}<div class="popup-acoes"><a class="popup-como-chegar" href="${destino}" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-8-8 18-2-8-8-2z"/></svg>Como chegar</a><a class="popup-detalhes" href="acessibilidade.html">Ver detalhes</a></div></article>`;
 }
 
 // Escolhe de que lado do marcador o cartão aparece para ele caber na área visível do mapa:
@@ -549,7 +516,7 @@ function criarMarcadores(locaisFiltrados) {
       title: local.nome,
       alt: local.nome,
       keyboard: !MODO_EMBED,
-      icon: L.divIcon({ className: `pin-estabelecimento${MODO_EMBED && !/UNICID|Universidade Cidade de S[aã]o Paulo/i.test(local.nome) ? " pin-preview-secundario" : ""}`, html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
+      icon: L.divIcon({ className: `pin-estabelecimento${MODO_EMBED && !REGEX_UNICID.test(local.nome) ? " pin-preview-secundario" : ""}`, html: `<span class="pin-estabelecimento-forma categoria-${chaveCategoriaLocal(local)}" style="--categoria-cor:${corDaCategoria(local)}"><span class="pin-estabelecimento-icone">${iconeDoLocal(local)}</span></span>`, iconSize: [44, 54], iconAnchor: [22, 52], popupAnchor: [0, -48] })
     }).bindPopup(conteudoPopup(local), { maxWidth: 320, minWidth: 280, closeButton: false, className: "popup-acessibilidade", autoPan: false });
     marcador.on("popupopen", (evento) => {
       if (!MODO_EMBED) posicionarPopup(marcador);
@@ -602,10 +569,10 @@ function mostrarLocais(locaisFiltrados) {
   }
 
   lista.innerHTML = locaisFiltrados.map((local) => `
-    <button class="local-item" type="button" data-id="${local.id}">
-      <span class="local-nome">${local.nome}</span>
-      <span class="local-meta local-categoria">${local.categoria}</span>
-      <span class="local-meta local-endereco">${local.endereco}</span>
+    <button class="local-item" type="button" data-id="${escaparHtml(local.id)}">
+      <span class="local-nome">${escaparHtml(local.nome)}</span>
+      <span class="local-meta local-categoria">${escaparHtml(local.categoria)}</span>
+      <span class="local-meta local-endereco">${escaparHtml(local.endereco)}</span>
       <span class="recursos-resumo">${resumoRecursos(local)}</span>
     </button>
   `).join("");
@@ -644,7 +611,7 @@ function centralizarNosTerminaisOnibus() {
 
 function abrirLocal(id) {
   const local = locais.find((item) => item.id === id)
-    || (id === "unicid" ? locais.find((item) => /UNICID|Universidade Cidade de S[aã]o Paulo/i.test(item.nome)) : null);
+    || (id === "unicid" ? locais.find((item) => REGEX_UNICID.test(item.nome)) : null);
   const marcador = marcadores[id];
   const marcadorDoLocal = marcador || (local && marcadores[local.id]);
   if (!local || !marcadorDoLocal) return;

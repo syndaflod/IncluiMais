@@ -94,7 +94,7 @@
     contrast.addEventListener("click", () => {
       root.classList.add("theme-switching");
       const isContrast = root.classList.toggle("alto-contraste");
-      localStorage.setItem("incluimais-high-contrast", String(isContrast));
+      try { localStorage.setItem("incluimais-high-contrast", String(isContrast)); } catch {}
       announce(isContrast ? "Alto contraste ativado" : "Alto contraste desativado");
       update();
       requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("theme-switching")));
@@ -377,7 +377,7 @@
       if (!resposta.ok) throw new Error("Falha ao carregar os dados");
       const dados = await resposta.json();
       const features = Array.isArray(dados?.features) ? dados.features : [];
-      const { contarLocaisDoMapa } = await import("./locais-dados.js?v=20261109-unicid");
+      const { contarLocaisDoMapa } = await import("./locais-dados.js?v=20261116-review");
       const total = contarLocaisDoMapa(features);
       const numero = alvo.querySelector("[data-locais-numero]");
       if (numero) numero.textContent = total;

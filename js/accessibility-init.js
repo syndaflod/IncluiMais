@@ -1,8 +1,11 @@
 (() => {
   const root = document.documentElement;
-  const savedScale = Number.parseInt(localStorage.getItem("incluimais-font-scale"), 10);
+  const ler = (chave) => {
+    try { return localStorage.getItem(chave); } catch { return null; }
+  };
+  const savedScale = Number.parseInt(ler("incluimais-font-scale"), 10);
   const scale = [100, 112, 125, 150].includes(savedScale) ? savedScale : 100;
-  const savedContrast = localStorage.getItem("incluimais-high-contrast");
+  const savedContrast = ler("incluimais-high-contrast");
   const contrast = savedContrast === null
     ? window.matchMedia("(prefers-contrast: more)").matches
     : savedContrast === "true";

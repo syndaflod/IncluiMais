@@ -65,13 +65,13 @@ export function localBaseDoGeoJson(feature) {
 // Mantém uma única entrada quando nome, categoria e posição são praticamente iguais.
 export function deduplicarLocais(itens) {
   const resultado = [];
+  const nomesNormalizados = new Map();
   const ids = new Set();
   for (const local of itens) {
     const nome = local.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
     const duplicado = resultado.some((existente) => {
       if (existente.categoria !== local.categoria) return false;
-      const outroNome = existente.nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]+/g, " ").trim();
-      if (outroNome !== nome) return false;
+      if (nomesNormalizados.get(existente) !== nome) return false;
       // Mesmo nome em números diferentes da rua são prédios distintos (ex.: UNICID 448 e 475).
       if (local.numero && existente.numero && local.numero !== existente.numero) return false;
       // Praças e instituições podem vir duplicadas como way e relation OSM,
@@ -83,6 +83,7 @@ export function deduplicarLocais(itens) {
     });
     if (!duplicado && !ids.has(local.id)) {
       resultado.push(local);
+      nomesNormalizados.set(local, nome);
       ids.add(local.id);
     }
   }
