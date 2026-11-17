@@ -51,7 +51,7 @@ Os detalhes estão na seção 10 do [escopo](escopo.md).
 | Aumentar o zoom e permitir chegar a todos os locais | Zoom inicial 20 | O primeiro ajuste (raio de 1.050 m e zoom mínimo 15) mostrava a cidade inteira e foi recusado; ficou um retângulo em volta dos locais, com zoom mínimo calculado pela tela |
 | Mostrar o segundo prédio da UNICID | O código juntava instituições de mesmo nome; agora locais com números de rua diferentes ficam separados | O endereço do segundo prédio (Rua Cesário Galeno, 475) foi preenchido pela IA e precisa ser confirmado |
 | Abrir o cartão do lado com espaço quando o local está na borda | Cartão abre acima, abaixo, à esquerda ou à direita, com a seta apontando para o marcador | Testado no navegador com locais no topo, no meio e na borda direita |
-| Atualizar a documentação conforme as entregas 1 e 2 | Checklist da entrega no README e o novo [`melhorias-mvp.md`](melhorias-mvp.md) | Os primeiros esqueletos encontrados eram de outra disciplina (banco de dados) e foram descartados; a IA usou os roteiros de Front-End enviados pela equipe |
+| Atualizar a documentação conforme as entregas 1 e 2 | Checklist da entrega no README e o novo [`melhorias-mvp.md`](evidencias/melhorias-mvp.md) | Os primeiros esqueletos encontrados eram de outra disciplina (banco de dados) e foram descartados; a IA usou os roteiros de Front-End enviados pela equipe |
 
 **Reflexão:** as mudanças foram conferidas no navegador quando possível. Os dados de acessibilidade dos 32 locais são fictícios e estão identificados assim no README e no escopo.
 

@@ -15,7 +15,7 @@ O IncluiMais é um projeto acadêmico sobre inclusão social e acessibilidade. E
 |---|---|
 | [`escopo.md`](escopo.md) | Problema, público, requisitos, tecnologias, cronograma e divisão de tarefas |
 | [`diario-de-bordo.md`](diario-de-bordo.md) | Decisões, divisão do trabalho e uso de IA |
-| [`melhorias-mvp.md`](melhorias-mvp.md) | Pontos da 1ª entrega (MVP) e como foram resolvidos, com antes e depois |
+| [`melhorias-mvp.md`](evidencias/melhorias-mvp.md) | Pontos da 1ª entrega (MVP) e como foram resolvidos, com antes e depois |
 | [`testes.md`](testes.md) | Validação W3C, Lighthouse, teclado, formulários e celular, com prints em [`evidencias/`](evidencias/) |
 | [`orcamento.md`](orcamento.md) | Comparação de hospedagem e domínio |
 | [`chatbot-make.md`](chatbot-make.md) | Integração do chatbot com o Make e a IA |
@@ -168,7 +168,7 @@ Situação em 16/11/2026, conforme o checklist do roteiro da 2ª entrega (AV A1)
 | Formulário validado com JavaScript e dados mantidos com `localStorage` | Feito; o `localStorage` guarda o alto contraste e o tamanho da fonte |
 | Navegação completa só com teclado | Feito pela equipe |
 | Todos os integrantes têm commits no GitHub; existe pelo menos um pull request | Pull requests feitos (#2 e #3). **Pendente:** só Heitor (syndaflod) e Gustavo Reis (GustaDoBronx) têm commits |
-| Pontos do MVP corrigidos e listados com antes e depois | Lista em [`melhorias-mvp.md`](melhorias-mvp.md); faltam os prints de antes e depois |
+| Pontos do MVP corrigidos e listados com antes e depois | Lista em [`melhorias-mvp.md`](evidencias/melhorias-mvp.md); faltam os prints de antes e depois |
 | Uso de IA registrado no diário de bordo | Em andamento; faltam o que foi aceito e corrigido nos prompts 1 a 4 |
 | README, diário, escopo, orçamento e evidências de testes em `/docs` | Feito; o diário e o escopo ainda têm campos **[preencher]** |
 | Slides com os 14 itens do roteiro e texto com 20 pt ou mais | Feito por Gustavo Reis: [`IncluiMais.pdf`](IncluiMais.pdf) e [`IncluiMais.pptx`](IncluiMais.pptx) |
